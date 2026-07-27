@@ -5,34 +5,16 @@ const linkClass =
 
 export function SiteFooter() {
   return (
-    <footer className="relative overflow-hidden bg-navy-deep pb-20 text-navy-foreground md:pb-0">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-1"
-        style={{
-          background:
-            "linear-gradient(90deg, var(--primary), var(--signal), var(--primary))",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -left-32 -top-32 size-96 rounded-full opacity-25 blur-3xl"
-        style={{ background: "var(--primary)" }}
-      />
-
-      <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="bg-navy-deep pb-20 text-navy-foreground md:pb-0">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
-            <span
-              className="flex size-8 items-center justify-center rounded-md font-display text-xs font-bold text-navy-deep"
-              style={{
-                background: "linear-gradient(135deg, var(--signal), var(--primary))",
-              }}
-            >
+            <span className="flex size-8 items-center justify-center rounded-md bg-primary font-display text-xs font-bold text-primary-foreground">
               AW
             </span>
             <span className="font-display text-lg font-bold">The Affiliate Week</span>
           </div>
+
           <p className="mt-3 max-w-xs text-sm text-navy-foreground/70">
             The weekly email for affiliate marketers — industry news, jobs, events and offers,
             every Thursday.
@@ -130,7 +112,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="relative border-t border-navy-foreground/10 bg-navy/40">
+      <div className="border-t border-navy-foreground/10">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} The Affiliate Week. All rights reserved.</p>
           <p>
