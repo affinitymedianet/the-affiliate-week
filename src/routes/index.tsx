@@ -36,7 +36,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "AffiliateX",
-          url: "https://affiliatex.co",
+          url: SITE_URL,
           description,
         }),
       },
@@ -63,13 +63,13 @@ function Index() {
       <SiteHeader />
       <main>
         <Hero />
+        <InsideThisIssue />
+        <WeeklyBoards />
         <WhatsInside />
-        <EventsPreview />
-        <JobsPreview />
-        <DealsPreview />
-        <WhyRead />
+        <EditorNote />
         <Faq />
         <ClosingCta />
+
       </main>
       <SiteFooter />
       <StickySubscribeBar />
