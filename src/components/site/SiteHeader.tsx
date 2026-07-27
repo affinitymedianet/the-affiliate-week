@@ -79,9 +79,14 @@ export function SiteHeader() {
               </Link>
             ))}
             <Button asChild size="sm" className="mt-2">
-              <Link to="/" hash="newsletter" onClick={() => setOpen(false)}>
-                Subscribe free
-              </Link>
+              <a
+                href={TYPEFORM_SUBMIT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+              >
+                Submit
+              </a>
             </Button>
           </nav>
         </div>
