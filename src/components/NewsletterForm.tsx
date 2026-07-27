@@ -106,7 +106,8 @@ export function NewsletterForm({
             variant === "dark" ? "text-navy-foreground/60" : "text-muted-foreground",
           )}
         >
-          One email every Thursday. No spam, unsubscribe anytime.
+          One email every Thursday. By subscribing you agree we can email you the newsletter —
+          one-click unsubscribe in every issue, and we never share your address.
         </p>
       )}
     </div>

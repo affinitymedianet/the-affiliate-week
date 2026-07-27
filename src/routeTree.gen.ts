@@ -13,7 +13,6 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as SponsorRouteImport } from './routes/sponsor'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as EventsRouteImport } from './routes/events'
 import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
@@ -40,11 +39,6 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EventsRoute = EventsRouteImport.update({
-  id: '/events',
-  path: '/events',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ArchiveRoute = ArchiveRouteImport.update({
   id: '/archive',
   path: '/archive',
@@ -56,9 +50,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventsIndexRoute = EventsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => EventsRoute,
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const IssuesSlugRoute = IssuesSlugRouteImport.update({
   id: '/issues/$slug',
@@ -66,15 +60,14 @@ const IssuesSlugRoute = IssuesSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventsEventIdRoute = EventsEventIdRouteImport.update({
-  id: '/$eventId',
-  path: '/$eventId',
-  getParentRoute: () => EventsRoute,
+  id: '/events/$eventId',
+  path: '/events/$eventId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
-  '/events': typeof EventsRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
@@ -98,7 +91,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
-  '/events': typeof EventsRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
@@ -112,7 +104,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/archive'
-    | '/events'
     | '/privacy'
     | '/sponsor'
     | '/submit'
@@ -135,7 +126,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/archive'
-    | '/events'
     | '/privacy'
     | '/sponsor'
     | '/submit'
@@ -148,12 +138,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArchiveRoute: typeof ArchiveRoute
-  EventsRoute: typeof EventsRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   SponsorRoute: typeof SponsorRoute
   SubmitRoute: typeof SubmitRoute
   TermsRoute: typeof TermsRoute
+  EventsEventIdRoute: typeof EventsEventIdRoute
   IssuesSlugRoute: typeof IssuesSlugRoute
+  EventsIndexRoute: typeof EventsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -186,13 +177,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/events': {
-      id: '/events'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/archive': {
       id: '/archive'
       path: '/archive'
@@ -209,10 +193,10 @@ declare module '@tanstack/react-router' {
     }
     '/events/': {
       id: '/events/'
-      path: '/'
+      path: '/events'
       fullPath: '/events/'
       preLoaderRoute: typeof EventsIndexRouteImport
-      parentRoute: typeof EventsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/issues/$slug': {
       id: '/issues/$slug'
@@ -223,36 +207,24 @@ declare module '@tanstack/react-router' {
     }
     '/events/$eventId': {
       id: '/events/$eventId'
-      path: '/$eventId'
+      path: '/events/$eventId'
       fullPath: '/events/$eventId'
       preLoaderRoute: typeof EventsEventIdRouteImport
-      parentRoute: typeof EventsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface EventsRouteChildren {
-  EventsEventIdRoute: typeof EventsEventIdRoute
-  EventsIndexRoute: typeof EventsIndexRoute
-}
-
-const EventsRouteChildren: EventsRouteChildren = {
-  EventsEventIdRoute: EventsEventIdRoute,
-  EventsIndexRoute: EventsIndexRoute,
-}
-
-const EventsRouteWithChildren =
-  EventsRoute._addFileChildren(EventsRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArchiveRoute: ArchiveRoute,
-  EventsRoute: EventsRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   SponsorRoute: SponsorRoute,
   SubmitRoute: SubmitRoute,
   TermsRoute: TermsRoute,
+  EventsEventIdRoute: EventsEventIdRoute,
   IssuesSlugRoute: IssuesSlugRoute,
+  EventsIndexRoute: EventsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
