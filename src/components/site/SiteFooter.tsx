@@ -62,6 +62,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link to="/deals" className="hover:text-navy-foreground">
+                Exclusive deals
+              </Link>
+            </li>
+            <li>
               <Link to="/submit" className="hover:text-navy-foreground">
                 Submit an event, job or offer
               </Link>

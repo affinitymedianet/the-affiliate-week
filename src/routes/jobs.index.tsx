@@ -1,11 +1,13 @@
-import { useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { MapPin, Building2, Briefcase, Banknote, ArrowRight } from "lucide-react";
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { Pager, paginate } from "@/components/site/Pager";
 import { Button } from "@/components/ui/button";
 import { listJobs } from "@/lib/jobs.functions";
 
@@ -18,7 +20,15 @@ const jobsQueryOptions = queryOptions({
   queryFn: () => listJobs(),
 });
 
+type JobsSearch = { q: string; work: string; type: string; page: number };
+
 export const Route = createFileRoute("/jobs/")({
+  validateSearch: (search: Record<string, unknown>): JobsSearch => ({
+    q: typeof search.q === "string" ? search.q : "",
+    work: typeof search.work === "string" ? search.work : "All",
+    type: typeof search.type === "string" ? search.type : "All",
+    page: Number(search.page) > 0 ? Math.floor(Number(search.page)) : 1,
+  }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(jobsQueryOptions);
   },
@@ -62,9 +72,10 @@ function formatPosted(date: string) {
 
 function JobsPage() {
   const { data: jobs } = useSuspenseQuery(jobsQueryOptions);
-  const [workType, setWorkType] = useState<(typeof workTypes)[number]>("All");
-  const [employment, setEmployment] = useState<(typeof employmentTypes)[number]>("All");
-  const [query, setQuery] = useState("");
+  const { q: query, work: workType, type: employment, page } = Route.useSearch();
+  const navigate = useNavigate({ from: "/jobs" });
+  const setSearch = (next: Partial<JobsSearch>) =>
+    navigate({ search: (prev: JobsSearch) => ({ ...prev, page: 1, ...next }) });
 
   const filtered = useMemo(
     () =>
@@ -81,13 +92,16 @@ function JobsPage() {
     [jobs, workType, employment, query],
   );
 
+  const paged = paginate(filtered, page);
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
         <section className="border-b border-border bg-surface py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-4">
-            <h1 className="font-display text-4xl font-bold sm:text-5xl">
+            <Breadcrumbs items={[{ label: "Jobs" }]} />
+            <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Affiliate marketing jobs
             </h1>
             <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -100,6 +114,9 @@ function JobsPage() {
               </Link>
               <Link to="/events" className="font-medium text-primary hover:underline">
                 Browse events →
+              </Link>
+              <Link to="/deals" className="font-medium text-primary hover:underline">
+                See deals →
               </Link>
             </p>
           </div>
@@ -114,7 +131,7 @@ function JobsPage() {
                   type="button"
                   size="sm"
                   variant={workType === w ? "default" : "outline"}
-                  onClick={() => setWorkType(w)}
+                  onClick={() => setSearch({ work: w })}
                 >
                   {w}
                 </Button>
@@ -126,7 +143,7 @@ function JobsPage() {
                   type="button"
                   size="sm"
                   variant={employment === e ? "secondary" : "ghost"}
-                  onClick={() => setEmployment(e)}
+                  onClick={() => setSearch({ type: e })}
                 >
                   {e}
                 </Button>
@@ -138,18 +155,19 @@ function JobsPage() {
               <input
                 type="search"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => setSearch({ q: e.target.value })}
                 placeholder="Search by title, company or location"
                 className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm outline-none ring-primary/30 focus:ring-2"
               />
             </label>
 
             <p className="mt-4 text-sm text-muted-foreground">
-              Showing {filtered.length} of {jobs.length} roles
+              Showing {paged.items.length ? paged.start + 1 : 0}–{paged.end} of {filtered.length}{" "}
+              roles
             </p>
 
             <ul className="mt-4 divide-y divide-border rounded-xl border border-border bg-card shadow-card">
-              {filtered.map((job) => (
+              {paged.items.map((job) => (
                 <li key={job.id} className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center">
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2">
@@ -212,6 +230,13 @@ function JobsPage() {
                 No roles match those filters right now.
               </p>
             ) : null}
+
+            <Pager
+              page={paged.page}
+              totalPages={paged.totalPages}
+              onPageChange={(p) => navigate({ search: (prev: JobsSearch) => ({ ...prev, page: p }) })}
+              label="Jobs pagination"
+            />
 
             <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-center">
               <h2 className="font-display text-xl font-semibold">New affiliate roles, weekly</h2>

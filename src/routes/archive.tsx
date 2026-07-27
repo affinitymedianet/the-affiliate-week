@@ -1,16 +1,25 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { Pager, paginate } from "@/components/site/Pager";
 import { issues } from "@/data/issues";
 
 const title = "AffiliateX newsletter archive — read past issues";
 const description =
   "Read AffiliateX issues in full before you subscribe: affiliate industry news, new programmes, jobs and events, published every Thursday.";
 
+type ArchiveSearch = { q: string; page: number };
+
 export const Route = createFileRoute("/archive")({
+  validateSearch: (search: Record<string, unknown>): ArchiveSearch => ({
+    q: typeof search.q === "string" ? search.q : "",
+    page: Number(search.page) > 0 ? Math.floor(Number(search.page)) : 1,
+  }),
   head: () => ({
     meta: [
       { title },
@@ -27,13 +36,29 @@ export const Route = createFileRoute("/archive")({
 });
 
 function ArchivePage() {
+  const { q, page } = Route.useSearch();
+  const navigate = useNavigate({ from: "/archive" });
+
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    if (!needle) return issues;
+    return issues.filter((issue) =>
+      `${issue.title} ${issue.summary} #${issue.number}`.toLowerCase().includes(needle),
+    );
+  }, [q]);
+
+  const paged = paginate(filtered, page);
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
         <section className="border-b border-border bg-surface py-14 lg:py-20">
           <div className="mx-auto max-w-4xl px-4">
-            <h1 className="font-display text-4xl font-bold sm:text-5xl">Newsletter archive</h1>
+            <Breadcrumbs items={[{ label: "Archive" }]} />
+            <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
+              Newsletter archive
+            </h1>
             <p className="mt-4 max-w-2xl text-muted-foreground">
               Every issue is published here in full, free to read. Start with the sample issue to
               see the format, length and tone before you hand over your email address.
@@ -43,8 +68,28 @@ function ArchivePage() {
 
         <section className="py-12 lg:py-16">
           <div className="mx-auto max-w-4xl px-4">
-            <ul className="space-y-4">
-              {issues.map((issue) => (
+            <label className="block">
+              <span className="sr-only">Search past issues</span>
+              <input
+                type="search"
+                value={q}
+                onChange={(e) =>
+                  navigate({
+                    search: (prev: ArchiveSearch) => ({ ...prev, q: e.target.value, page: 1 }),
+                  })
+                }
+                placeholder="Search past issues by topic or title"
+                className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm outline-none ring-primary/30 focus:ring-2"
+              />
+            </label>
+
+            <p className="mt-4 text-sm text-muted-foreground">
+              Showing {paged.items.length ? paged.start + 1 : 0}–{paged.end} of {filtered.length}{" "}
+              issues
+            </p>
+
+            <ul className="mt-4 space-y-4">
+              {paged.items.map((issue) => (
                 <li key={issue.slug}>
                   <Link
                     to="/issues/$slug"
@@ -63,6 +108,21 @@ function ArchivePage() {
                 </li>
               ))}
             </ul>
+
+            {filtered.length === 0 ? (
+              <p className="mt-6 text-center text-sm text-muted-foreground">
+                No issues match that search yet.
+              </p>
+            ) : null}
+
+            <Pager
+              page={paged.page}
+              totalPages={paged.totalPages}
+              onPageChange={(p) =>
+                navigate({ search: (prev: ArchiveSearch) => ({ ...prev, page: p }) })
+              }
+              label="Archive pagination"
+            />
 
             <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-center">
               <h2 className="font-display text-xl font-semibold">Get the next one by email</h2>

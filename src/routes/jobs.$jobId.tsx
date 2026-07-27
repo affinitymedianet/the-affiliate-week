@@ -5,6 +5,7 @@ import { MapPin, Building2, Briefcase, Banknote, ExternalLink, ArrowLeft } from 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { getJob } from "@/lib/jobs.functions";
 
@@ -108,9 +109,10 @@ function JobDetail() {
       <main>
         <section className="border-b border-border bg-surface py-12 lg:py-16">
           <div className="mx-auto max-w-3xl px-4">
+            <Breadcrumbs items={[{ label: "Jobs", href: "/jobs" }, { label: job.title }]} />
             <Link
               to="/jobs"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
             >
               <ArrowLeft className="size-4" /> All jobs
             </Link>

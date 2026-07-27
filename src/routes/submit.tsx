@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,7 +47,7 @@ const schema = z.object({
 const kinds = [
   { value: "event", label: "Event" },
   { value: "job", label: "Job" },
-  { value: "offer", label: "Offer / programme" },
+  { value: "offer", label: "Offer / deal" },
 ] as const;
 
 function SubmitPage() {
@@ -91,7 +92,8 @@ function SubmitPage() {
       <main>
         <section className="border-b border-border bg-surface py-14 lg:py-20">
           <div className="mx-auto max-w-3xl px-4">
-            <h1 className="font-display text-4xl font-bold sm:text-5xl">
+            <Breadcrumbs items={[{ label: "Submit" }]} />
+            <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Submit an event, job or offer
             </h1>
             <p className="mt-4 text-muted-foreground">

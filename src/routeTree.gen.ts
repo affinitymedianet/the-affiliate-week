@@ -17,9 +17,11 @@ import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
+import { Route as DealsIndexRouteImport } from './routes/deals.index'
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as IssuesSlugRouteImport } from './routes/issues.$slug'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
+import { Route as DealsDealIdRouteImport } from './routes/deals.$dealId'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -61,6 +63,11 @@ const EventsIndexRoute = EventsIndexRouteImport.update({
   path: '/events/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DealsIndexRoute = DealsIndexRouteImport.update({
+  id: '/deals/',
+  path: '/deals/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JobsJobIdRoute = JobsJobIdRouteImport.update({
   id: '/jobs/$jobId',
   path: '/jobs/$jobId',
@@ -76,6 +83,11 @@ const EventsEventIdRoute = EventsEventIdRouteImport.update({
   path: '/events/$eventId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DealsDealIdRoute = DealsDealIdRouteImport.update({
+  id: '/deals/$dealId',
+  path: '/deals/$dealId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -84,9 +96,11 @@ export interface FileRoutesByFullPath {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
+  '/deals/': typeof DealsIndexRoute
   '/events/': typeof EventsIndexRoute
   '/jobs/': typeof JobsIndexRoute
 }
@@ -97,9 +111,11 @@ export interface FileRoutesByTo {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
+  '/deals': typeof DealsIndexRoute
   '/events': typeof EventsIndexRoute
   '/jobs': typeof JobsIndexRoute
 }
@@ -111,9 +127,11 @@ export interface FileRoutesById {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
+  '/deals/': typeof DealsIndexRoute
   '/events/': typeof EventsIndexRoute
   '/jobs/': typeof JobsIndexRoute
 }
@@ -126,9 +144,11 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/deals/$dealId'
     | '/events/$eventId'
     | '/issues/$slug'
     | '/jobs/$jobId'
+    | '/deals/'
     | '/events/'
     | '/jobs/'
   fileRoutesByTo: FileRoutesByTo
@@ -139,9 +159,11 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/deals/$dealId'
     | '/events/$eventId'
     | '/issues/$slug'
     | '/jobs/$jobId'
+    | '/deals'
     | '/events'
     | '/jobs'
   id:
@@ -152,9 +174,11 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/deals/$dealId'
     | '/events/$eventId'
     | '/issues/$slug'
     | '/jobs/$jobId'
+    | '/deals/'
     | '/events/'
     | '/jobs/'
   fileRoutesById: FileRoutesById
@@ -166,9 +190,11 @@ export interface RootRouteChildren {
   SponsorRoute: typeof SponsorRoute
   SubmitRoute: typeof SubmitRoute
   TermsRoute: typeof TermsRoute
+  DealsDealIdRoute: typeof DealsDealIdRoute
   EventsEventIdRoute: typeof EventsEventIdRoute
   IssuesSlugRoute: typeof IssuesSlugRoute
   JobsJobIdRoute: typeof JobsJobIdRoute
+  DealsIndexRoute: typeof DealsIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
   JobsIndexRoute: typeof JobsIndexRoute
 }
@@ -231,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/deals/': {
+      id: '/deals/'
+      path: '/deals'
+      fullPath: '/deals/'
+      preLoaderRoute: typeof DealsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/jobs/$jobId': {
       id: '/jobs/$jobId'
       path: '/jobs/$jobId'
@@ -252,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsEventIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/deals/$dealId': {
+      id: '/deals/$dealId'
+      path: '/deals/$dealId'
+      fullPath: '/deals/$dealId'
+      preLoaderRoute: typeof DealsDealIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -262,9 +302,11 @@ const rootRouteChildren: RootRouteChildren = {
   SponsorRoute: SponsorRoute,
   SubmitRoute: SubmitRoute,
   TermsRoute: TermsRoute,
+  DealsDealIdRoute: DealsDealIdRoute,
   EventsEventIdRoute: EventsEventIdRoute,
   IssuesSlugRoute: IssuesSlugRoute,
   JobsJobIdRoute: JobsJobIdRoute,
+  DealsIndexRoute: DealsIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   JobsIndexRoute: JobsIndexRoute,
 }

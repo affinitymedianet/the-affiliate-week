@@ -4,6 +4,7 @@ import { MapPin, CalendarDays, Ticket, ExternalLink } from "lucide-react";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { events, type AffiliateEvent } from "@/data/events";
 
 export const Route = createFileRoute("/events/$eventId")({
@@ -95,7 +96,10 @@ function EventPage() {
               className="h-56 w-full object-cover sm:h-72"
             />
           </div>
-          <span className="mt-6 block text-xs font-medium uppercase tracking-wide text-primary">
+          <div className="mt-6">
+            <Breadcrumbs items={[{ label: "Events", href: "/events" }, { label: event.name }]} />
+          </div>
+          <span className="mt-4 block text-xs font-medium uppercase tracking-wide text-primary">
             {event.format}
           </span>
           <h1 className="mt-2 font-display text-3xl font-bold sm:text-4xl">{event.name}</h1>

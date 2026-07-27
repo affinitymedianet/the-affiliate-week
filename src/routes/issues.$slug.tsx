@@ -3,6 +3,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { issues, type Issue } from "@/data/issues";
 
 export const Route = createFileRoute("/issues/$slug")({
@@ -78,7 +79,10 @@ function IssuePage() {
       <SiteHeader />
       <main>
         <article className="mx-auto max-w-3xl px-4 py-14 lg:py-20">
-          <p className="text-xs font-medium uppercase tracking-wide text-primary">
+          <Breadcrumbs
+            items={[{ label: "Archive", href: "/archive" }, { label: `Issue #${issue.number}` }]}
+          />
+          <p className="mt-5 text-xs font-medium uppercase tracking-wide text-primary">
             Issue #{issue.number} · {issue.date} · {issue.readingTime}
           </p>
           <h1 className="mt-3 font-display text-3xl font-bold sm:text-4xl">{issue.title}</h1>
