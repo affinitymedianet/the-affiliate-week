@@ -44,9 +44,13 @@ export function SiteHeader() {
 
         <div className="hidden md:block">
           <Button asChild size="sm">
-            <Link to="/" hash="newsletter">
-              Subscribe free
-            </Link>
+            <a
+              href={TYPEFORM_SUBMIT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Submit
+            </a>
           </Button>
         </div>
 
