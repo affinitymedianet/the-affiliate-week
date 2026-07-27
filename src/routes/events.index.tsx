@@ -8,7 +8,7 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Pager, paginate } from "@/components/site/Pager";
 import { Button } from "@/components/ui/button";
-import { events } from "@/data/events";
+import { events, type AffiliateEvent } from "@/data/events";
 
 const title = "Affiliate marketing events calendar — AffiliateX";
 const description =
@@ -56,6 +56,21 @@ export const Route = createFileRoute("/events/")({
 
 const formats = ["All", "Conference", "Meetup", "Webinar", "Summit"] as const;
 const places = ["All", "Online", "In person"] as const;
+
+function groupByMonth(items: AffiliateEvent[]) {
+  const groups: { label: string; events: AffiliateEvent[] }[] = [];
+  for (const event of items) {
+    const label = new Date(event.isoDate).toLocaleDateString("en-GB", {
+      month: "long",
+      year: "numeric",
+    });
+    const last = groups[groups.length - 1];
+    if (last && last.label === label) last.events.push(event);
+    else groups.push({ label, events: [event] });
+  }
+  return groups;
+}
+
 
 function EventsPage() {
   const { q, format, place, free: freeOnly, page } = Route.useSearch();
