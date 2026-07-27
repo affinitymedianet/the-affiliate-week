@@ -92,7 +92,7 @@ function SponsorPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <section className="border-b border-border bg-surface py-14 lg:py-20">
+        <section className="border-b border-border bg-background py-14 lg:py-20">
           <div className="mx-auto max-w-4xl px-4">
             <Breadcrumbs items={[{ label: "Sponsor" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">

@@ -145,7 +145,7 @@ function EventPage() {
             </p>
           )}
 
-          <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-center">
+          <div className="mt-12 rounded-xl border border-border bg-background p-6 text-center">
             <h2 className="font-display text-xl font-semibold">
               Never miss an affiliate event again
             </h2>

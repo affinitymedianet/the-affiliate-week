@@ -40,7 +40,7 @@ export function WeeklyBoards() {
   const upcoming = events.slice(0, 4);
 
   return (
-    <section className="border-b border-rule bg-surface py-16 lg:py-20">
+    <section className="border-b border-rule bg-background py-16 lg:py-20">
       <div className="mx-auto max-w-6xl space-y-14 px-4">
         <div>
           <SectionHead

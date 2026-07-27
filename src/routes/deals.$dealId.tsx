@@ -100,7 +100,7 @@ function DealDetail() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <section className="border-b border-border bg-surface py-12 lg:py-16">
+        <section className="border-b border-border bg-background py-12 lg:py-16">
           <div className="mx-auto max-w-3xl px-4">
             <Breadcrumbs items={[{ label: "Deals", href: "/deals" }, { label: deal.title }]} />
             <div className="mt-5 flex flex-wrap items-center gap-2">
@@ -188,7 +188,7 @@ function DealDetail() {
               </Link>
             </div>
 
-            <div className="mt-10 rounded-xl border border-border bg-surface p-6 text-center">
+            <div className="mt-10 rounded-xl border border-border bg-background p-6 text-center">
               <h2 className="font-display text-xl font-semibold">Get deals before they expire</h2>
               <p className="mt-2 text-sm text-muted-foreground">
                 Exclusive codes land in the Thursday issue first.

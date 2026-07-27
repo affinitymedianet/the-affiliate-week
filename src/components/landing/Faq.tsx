@@ -34,7 +34,7 @@ export const faqs = [
 
 export function Faq() {
   return (
-    <section id="faq" className="border-b border-rule bg-surface py-16 lg:py-20">
+    <section id="faq" className="border-b border-rule bg-background py-16 lg:py-20">
       <div className="mx-auto max-w-3xl px-4">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-signal">Questions</p>
         <h2 className="mt-1.5 font-display text-2xl font-bold tracking-tight sm:text-3xl">
