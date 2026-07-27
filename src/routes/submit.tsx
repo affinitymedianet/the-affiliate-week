@@ -47,7 +47,7 @@ const schema = z.object({
 const kinds = [
   { value: "event", label: "Event" },
   { value: "job", label: "Job" },
-  { value: "offer", label: "Offer / programme" },
+  { value: "offer", label: "Offer / deal" },
 ] as const;
 
 function SubmitPage() {
