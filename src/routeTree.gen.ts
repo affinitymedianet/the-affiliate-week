@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as SponsorRouteImport } from './routes/sponsor'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -17,6 +18,11 @@ import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as IssuesSlugRouteImport } from './routes/issues.$slug'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SubmitRoute = SubmitRouteImport.update({
   id: '/submit',
   path: '/submit',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
+  '/terms': typeof TermsRoute
   '/issues/$slug': typeof IssuesSlugRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
+  '/terms': typeof TermsRoute
   '/issues/$slug': typeof IssuesSlugRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
+  '/terms': typeof TermsRoute
   '/issues/$slug': typeof IssuesSlugRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sponsor'
     | '/submit'
+    | '/terms'
     | '/issues/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sponsor'
     | '/submit'
+    | '/terms'
     | '/issues/$slug'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sponsor'
     | '/submit'
+    | '/terms'
     | '/issues/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -118,11 +130,19 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   SponsorRoute: typeof SponsorRoute
   SubmitRoute: typeof SubmitRoute
+  TermsRoute: typeof TermsRoute
   IssuesSlugRoute: typeof IssuesSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/submit': {
       id: '/submit'
       path: '/submit'
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   SponsorRoute: SponsorRoute,
   SubmitRoute: SubmitRoute,
+  TermsRoute: TermsRoute,
   IssuesSlugRoute: IssuesSlugRoute,
 }
 export const routeTree = rootRouteImport
