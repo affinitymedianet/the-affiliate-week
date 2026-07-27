@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      deals: {
+        Row: {
+          category: string
+          coupon_code: string | null
+          created_at: string
+          deal_type: string
+          deal_url: string
+          description: string
+          discount_label: string | null
+          exclusive: boolean
+          expires_on: string | null
+          featured: boolean
+          id: string
+          published: boolean
+          starts_on: string
+          summary: string
+          title: string
+          updated_at: string
+          vendor: string
+        }
+        Insert: {
+          category?: string
+          coupon_code?: string | null
+          created_at?: string
+          deal_type?: string
+          deal_url: string
+          description: string
+          discount_label?: string | null
+          exclusive?: boolean
+          expires_on?: string | null
+          featured?: boolean
+          id?: string
+          published?: boolean
+          starts_on?: string
+          summary: string
+          title: string
+          updated_at?: string
+          vendor: string
+        }
+        Update: {
+          category?: string
+          coupon_code?: string | null
+          created_at?: string
+          deal_type?: string
+          deal_url?: string
+          description?: string
+          discount_label?: string | null
+          exclusive?: boolean
+          expires_on?: string | null
+          featured?: boolean
+          id?: string
+          published?: boolean
+          starts_on?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+          vendor?: string
+        }
+        Relationships: []
+      }
       jobs: {
         Row: {
           apply_url: string
