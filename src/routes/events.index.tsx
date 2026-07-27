@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { MapPin, CalendarDays, Ticket, ArrowRight } from "lucide-react";
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { Pager, paginate } from "@/components/site/Pager";
 import { Button } from "@/components/ui/button";
 import { events } from "@/data/events";
 
@@ -12,7 +14,16 @@ const title = "Affiliate marketing events calendar — AffiliateX";
 const description =
   "Every affiliate marketing conference, meetup and webinar we're tracking, with dates, locations and ticket prices. Updated weekly.";
 
+type EventsSearch = { q: string; format: string; place: string; free: boolean; page: number };
+
 export const Route = createFileRoute("/events/")({
+  validateSearch: (search: Record<string, unknown>): EventsSearch => ({
+    q: typeof search.q === "string" ? search.q : "",
+    format: typeof search.format === "string" ? search.format : "All",
+    place: typeof search.place === "string" ? search.place : "All",
+    free: search.free === true || search.free === "true",
+    page: Number(search.page) > 0 ? Math.floor(Number(search.page)) : 1,
+  }),
   head: () => ({
     meta: [
       { title },
@@ -47,9 +58,10 @@ const formats = ["All", "Conference", "Meetup", "Webinar", "Summit"] as const;
 const places = ["All", "Online", "In person"] as const;
 
 function EventsPage() {
-  const [format, setFormat] = useState<(typeof formats)[number]>("All");
-  const [place, setPlace] = useState<(typeof places)[number]>("All");
-  const [freeOnly, setFreeOnly] = useState(false);
+  const { q, format, place, free: freeOnly, page } = Route.useSearch();
+  const navigate = useNavigate({ from: "/events" });
+  const setSearch = (next: Partial<EventsSearch>) =>
+    navigate({ search: (prev: EventsSearch) => ({ ...prev, page: 1, ...next }) });
 
   const filtered = useMemo(
     () =>
@@ -58,10 +70,17 @@ function EventsPage() {
         if (place === "Online" && e.location !== "Online") return false;
         if (place === "In person" && e.location === "Online") return false;
         if (freeOnly && e.price.toLowerCase() !== "free") return false;
+        if (q.trim()) {
+          const needle = q.trim().toLowerCase();
+          const haystack = `${e.name} ${e.location} ${e.format} ${e.description}`.toLowerCase();
+          if (!haystack.includes(needle)) return false;
+        }
         return true;
       }),
-    [format, place, freeOnly],
+    [format, place, freeOnly, q],
   );
+
+  const paged = paginate(filtered, page);
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,7 +88,8 @@ function EventsPage() {
       <main>
         <section className="border-b border-border bg-surface py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-4">
-            <h1 className="font-display text-4xl font-bold sm:text-5xl">
+            <Breadcrumbs items={[{ label: "Events" }]} />
+            <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Affiliate events calendar
             </h1>
             <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -79,6 +99,12 @@ function EventsPage() {
             <p className="mt-4 text-sm">
               <Link to="/submit" className="font-medium text-primary hover:underline">
                 Submit an event →
+              </Link>
+              <Link to="/jobs" className="ml-6 font-medium text-primary hover:underline">
+                Browse jobs →
+              </Link>
+              <Link to="/deals" className="ml-6 font-medium text-primary hover:underline">
+                See deals →
               </Link>
             </p>
           </div>
@@ -93,7 +119,7 @@ function EventsPage() {
                   type="button"
                   size="sm"
                   variant={format === f ? "default" : "outline"}
-                  onClick={() => setFormat(f)}
+                  onClick={() => setSearch({ format: f })}
                 >
                   {f}
                 </Button>
@@ -105,7 +131,7 @@ function EventsPage() {
                   type="button"
                   size="sm"
                   variant={place === p ? "secondary" : "ghost"}
-                  onClick={() => setPlace(p)}
+                  onClick={() => setSearch({ place: p })}
                 >
                   {p}
                 </Button>
@@ -114,18 +140,30 @@ function EventsPage() {
                 type="button"
                 size="sm"
                 variant={freeOnly ? "secondary" : "ghost"}
-                onClick={() => setFreeOnly((v) => !v)}
+                onClick={() => setSearch({ free: !freeOnly })}
               >
                 Free only
               </Button>
             </div>
 
+            <label className="mt-4 block">
+              <span className="sr-only">Search events by name, location or format</span>
+              <input
+                type="search"
+                value={q}
+                onChange={(e) => setSearch({ q: e.target.value })}
+                placeholder="Search events by name, location or format"
+                className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm outline-none ring-primary/30 focus:ring-2"
+              />
+            </label>
+
             <p className="mt-4 text-sm text-muted-foreground">
-              Showing {filtered.length} of {events.length} events
+              Showing {paged.items.length ? paged.start + 1 : 0}–{paged.end} of {filtered.length}{" "}
+              events
             </p>
 
             <ul className="mt-4 divide-y divide-border rounded-xl border border-border bg-card shadow-card">
-              {filtered.map((event) => (
+              {paged.items.map((event) => (
                 <li
                   key={event.id}
                   className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-6"
@@ -183,6 +221,15 @@ function EventsPage() {
                 No events match those filters yet.
               </p>
             ) : null}
+
+            <Pager
+              page={paged.page}
+              totalPages={paged.totalPages}
+              onPageChange={(p) =>
+                navigate({ search: (prev: EventsSearch) => ({ ...prev, page: p }) })
+              }
+              label="Events pagination"
+            />
 
             <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-center">
               <h2 className="font-display text-xl font-semibold">
