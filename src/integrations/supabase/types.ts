@@ -14,6 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      sponsor_enquiries: {
+        Row: {
+          budget: string | null
+          company: string
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          website: string | null
+        }
+        Insert: {
+          budget?: string | null
+          company: string
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          website?: string | null
+        }
+        Update: {
+          budget?: string | null
+          company?: string
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      submissions: {
+        Row: {
+          created_at: string
+          details: string | null
+          happens_on: string | null
+          id: string
+          kind: string
+          location: string | null
+          organisation: string | null
+          submitter_email: string
+          submitter_name: string
+          title: string
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          happens_on?: string | null
+          id?: string
+          kind: string
+          location?: string | null
+          organisation?: string | null
+          submitter_email: string
+          submitter_name: string
+          title: string
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          happens_on?: string | null
+          id?: string
+          kind?: string
+          location?: string | null
+          organisation?: string | null
+          submitter_email?: string
+          submitter_name?: string
+          title?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       subscribers: {
         Row: {
           created_at: string
