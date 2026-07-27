@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 const title = "Sponsor The Affiliate Week — reach affiliate marketers weekly";
 const description =
-  "Advertise to affiliates, media buyers and partnership managers in the The Affiliate Week weekly newsletter. Placements, audience profile and how to book.";
+  "Advertise to affiliates, media buyers and partnership managers in The Affiliate Week weekly newsletter. Placements, audience profile and how to book.";
 
 export const Route = createFileRoute("/sponsor")({
   head: () => ({

@@ -31,7 +31,7 @@ const sections = [
   },
   {
     h: "Why we collect it",
-    p: "Your email is used to send you the The Affiliate Week newsletter and, where relevant, to reply to a submission or sponsorship enquiry you sent us. Our lawful basis is your consent, given when you submit the form.",
+    p: "Your email is used to send you The Affiliate Week newsletter and, where relevant, to reply to a submission or sponsorship enquiry you sent us. Our lawful basis is your consent, given when you submit the form.",
   },
   {
     h: "What we never do",

@@ -14,7 +14,7 @@ export const Route = createFileRoute("/issues/$slug")({
       : "Issue not found — The Affiliate Week newsletter";
     const description =
       issue?.summary ??
-      "This The Affiliate Week issue could not be found. Browse the archive for every published issue.";
+      "This issue of The Affiliate Week could not be found. Browse the archive for every published issue.";
     return {
       meta: [
         { title },

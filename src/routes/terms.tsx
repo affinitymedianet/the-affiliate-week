@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
 const title = "Terms of use — The Affiliate Week newsletter";
 const description =
-  "The terms covering use of the The Affiliate Week website, newsletter subscriptions, editorial listings and sponsored placements.";
+  "The terms covering use of The Affiliate Week website, newsletter subscriptions, editorial listings and sponsored placements.";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
