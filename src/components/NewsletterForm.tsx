@@ -17,7 +17,9 @@ const emailSchema = z
 type Props = {
   source: "hero" | "footer" | "cta";
   className?: string;
-  variant?: "light" | "dark";
+  variant?: "light" | "dark" | "band";
+  layout?: "inline" | "stacked";
+  hideNote?: boolean;
   buttonLabel?: string;
 };
 
@@ -25,6 +27,8 @@ export function NewsletterForm({
   source,
   className,
   variant = "light",
+  layout = "inline",
+  hideNote = false,
   buttonLabel = "Subscribe",
 }: Props) {
   const [email, setEmail] = useState("");
@@ -63,7 +67,10 @@ export function NewsletterForm({
 
   return (
     <div className={cn("w-full", className)}>
-      <form onSubmit={handleSubmit} className="flex w-full flex-col gap-2 sm:flex-row">
+      <form onSubmit={handleSubmit} className={cn(
+          "flex w-full flex-col gap-2",
+          layout === "inline" && "sm:flex-row",
+        )}>
         <label htmlFor={`email-${source}`} className="sr-only">
           Email address
         </label>
@@ -77,12 +84,23 @@ export function NewsletterForm({
           maxLength={255}
           onChange={(e) => setEmail(e.target.value)}
           className={cn(
-            "h-11 flex-1 rounded-md",
+            "h-12 flex-1 rounded-md",
             variant === "dark" &&
               "border-navy-foreground/20 bg-navy-foreground/10 text-navy-foreground placeholder:text-navy-foreground/50",
+            variant === "band" &&
+              "border-transparent bg-background text-foreground placeholder:text-muted-foreground",
           )}
         />
-        <Button type="submit" size="lg" className="h-11 shrink-0" disabled={status === "loading"}>
+        <Button
+          type="submit"
+          size="lg"
+          className={cn(
+            "h-12 shrink-0",
+            variant === "band" &&
+              "w-full bg-navy-deep text-navy-foreground hover:bg-navy font-semibold",
+          )}
+          disabled={status === "loading"}
+        >
           {status === "loading" ? <Loader2 className="size-4 animate-spin" /> : buttonLabel}
         </Button>
       </form>
@@ -92,18 +110,18 @@ export function NewsletterForm({
             "mt-2 text-sm",
             isError
               ? "text-destructive"
-              : variant === "dark"
-                ? "text-navy-foreground/80"
-                : "text-muted-foreground",
+              : variant === "light"
+                ? "text-muted-foreground"
+                : "text-navy-foreground/80",
           )}
         >
           {message}
         </p>
-      ) : (
+      ) : hideNote ? null : (
         <p
           className={cn(
             "mt-2 text-xs",
-            variant === "dark" ? "text-navy-foreground/60" : "text-muted-foreground",
+            variant === "light" ? "text-muted-foreground" : "text-navy-foreground/60",
           )}
         >
           One email every Thursday. By subscribing you agree we can email you the newsletter —
