@@ -21,6 +21,7 @@ import { Route as DealsIndexRouteImport } from './routes/deals.index'
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as IssuesSlugRouteImport } from './routes/issues.$slug'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
+import { Route as DealsDealIdRouteImport } from './routes/deals.$dealId'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -82,6 +83,11 @@ const EventsEventIdRoute = EventsEventIdRouteImport.update({
   path: '/events/$eventId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DealsDealIdRoute = DealsDealIdRouteImport.update({
+  id: '/deals/$dealId',
+  path: '/deals/$dealId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/deals/$dealId'
     | '/events/$eventId'
     | '/issues/$slug'
     | '/jobs/$jobId'
@@ -149,6 +159,7 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/deals/$dealId'
     | '/events/$eventId'
     | '/issues/$slug'
     | '/jobs/$jobId'
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/deals/$dealId'
     | '/events/$eventId'
     | '/issues/$slug'
     | '/jobs/$jobId'
@@ -178,6 +190,7 @@ export interface RootRouteChildren {
   SponsorRoute: typeof SponsorRoute
   SubmitRoute: typeof SubmitRoute
   TermsRoute: typeof TermsRoute
+  DealsDealIdRoute: typeof DealsDealIdRoute
   EventsEventIdRoute: typeof EventsEventIdRoute
   IssuesSlugRoute: typeof IssuesSlugRoute
   JobsJobIdRoute: typeof JobsJobIdRoute
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsEventIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/deals/$dealId': {
+      id: '/deals/$dealId'
+      path: '/deals/$dealId'
+      fullPath: '/deals/$dealId'
+      preLoaderRoute: typeof DealsDealIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -282,6 +302,7 @@ const rootRouteChildren: RootRouteChildren = {
   SponsorRoute: SponsorRoute,
   SubmitRoute: SubmitRoute,
   TermsRoute: TermsRoute,
+  DealsDealIdRoute: DealsDealIdRoute,
   EventsEventIdRoute: EventsEventIdRoute,
   IssuesSlugRoute: IssuesSlugRoute,
   JobsJobIdRoute: JobsJobIdRoute,
