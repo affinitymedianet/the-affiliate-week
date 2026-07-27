@@ -5,10 +5,11 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const links = [
-  { label: "Newsletter", to: "/", hash: "newsletter" },
-  { label: "Events", to: "/events" },
-  { label: "What's inside", to: "/", hash: "inside" },
-  { label: "FAQ", to: "/", hash: "faq" },
+  { label: "Archive", to: "/archive" as const },
+  { label: "Events", to: "/events" as const },
+  { label: "Submit", to: "/submit" as const },
+  { label: "Sponsor", to: "/sponsor" as const },
+  { label: "FAQ", to: "/" as const, hash: "faq" },
 ];
 
 export function SiteHeader() {
