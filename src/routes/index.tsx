@@ -67,8 +67,6 @@ function Index() {
         <WhatsInside />
         <EditorNote />
         <Faq />
-        <ClosingCta />
-
       </main>
       <SiteFooter />
       <StickySubscribeBar />
