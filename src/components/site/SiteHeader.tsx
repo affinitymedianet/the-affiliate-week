@@ -10,7 +10,6 @@ const links = [
   { label: "Jobs", to: "/jobs" as const },
   { label: "Deals", to: "/deals" as const },
   { label: "Events", to: "/events" as const },
-  { label: "Submit", to: "/submit" as const },
   { label: "Sponsor", to: "/sponsor" as const },
   { label: "FAQ", to: "/" as const, hash: "faq" },
 ];
