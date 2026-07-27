@@ -73,7 +73,7 @@ function DealsPage() {
   const navigate = useNavigate({ from: "/deals" });
 
   const setSearch = (next: Partial<DealsSearch>) =>
-    navigate({ search: (prev) => ({ ...prev, page: 1, ...next }) });
+    navigate({ search: (prev: DealsSearch) => ({ ...prev, page: 1, ...next }) });
 
   const filtered = useMemo(
     () =>
@@ -207,7 +207,7 @@ function DealsPage() {
             <Pager
               page={paged.page}
               totalPages={paged.totalPages}
-              onPageChange={(p) => navigate({ search: (prev) => ({ ...prev, page: p }) })}
+              onPageChange={(p) => navigate({ search: (prev: DealsSearch) => ({ ...prev, page: p }) })}
               label="Deals pagination"
             />
 
