@@ -18,6 +18,7 @@ import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as IssuesSlugRouteImport } from './routes/issues.$slug'
+import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -64,6 +65,11 @@ const IssuesSlugRoute = IssuesSlugRouteImport.update({
   path: '/issues/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsEventIdRoute = EventsEventIdRouteImport.update({
+  id: '/$eventId',
+  path: '/$eventId',
+  getParentRoute: () => EventsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
   '/events/': typeof EventsIndexRoute
 }
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
   '/events': typeof EventsIndexRoute
 }
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
   '/events/': typeof EventsIndexRoute
 }
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/events/$eventId'
     | '/issues/$slug'
     | '/events/'
   fileRoutesByTo: FileRoutesByTo
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/events/$eventId'
     | '/issues/$slug'
     | '/events'
   id:
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/events/$eventId'
     | '/issues/$slug'
     | '/events/'
   fileRoutesById: FileRoutesById
@@ -209,14 +221,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IssuesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/events/$eventId': {
+      id: '/events/$eventId'
+      path: '/$eventId'
+      fullPath: '/events/$eventId'
+      preLoaderRoute: typeof EventsEventIdRouteImport
+      parentRoute: typeof EventsRoute
+    }
   }
 }
 
 interface EventsRouteChildren {
+  EventsEventIdRoute: typeof EventsEventIdRoute
   EventsIndexRoute: typeof EventsIndexRoute
 }
 
 const EventsRouteChildren: EventsRouteChildren = {
+  EventsEventIdRoute: EventsEventIdRoute,
   EventsIndexRoute: EventsIndexRoute,
 }
 
