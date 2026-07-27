@@ -90,8 +90,12 @@
   --navy: oklch(0.26 0.055 258);
   --navy-foreground: oklch(0.98 0.005 258);
   --navy-deep: oklch(0.19 0.05 258);
-  --surface: oklch(0.972 0.004 258);
+  --surface: oklch(0.975 0.006 92);
   --surface-foreground: oklch(0.24 0.045 258);
+  --signal: oklch(0.66 0.17 48);
+  --signal-foreground: oklch(0.18 0.04 48);
+  --rule: oklch(0.86 0.014 258);
+
   --chart-1: oklch(0.52 0.17 258);
   --chart-2: oklch(0.62 0.13 232);
   --chart-3: oklch(0.4 0.09 258);
@@ -132,6 +136,10 @@
   --navy-deep: oklch(0.15 0.04 258);
   --surface: oklch(0.2 0.048 258);
   --surface-foreground: oklch(0.98 0.005 258);
+  --signal: oklch(0.75 0.15 55);
+  --signal-foreground: oklch(0.18 0.04 48);
+  --rule: oklch(1 0 0 / 16%);
+
   --chart-1: oklch(0.66 0.16 255);
   --chart-2: oklch(0.72 0.12 232);
   --chart-3: oklch(0.55 0.11 258);
