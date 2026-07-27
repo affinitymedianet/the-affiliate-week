@@ -11,8 +11,8 @@ export const Route = createFileRoute("/events/$eventId")({
   head: ({ params }) => {
     const event = events.find((e) => e.id === params.eventId);
     const title = event
-      ? `${event.name} — ${event.date}, ${event.location} | AffiliateX`
-      : "Event not found — AffiliateX";
+      ? `${event.name} — ${event.date}, ${event.location} | The Affiliate Week`
+      : "Event not found — The Affiliate Week";
     const description =
       event?.description ??
       "This event could not be found. Browse the full affiliate events calendar.";

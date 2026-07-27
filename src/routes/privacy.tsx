@@ -4,9 +4,9 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
-const title = "Privacy policy — AffiliateX newsletter";
+const title = "Privacy policy — The Affiliate Week newsletter";
 const description =
-  "How AffiliateX collects, stores and uses your email address, what we never do with it, and how to unsubscribe or request deletion.";
+  "How The Affiliate Week collects, stores and uses your email address, what we never do with it, and how to unsubscribe or request deletion.";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -31,7 +31,7 @@ const sections = [
   },
   {
     h: "Why we collect it",
-    p: "Your email is used to send you the AffiliateX newsletter and, where relevant, to reply to a submission or sponsorship enquiry you sent us. Our lawful basis is your consent, given when you submit the form.",
+    p: "Your email is used to send you The Affiliate Week newsletter and, where relevant, to reply to a submission or sponsorship enquiry you sent us. Our lawful basis is your consent, given when you submit the form.",
   },
   {
     h: "What we never do",
@@ -47,7 +47,7 @@ const sections = [
   },
   {
     h: "Your rights",
-    p: "You can unsubscribe with the one-click link in any issue. You can also ask us to confirm what we hold about you, correct it, or delete it entirely — email hello@affiliatex.co and we will action it within 30 days.",
+    p: "You can unsubscribe with the one-click link in any issue. You can also ask us to confirm what we hold about you, correct it, or delete it entirely — email hello@theaffiliateweek.com and we will action it within 30 days.",
   },
   {
     h: "Cookies",
@@ -55,7 +55,7 @@ const sections = [
   },
   {
     h: "Contact",
-    p: "Questions about this policy: hello@affiliatex.co. Add your registered postal address here before sending your first issue — bulk email law in most territories requires it.",
+    p: "Questions about this policy: hello@theaffiliateweek.com. Add your registered postal address here before sending your first issue — bulk email law in most territories requires it.",
   },
 ];
 
@@ -68,7 +68,7 @@ function PrivacyPage() {
           <Breadcrumbs items={[{ label: "Privacy policy" }]} />
           <h1 className="mt-4 font-display text-4xl font-bold">Privacy policy</h1>
           <p className="mt-3 text-sm text-muted-foreground">
-            This is a working policy for AffiliateX. Have it reviewed against your jurisdiction
+            This is a working policy for The Affiliate Week. Have it reviewed against your jurisdiction
             before launch.
           </p>
           <div className="mt-10 space-y-8">

@@ -27,11 +27,11 @@ export const Route = createFileRoute("/jobs/$jobId")({
   head: ({ loaderData, params }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Job unavailable — AffiliateX" }, { name: "robots", content: "noindex" }],
+        meta: [{ title: "Job unavailable — The Affiliate Week" }, { name: "robots", content: "noindex" }],
       };
     }
     const { job } = loaderData;
-    const title = `${job.title} at ${job.company} — ${job.location} | AffiliateX`;
+    const title = `${job.title} at ${job.company} — ${job.location} | The Affiliate Week`;
     return {
       meta: [
         { title },

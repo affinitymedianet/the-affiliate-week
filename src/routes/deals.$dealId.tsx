@@ -27,11 +27,11 @@ export const Route = createFileRoute("/deals/$dealId")({
   head: ({ loaderData, params }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Deal unavailable — AffiliateX" }, { name: "robots", content: "noindex" }],
+        meta: [{ title: "Deal unavailable — The Affiliate Week" }, { name: "robots", content: "noindex" }],
       };
     }
     const { deal } = loaderData;
-    const title = `${deal.title} — ${deal.vendor} deal | AffiliateX`;
+    const title = `${deal.title} — ${deal.vendor} deal | The Affiliate Week`;
     return {
       meta: [
         { title },

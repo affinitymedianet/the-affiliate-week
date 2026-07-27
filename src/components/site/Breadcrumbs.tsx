@@ -7,7 +7,7 @@ export type Crumb = {
   href?: string;
 };
 
-const SITE = "https://affiliatex.co";
+const SITE = "https://theaffiliateweek.com";
 
 /**
  * Breadcrumb trail + BreadcrumbList structured data.

@@ -10,11 +10,11 @@ export const Route = createFileRoute("/issues/$slug")({
   head: ({ params }) => {
     const issue = issues.find((i) => i.slug === params.slug);
     const title = issue
-      ? `${issue.title} — AffiliateX`
-      : "Issue not found — AffiliateX newsletter";
+      ? `${issue.title} — The Affiliate Week`
+      : "Issue not found — The Affiliate Week newsletter";
     const description =
       issue?.summary ??
-      "This AffiliateX issue could not be found. Browse the archive for every published issue.";
+      "This issue of The Affiliate Week could not be found. Browse the archive for every published issue.";
     return {
       meta: [
         { title },
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/issues/$slug")({
                 headline: issue.title,
                 datePublished: issue.isoDate,
                 description: issue.summary,
-                author: { "@type": "Organization", name: "AffiliateX" },
+                author: { "@type": "Organization", name: "The Affiliate Week" },
               }),
             },
           ]
@@ -85,7 +85,7 @@ function IssuePage() {
 
           <header className="mt-6 border-y border-rule py-6">
             <p className="font-display text-xs font-semibold uppercase tracking-[0.22em] text-signal">
-              AffiliateX · Issue #{issue.number}
+              The Affiliate Week · Issue #{issue.number}
             </p>
             <h1 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
               {issue.title}

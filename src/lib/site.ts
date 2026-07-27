@@ -1,3 +1,3 @@
-export const SITE_NAME = "AffiliateX";
-export const SITE_URL = "https://affiliatex.co";
-export const CONTACT_EMAIL = "hello@affiliatex.co";
+export const SITE_NAME = "The Affiliate Week";
+export const SITE_URL = "https://theaffiliateweek.com";
+export const CONTACT_EMAIL = "hello@theaffiliateweek.com";

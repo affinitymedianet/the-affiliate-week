@@ -12,9 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-const title = "Sponsor AffiliateX — reach affiliate marketers weekly";
+const title = "Sponsor The Affiliate Week — reach affiliate marketers weekly";
 const description =
-  "Advertise to affiliates, media buyers and partnership managers in the AffiliateX weekly newsletter. Placements, audience profile and how to book.";
+  "Advertise to affiliates, media buyers and partnership managers in The Affiliate Week weekly newsletter. Placements, audience profile and how to book.";
 
 export const Route = createFileRoute("/sponsor")({
   head: () => ({
@@ -82,7 +82,7 @@ function SponsorPage() {
     const { error: insertError } = await supabase.from("sponsor_enquiries").insert(parsed.data);
     if (insertError) {
       setStatus("idle");
-      setError("Something went wrong. Please email partners@affiliatex.co instead.");
+      setError("Something went wrong. Please email partners@theaffiliateweek.com instead.");
       return;
     }
     setStatus("done");
@@ -99,7 +99,7 @@ function SponsorPage() {
               Sponsor the newsletter
             </h1>
             <p className="mt-4 max-w-2xl text-muted-foreground">
-              AffiliateX goes to people who buy media, run programmes and choose networks — a
+              The Affiliate Week goes to people who buy media, run programmes and choose networks — a
               small, specific audience rather than a large general one.
             </p>
           </div>

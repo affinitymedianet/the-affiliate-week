@@ -10,7 +10,7 @@ import { Pager, paginate } from "@/components/site/Pager";
 import { Button } from "@/components/ui/button";
 import { events, type AffiliateEvent } from "@/data/events";
 
-const title = "Affiliate marketing events calendar — AffiliateX";
+const title = "Affiliate marketing events calendar — The Affiliate Week";
 const description =
   "Every affiliate marketing conference, meetup and webinar we're tracking, with dates, locations and ticket prices. Updated weekly.";
 
