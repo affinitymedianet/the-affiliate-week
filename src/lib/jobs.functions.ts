@@ -99,6 +99,9 @@ export const listJobs = createServerFn({ method: "GET" }).handler(async (): Prom
 export const getJob = createServerFn({ method: "GET" })
   .inputValidator((data: { id: string }) => data)
   .handler(async ({ data }): Promise<JobListing | null> => {
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.id);
+    if (!isUuid) return null;
     const supabase = getPublicClient();
     const { data: row, error } = await supabase
       .from("jobs")
