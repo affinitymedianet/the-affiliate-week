@@ -11,9 +11,9 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 import { Button } from "@/components/ui/button";
 import { listDeals } from "@/lib/deals.functions";
 
-const title = "Exclusive affiliate marketing deals — software, tools & proxies | AffiliateX";
+const title = "Exclusive affiliate marketing deals — software, tools & proxies | The Affiliate Week";
 const description =
-  "Hand-checked discounts on affiliate software, SEO tools, proxies, trackers and hosting. Exclusive codes for AffiliateX readers, updated weekly.";
+  "Hand-checked discounts on affiliate software, SEO tools, proxies, trackers and hosting. Exclusive codes for The Affiliate Week readers, updated weekly.";
 
 const dealsQueryOptions = queryOptions({
   queryKey: ["deals"],

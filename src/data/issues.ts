@@ -22,7 +22,7 @@ export const sampleIssue: Issue = {
   isoDate: "2026-08-06",
   readingTime: "5 min read",
   summary:
-    "A representative issue of AffiliateX: the week's industry news, new programmes worth testing, open affiliate roles, and the events on the calendar.",
+    "A representative issue of The Affiliate Week: the week's industry news, new programmes worth testing, open affiliate roles, and the events on the calendar.",
   sections: [
     {
       heading: "Industry news",

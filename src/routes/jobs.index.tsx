@@ -11,7 +11,7 @@ import { Pager, paginate } from "@/components/site/Pager";
 import { Button } from "@/components/ui/button";
 import { listJobs } from "@/lib/jobs.functions";
 
-const title = "Affiliate marketing jobs board — AffiliateX";
+const title = "Affiliate marketing jobs board — The Affiliate Week";
 const description =
   "Open affiliate marketing, partnerships and performance roles — remote, hybrid and onsite. Apply directly with the employer. Updated weekly.";
 

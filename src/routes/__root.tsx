@@ -77,13 +77,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AffiliateX — The weekly affiliate marketing newsletter" },
+      { title: "The Affiliate Week — The weekly affiliate marketing newsletter" },
       {
         name: "description",
         content:
           "A free weekly email for affiliate marketers: industry news, offers, jobs and events.",
       },
-      { property: "og:site_name", content: "AffiliateX" },
+      { property: "og:site_name", content: "The Affiliate Week" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

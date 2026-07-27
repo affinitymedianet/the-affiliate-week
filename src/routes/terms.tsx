@@ -4,9 +4,9 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
-const title = "Terms of use — AffiliateX newsletter";
+const title = "Terms of use — The Affiliate Week newsletter";
 const description =
-  "The terms covering use of the AffiliateX website, newsletter subscriptions, editorial listings and sponsored placements.";
+  "The terms covering use of the The Affiliate Week website, newsletter subscriptions, editorial listings and sponsored placements.";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/terms")({
 const sections = [
   {
     h: "The newsletter",
-    p: "AffiliateX is a free weekly email. We aim to send it every Thursday but make no guarantee of frequency, and we may pause or discontinue it at any time.",
+    p: "The Affiliate Week is a free weekly email. We aim to send it every Thursday but make no guarantee of frequency, and we may pause or discontinue it at any time.",
   },
   {
     h: "No advice",
@@ -51,7 +51,7 @@ const sections = [
   },
   {
     h: "Changes and contact",
-    p: "We may update these terms; the current version always lives on this page. Questions: hello@affiliatex.co.",
+    p: "We may update these terms; the current version always lives on this page. Questions: hello@theaffiliateweek.com.",
   },
 ];
 
@@ -64,7 +64,7 @@ function TermsPage() {
           <Breadcrumbs items={[{ label: "Terms of use" }]} />
           <h1 className="mt-4 font-display text-4xl font-bold">Terms of use</h1>
           <p className="mt-3 text-sm text-muted-foreground">
-            Working terms for AffiliateX. Have them reviewed before launch.
+            Working terms for The Affiliate Week. Have them reviewed before launch.
           </p>
           <div className="mt-10 space-y-8">
             {sections.map((s) => (

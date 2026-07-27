@@ -9,9 +9,9 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Pager, paginate } from "@/components/site/Pager";
 import { issues } from "@/data/issues";
 
-const title = "AffiliateX newsletter archive — read past issues";
+const title = "The Affiliate Week newsletter archive — read past issues";
 const description =
-  "Read AffiliateX issues in full before you subscribe: affiliate industry news, new programmes, jobs and events, published every Thursday.";
+  "Read The Affiliate Week issues in full before you subscribe: affiliate industry news, new programmes, jobs and events, published every Thursday.";
 
 type ArchiveSearch = { q: string; page: number };
 

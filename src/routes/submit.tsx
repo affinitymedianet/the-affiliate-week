@@ -12,9 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-const title = "Submit an affiliate event, job or offer — AffiliateX";
+const title = "Submit an affiliate event, job or offer — The Affiliate Week";
 const description =
-  "Tell us about an affiliate marketing event, job opening or new programme and we'll consider it for an upcoming issue of AffiliateX. Free editorial listings.";
+  "Tell us about an affiliate marketing event, job opening or new programme and we'll consider it for an upcoming issue of The Affiliate Week. Free editorial listings.";
 
 export const Route = createFileRoute("/submit")({
   head: () => ({
@@ -80,7 +80,7 @@ function SubmitPage() {
     const { error: insertError } = await supabase.from("submissions").insert(parsed.data);
     if (insertError) {
       setStatus("idle");
-      setError("Something went wrong. Please try again or email hello@affiliatex.co.");
+      setError("Something went wrong. Please try again or email hello@theaffiliateweek.com.");
       return;
     }
     setStatus("done");

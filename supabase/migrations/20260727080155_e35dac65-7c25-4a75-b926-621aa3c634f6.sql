@@ -61,7 +61,7 @@ INSERT INTO public.jobs (title, company, location, work_type, employment_type, s
  'Entry-level route into affiliate marketing with a large retail group.',
  E'A great first or second role in affiliate marketing.\n\nDay to day you will:\n- Handle partner queries and application approvals\n- Load offers, creatives and deals into the network\n- Prepare monthly performance reports\n- Support the Affiliate Manager on partner outreach\n\nNo agency experience required, but you should be numerate, organised and genuinely interested in performance marketing.',
  'https://example.com/jobs/affiliate-programme-executive', current_date - 12, false),
-('Freelance Affiliate Consultant', 'Various clients (via AffiliateX)', 'Remote (Worldwide)', 'Remote', 'Contract', '$500 – $900 / day',
+('Freelance Affiliate Consultant', 'Various clients (via The Affiliate Week)', 'Remote (Worldwide)', 'Remote', 'Contract', '$500 – $900 / day',
  'Short engagements auditing and relaunching affiliate programmes.',
  E'We regularly hear from brands looking for a consultant to audit an underperforming affiliate programme.\n\nTypical engagements:\n- Two to six weeks\n- Programme audit, partner mix review and commission redesign\n- Handover documentation and a 90-day plan\n\nYou need a track record of running programmes at scale and references we can check.',
  'https://example.com/jobs/freelance-affiliate-consultant', current_date - 14, false),

@@ -13,7 +13,7 @@ import { ClosingCta } from "@/components/landing/ClosingCta";
 import { SITE_URL } from "@/lib/site";
 
 
-const title = "AffiliateX — The weekly affiliate marketing newsletter";
+const title = "The Affiliate Week — The weekly affiliate marketing newsletter";
 const description =
   "A free weekly email for affiliate marketers: industry news, new offers, affiliate jobs and the events worth attending. Every Thursday.";
 
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "AffiliateX",
+          name: "The Affiliate Week",
           url: SITE_URL,
           description,
         }),

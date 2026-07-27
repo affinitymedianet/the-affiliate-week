@@ -7,7 +7,7 @@ import {
 
 export const faqs = [
   {
-    q: "What exactly is AffiliateX?",
+    q: "What exactly is The Affiliate Week?",
     a: "A weekly email newsletter for people working in affiliate marketing. Each issue covers industry news, new offers and programmes, affiliate jobs, and upcoming events.",
   },
   {
@@ -16,7 +16,7 @@ export const faqs = [
   },
   {
     q: "Is it free?",
-    a: "Yes. AffiliateX is completely free to read. It's supported by the occasional clearly-marked sponsor.",
+    a: "Yes. The Affiliate Week is completely free to read. It's supported by the occasional clearly-marked sponsor.",
   },
   {
     q: "Who is it for?",
@@ -24,7 +24,7 @@ export const faqs = [
   },
   {
     q: "Can I submit an event, job or offer?",
-    a: "Yes. Email hello@affiliatex.co with the details and we'll consider it for an upcoming issue. Listings are editorial, not paid placements.",
+    a: "Yes. Email hello@theaffiliateweek.com with the details and we'll consider it for an upcoming issue. Listings are editorial, not paid placements.",
   },
   {
     q: "How do I unsubscribe?",
