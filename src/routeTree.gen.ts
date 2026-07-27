@@ -17,6 +17,7 @@ import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
+import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as IssuesSlugRouteImport } from './routes/issues.$slug'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
 
@@ -60,6 +61,11 @@ const EventsIndexRoute = EventsIndexRouteImport.update({
   path: '/events/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JobsJobIdRoute = JobsJobIdRouteImport.update({
+  id: '/jobs/$jobId',
+  path: '/jobs/$jobId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IssuesSlugRoute = IssuesSlugRouteImport.update({
   id: '/issues/$slug',
   path: '/issues/$slug',
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
+  '/jobs/$jobId': typeof JobsJobIdRoute
   '/events/': typeof EventsIndexRoute
   '/jobs/': typeof JobsIndexRoute
 }
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
+  '/jobs/$jobId': typeof JobsJobIdRoute
   '/events': typeof EventsIndexRoute
   '/jobs': typeof JobsIndexRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
+  '/jobs/$jobId': typeof JobsJobIdRoute
   '/events/': typeof EventsIndexRoute
   '/jobs/': typeof JobsIndexRoute
 }
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/events/$eventId'
     | '/issues/$slug'
+    | '/jobs/$jobId'
     | '/events/'
     | '/jobs/'
   fileRoutesByTo: FileRoutesByTo
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/events/$eventId'
     | '/issues/$slug'
+    | '/jobs/$jobId'
     | '/events'
     | '/jobs'
   id:
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/events/$eventId'
     | '/issues/$slug'
+    | '/jobs/$jobId'
     | '/events/'
     | '/jobs/'
   fileRoutesById: FileRoutesById
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   EventsEventIdRoute: typeof EventsEventIdRoute
   IssuesSlugRoute: typeof IssuesSlugRoute
+  JobsJobIdRoute: typeof JobsJobIdRoute
   EventsIndexRoute: typeof EventsIndexRoute
   JobsIndexRoute: typeof JobsIndexRoute
 }
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jobs/$jobId': {
+      id: '/jobs/$jobId'
+      path: '/jobs/$jobId'
+      fullPath: '/jobs/$jobId'
+      preLoaderRoute: typeof JobsJobIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/issues/$slug': {
       id: '/issues/$slug'
       path: '/issues/$slug'
@@ -244,6 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   EventsEventIdRoute: EventsEventIdRoute,
   IssuesSlugRoute: IssuesSlugRoute,
+  JobsJobIdRoute: JobsJobIdRoute,
   EventsIndexRoute: EventsIndexRoute,
   JobsIndexRoute: JobsIndexRoute,
 }
