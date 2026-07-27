@@ -1,4 +1,7 @@
-import heroImage from "@/assets/hero-dashboard.jpg";
+import heroPreview from "@/assets/hero-dashboard.jpg";
+import { Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
+
 import { NewsletterForm } from "@/components/NewsletterForm";
 
 export function Hero() {
@@ -23,37 +26,38 @@ export function Hero() {
             <NewsletterForm source="hero" buttonLabel="Subscribe free" />
           </div>
 
-          <div className="mt-7 flex items-center gap-3">
-            <div className="flex -space-x-2">
-              {["JD", "MK", "SR", "AL"].map((initials) => (
-                <span
-                  key={initials}
-                  className="flex size-8 items-center justify-center rounded-full border-2 border-surface bg-navy text-[11px] font-semibold text-navy-foreground"
-                >
-                  {initials}
-                </span>
-              ))}
-            </div>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+            <Link
+              to="/issues/$slug"
+              params={{ slug: "sample-issue" }}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              Read a sample issue first <ArrowRight className="size-4" />
+            </Link>
             <p className="text-sm text-muted-foreground">
-              Joined by <span className="font-semibold text-foreground">5,200+</span> affiliates,
-              media buyers and partnership managers
+              Issue #1 ships soon — be one of the first readers.
             </p>
           </div>
         </div>
 
         <div className="relative">
           <div className="overflow-hidden rounded-xl border border-border bg-card shadow-lift">
+            <div className="flex items-center justify-between border-b border-border bg-background px-4 py-3">
+              <span className="font-display text-sm font-semibold">AffiliateX · Issue #1</span>
+              <span className="text-xs text-muted-foreground">Thursday, 7:00am</span>
+            </div>
             <img
-              src={heroImage}
-              alt="Affiliate marketing performance dashboard on a laptop"
+              src={heroPreview}
+              alt="Preview of the AffiliateX weekly newsletter issue"
               width={1280}
               height={960}
+              loading="eager"
               className="h-full w-full object-cover"
             />
           </div>
           <div className="absolute -bottom-4 left-4 rounded-lg border border-border bg-background px-4 py-3 shadow-card">
-            <p className="font-display text-xl font-bold">Issue #148</p>
-            <p className="text-xs text-muted-foreground">Out this Thursday</p>
+            <p className="font-display text-xl font-bold">5 min read</p>
+            <p className="text-xs text-muted-foreground">News · Offers · Jobs · Events</p>
           </div>
         </div>
       </div>

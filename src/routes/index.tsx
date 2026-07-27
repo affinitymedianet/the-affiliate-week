@@ -6,7 +6,8 @@ import { Hero } from "@/components/landing/Hero";
 import { WhatsInside } from "@/components/landing/WhatsInside";
 import { EventsPreview } from "@/components/landing/EventsPreview";
 import { Faq, faqs } from "@/components/landing/Faq";
-import { Testimonials } from "@/components/landing/Testimonials";
+import { WhyRead } from "@/components/landing/WhyRead";
+import { StickySubscribeBar } from "@/components/site/StickySubscribeBar";
 import { ClosingCta } from "@/components/landing/ClosingCta";
 
 const title = "AffiliateX — The weekly affiliate marketing newsletter";
@@ -61,11 +62,12 @@ function Index() {
         <Hero />
         <WhatsInside />
         <EventsPreview />
+        <WhyRead />
         <Faq />
-        <Testimonials />
         <ClosingCta />
       </main>
       <SiteFooter />
+      <StickySubscribeBar />
     </div>
   );
 }

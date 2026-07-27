@@ -47,7 +47,15 @@ export function EventsPreview() {
                 <span className="text-xs font-medium uppercase tracking-wide text-primary">
                   {event.format}
                 </span>
-                <h3 className="mt-2 font-display text-lg font-semibold">{event.name}</h3>
+                <h3 className="mt-2 font-display text-lg font-semibold">
+                  <Link
+                    to="/events/$eventId"
+                    params={{ eventId: event.id }}
+                    className="hover:underline"
+                  >
+                    {event.name}
+                  </Link>
+                </h3>
                 <p className="mt-2 flex-1 text-sm text-muted-foreground">{event.description}</p>
                 <p className="mt-4 flex items-center gap-1.5 text-sm text-muted-foreground">
                   <MapPin className="size-4" />

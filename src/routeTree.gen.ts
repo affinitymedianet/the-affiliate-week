@@ -9,12 +9,39 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as EventsRouteImport } from './routes/events'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SubmitRouteImport } from './routes/submit'
+import { Route as SponsorRouteImport } from './routes/sponsor'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EventsIndexRouteImport } from './routes/events.index'
+import { Route as IssuesSlugRouteImport } from './routes/issues.$slug'
+import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
 
-const EventsRoute = EventsRouteImport.update({
-  id: '/events',
-  path: '/events',
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubmitRoute = SubmitRouteImport.update({
+  id: '/submit',
+  path: '/submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SponsorRoute = SponsorRouteImport.update({
+  id: '/sponsor',
+  path: '/sponsor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArchiveRoute = ArchiveRouteImport.update({
+  id: '/archive',
+  path: '/archive',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,40 +49,139 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsIndexRoute = EventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IssuesSlugRoute = IssuesSlugRouteImport.update({
+  id: '/issues/$slug',
+  path: '/issues/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsEventIdRoute = EventsEventIdRouteImport.update({
+  id: '/events/$eventId',
+  path: '/events/$eventId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/events': typeof EventsRoute
+  '/archive': typeof ArchiveRoute
+  '/privacy': typeof PrivacyRoute
+  '/sponsor': typeof SponsorRoute
+  '/submit': typeof SubmitRoute
+  '/terms': typeof TermsRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/issues/$slug': typeof IssuesSlugRoute
+  '/events/': typeof EventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/events': typeof EventsRoute
+  '/archive': typeof ArchiveRoute
+  '/privacy': typeof PrivacyRoute
+  '/sponsor': typeof SponsorRoute
+  '/submit': typeof SubmitRoute
+  '/terms': typeof TermsRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/issues/$slug': typeof IssuesSlugRoute
+  '/events': typeof EventsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/events': typeof EventsRoute
+  '/archive': typeof ArchiveRoute
+  '/privacy': typeof PrivacyRoute
+  '/sponsor': typeof SponsorRoute
+  '/submit': typeof SubmitRoute
+  '/terms': typeof TermsRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/issues/$slug': typeof IssuesSlugRoute
+  '/events/': typeof EventsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/events'
+  fullPaths:
+    | '/'
+    | '/archive'
+    | '/privacy'
+    | '/sponsor'
+    | '/submit'
+    | '/terms'
+    | '/events/$eventId'
+    | '/issues/$slug'
+    | '/events/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/events'
-  id: '__root__' | '/' | '/events'
+  to:
+    | '/'
+    | '/archive'
+    | '/privacy'
+    | '/sponsor'
+    | '/submit'
+    | '/terms'
+    | '/events/$eventId'
+    | '/issues/$slug'
+    | '/events'
+  id:
+    | '__root__'
+    | '/'
+    | '/archive'
+    | '/privacy'
+    | '/sponsor'
+    | '/submit'
+    | '/terms'
+    | '/events/$eventId'
+    | '/issues/$slug'
+    | '/events/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  EventsRoute: typeof EventsRoute
+  ArchiveRoute: typeof ArchiveRoute
+  PrivacyRoute: typeof PrivacyRoute
+  SponsorRoute: typeof SponsorRoute
+  SubmitRoute: typeof SubmitRoute
+  TermsRoute: typeof TermsRoute
+  EventsEventIdRoute: typeof EventsEventIdRoute
+  IssuesSlugRoute: typeof IssuesSlugRoute
+  EventsIndexRoute: typeof EventsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/events': {
-      id: '/events'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsRouteImport
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/submit': {
+      id: '/submit'
+      path: '/submit'
+      fullPath: '/submit'
+      preLoaderRoute: typeof SubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sponsor': {
+      id: '/sponsor'
+      path: '/sponsor'
+      fullPath: '/sponsor'
+      preLoaderRoute: typeof SponsorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/archive': {
+      id: '/archive'
+      path: '/archive'
+      fullPath: '/archive'
+      preLoaderRoute: typeof ArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -65,12 +191,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/events/': {
+      id: '/events/'
+      path: '/events'
+      fullPath: '/events/'
+      preLoaderRoute: typeof EventsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/issues/$slug': {
+      id: '/issues/$slug'
+      path: '/issues/$slug'
+      fullPath: '/issues/$slug'
+      preLoaderRoute: typeof IssuesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/$eventId': {
+      id: '/events/$eventId'
+      path: '/events/$eventId'
+      fullPath: '/events/$eventId'
+      preLoaderRoute: typeof EventsEventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  EventsRoute: EventsRoute,
+  ArchiveRoute: ArchiveRoute,
+  PrivacyRoute: PrivacyRoute,
+  SponsorRoute: SponsorRoute,
+  SubmitRoute: SubmitRoute,
+  TermsRoute: TermsRoute,
+  EventsEventIdRoute: EventsEventIdRoute,
+  IssuesSlugRoute: IssuesSlugRoute,
+  EventsIndexRoute: EventsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
