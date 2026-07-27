@@ -136,8 +136,8 @@
   --navy-deep: oklch(0.15 0.04 258);
   --surface: oklch(0.2 0.048 258);
   --surface-foreground: oklch(0.98 0.005 258);
-  --signal: oklch(0.75 0.15 55);
-  --signal-foreground: oklch(0.18 0.04 48);
+  --signal: oklch(0.72 0.13 250);
+  --signal-foreground: oklch(0.17 0.045 258);
   --rule: oklch(1 0 0 / 16%);
 
   --chart-1: oklch(0.66 0.16 255);
