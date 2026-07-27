@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
 const title = "Privacy policy — AffiliateX newsletter";
 const description =
@@ -64,7 +65,8 @@ function PrivacyPage() {
       <SiteHeader />
       <main>
         <article className="mx-auto max-w-3xl px-4 py-14 lg:py-20">
-          <h1 className="font-display text-4xl font-bold">Privacy policy</h1>
+          <Breadcrumbs items={[{ label: "Privacy policy" }]} />
+          <h1 className="mt-4 font-display text-4xl font-bold">Privacy policy</h1>
           <p className="mt-3 text-sm text-muted-foreground">
             This is a working policy for AffiliateX. Have it reviewed against your jurisdiction
             before launch.

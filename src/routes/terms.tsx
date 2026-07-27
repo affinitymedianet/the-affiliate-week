@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
 const title = "Terms of use — AffiliateX newsletter";
 const description =
@@ -60,7 +61,8 @@ function TermsPage() {
       <SiteHeader />
       <main>
         <article className="mx-auto max-w-3xl px-4 py-14 lg:py-20">
-          <h1 className="font-display text-4xl font-bold">Terms of use</h1>
+          <Breadcrumbs items={[{ label: "Terms of use" }]} />
+          <h1 className="mt-4 font-display text-4xl font-bold">Terms of use</h1>
           <p className="mt-3 text-sm text-muted-foreground">
             Working terms for AffiliateX. Have them reviewed before launch.
           </p>
