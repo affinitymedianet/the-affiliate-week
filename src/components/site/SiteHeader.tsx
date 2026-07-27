@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const links = [
   { label: "Archive", to: "/archive" as const },
+  { label: "Jobs", to: "/jobs" as const },
   { label: "Events", to: "/events" as const },
   { label: "Submit", to: "/submit" as const },
   { label: "Sponsor", to: "/sponsor" as const },

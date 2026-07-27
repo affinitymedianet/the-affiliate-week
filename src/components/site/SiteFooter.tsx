@@ -52,6 +52,11 @@ export function SiteFooter() {
           </h3>
           <ul className="mt-4 space-y-2 text-sm text-navy-foreground/70">
             <li>
+              <Link to="/jobs" className="hover:text-navy-foreground">
+                Affiliate jobs
+              </Link>
+            </li>
+            <li>
               <Link to="/events" className="hover:text-navy-foreground">
                 Affiliate events
               </Link>

@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { Hero } from "@/components/landing/Hero";
 import { WhatsInside } from "@/components/landing/WhatsInside";
 import { EventsPreview } from "@/components/landing/EventsPreview";
+import { JobsPreview } from "@/components/landing/JobsPreview";
 import { Faq, faqs } from "@/components/landing/Faq";
 import { WhyRead } from "@/components/landing/WhyRead";
 import { StickySubscribeBar } from "@/components/site/StickySubscribeBar";
@@ -62,6 +63,7 @@ function Index() {
         <Hero />
         <WhatsInside />
         <EventsPreview />
+        <JobsPreview />
         <WhyRead />
         <Faq />
         <ClosingCta />
