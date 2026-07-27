@@ -1,33 +1,31 @@
-import { Newspaper, Briefcase, CalendarDays, Tag, Users, LineChart } from "lucide-react";
-
 const items = [
   {
-    icon: Newspaper,
+    n: "01",
     title: "Industry news",
     body: "Network changes, tracking and compliance updates, and the moves that affect your payouts.",
   },
   {
-    icon: Tag,
+    n: "02",
     title: "New offers & programmes",
     body: "Fresh affiliate programmes and commission changes worth adding to your rotation.",
   },
   {
-    icon: Briefcase,
+    n: "03",
     title: "Affiliate jobs",
     body: "Openings for affiliate managers, media buyers and partnership leads, remote and on-site.",
   },
   {
-    icon: CalendarDays,
+    n: "04",
     title: "Events",
     body: "Conferences, meetups and webinars — with dates, locations and whether they're worth the flight.",
   },
   {
-    icon: Users,
+    n: "05",
     title: "Networking",
     body: "Who's hiring, who's launching, and where the people in this industry are gathering next.",
   },
   {
-    icon: LineChart,
+    n: "06",
     title: "Tactics that worked",
     body: "Short breakdowns from operators on what is actually converting this month.",
   },
@@ -35,26 +33,23 @@ const items = [
 
 export function WhatsInside() {
   return (
-    <section id="inside" className="border-b border-border py-16 lg:py-24">
+    <section id="inside" className="border-b border-rule py-16 lg:py-20">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-3xl font-bold sm:text-4xl">What's inside every issue</h2>
-          <p className="mt-3 text-muted-foreground">
-            Six sections, one email, five minutes. No filler, no recycled press releases.
+        <div className="border-b border-rule pb-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-signal">
+            Every issue
           </p>
+          <h2 className="mt-1.5 font-display text-2xl font-bold tracking-tight sm:text-3xl">
+            Six sections, one email, five minutes
+          </h2>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
-            <article
-              key={item.title}
-              className="rounded-xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-lift"
-            >
-              <span className="flex size-11 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-                <item.icon className="size-5" />
-              </span>
-              <h3 className="mt-4 font-display text-lg font-semibold">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+            <article key={item.title} className="border-b border-rule py-6">
+              <p className="font-display text-sm font-bold text-signal">{item.n}</p>
+              <h3 className="mt-2 font-display text-lg font-semibold">{item.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
             </article>
           ))}
         </div>
