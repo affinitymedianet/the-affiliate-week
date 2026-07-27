@@ -1,22 +1,37 @@
-Update the site header so submissions are handled via Typeform instead of the in-house /submit page link.
+## Goal
+
+Replace the current split hero (background image + four preview cards) with a compact, full-bleed Morning Brew-style colour band in our brand blue.
+
+## New hero layout
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│  [ BLUE BAND ]                                               │
+│  Issue #N · Thursdays · Free        ┌──────────────────────┐ │
+│  The affiliate industry,            │ Email                │ │
+│  every week.                        └──────────────────────┘ │
+│  One email every Thursday with       ┌──────────────────────┐ │
+│  news, jobs, events and deals.       │      Subscribe       │ │
+│                                      └──────────────────────┘ │
+│                                   By subscribing you accept   │
+│                                   our Terms & Privacy Policy. │
+└──────────────────────────────────────────────────────────────┘
+```
+
+- Two-column grid on desktop (copy left, form right), stacked on mobile.
+- Solid brand-blue background, white serif display headline, lighter-white supporting line.
+- Small amber kicker line above the headline for the issue/cadence signal.
+- Stacked form: full-width white email input, then a full-width near-black Subscribe button beneath it.
+- Fine print under the button links to `/terms` and `/privacy`.
+- No background image, no vignette, no preview cards.
 
 ## Changes
 
-1. **Add a Typeform URL constant**
-   - Add `TYPEFORM_SUBMIT_URL` to `src/lib/site.ts` as a configurable placeholder (e.g., `https://form.typeform.com/to/REPLACE_ME`).
-   - The user will replace this with their real Typeform link before publishing.
+- `src/components/landing/Hero.tsx` — rewritten as the band; drops the `heroBg` asset, the React Query calls for jobs/deals, the events/issue preview data, and the `PreviewCard` component.
+- `src/components/NewsletterForm.tsx` — add an optional stacked/on-dark variant so the input and button render full width with the correct contrast inside the band. Existing usages elsewhere keep their current appearance.
+- `src/styles.css` — only if a token is missing for the near-black button; otherwise reuse existing navy/foreground tokens.
+- Homepage section order below the hero is unchanged.
 
-2. **Remove the Submit nav link from the header**
-   - Remove the `{ label: "Submit", to: "/submit" }` entry from the `links` array in `src/components/site/SiteHeader.tsx`.
-   - The `/submit` page itself remains available for direct traffic but is no longer promoted in the main nav.
+## Notes
 
-3. **Rename the header CTA button to "Submit"**
-   - In `src/components/site/SiteHeader.tsx`, change the desktop and mobile CTA button text from "Subscribe free" to "Submit".
-   - Link it to `TYPEFORM_SUBMIT_URL` instead of `/#newsletter`.
-   - Open the Typeform in a new tab (`target="_blank" rel="noopener noreferrer"`) so visitors stay on the site.
-
-## Technical notes
-
-- The newsletter signup form in the hero and footer stays unchanged.
-- The existing `/submit` route and its backend table remain intact; only the header promotion changes.
-- After the change, the header nav will read: Archive, Jobs, Deals, Events, Sponsor, FAQ — with a "Submit" CTA button pointing to Typeform.
+Removing the preview cards means the first thing after the hero becomes the existing "Inside this issue" section, which still shows what subscribers get — so the proof isn't lost.
