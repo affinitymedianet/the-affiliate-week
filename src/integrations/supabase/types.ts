@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      jobs: {
+        Row: {
+          apply_url: string
+          company: string
+          created_at: string
+          description: string
+          employment_type: string
+          expires_on: string | null
+          featured: boolean
+          id: string
+          location: string
+          posted_on: string
+          published: boolean
+          salary_range: string | null
+          summary: string
+          title: string
+          updated_at: string
+          work_type: string
+        }
+        Insert: {
+          apply_url: string
+          company: string
+          created_at?: string
+          description: string
+          employment_type?: string
+          expires_on?: string | null
+          featured?: boolean
+          id?: string
+          location: string
+          posted_on?: string
+          published?: boolean
+          salary_range?: string | null
+          summary: string
+          title: string
+          updated_at?: string
+          work_type?: string
+        }
+        Update: {
+          apply_url?: string
+          company?: string
+          created_at?: string
+          description?: string
+          employment_type?: string
+          expires_on?: string | null
+          featured?: boolean
+          id?: string
+          location?: string
+          posted_on?: string
+          published?: boolean
+          salary_range?: string | null
+          summary?: string
+          title?: string
+          updated_at?: string
+          work_type?: string
+        }
+        Relationships: []
+      }
       sponsor_enquiries: {
         Row: {
           budget: string | null
