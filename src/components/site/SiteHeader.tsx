@@ -21,11 +21,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <span className="flex size-8 items-center justify-center rounded-md bg-navy font-display text-sm font-bold text-navy-foreground">
-            A
+          <span className="flex size-8 items-center justify-center rounded-md bg-navy font-display text-xs font-bold text-navy-foreground">
+            AW
           </span>
           <span className="font-display text-lg font-bold tracking-tight">
-            Affiliate<span className="text-primary">X</span>
+            The Affiliate Week
           </span>
         </Link>
 

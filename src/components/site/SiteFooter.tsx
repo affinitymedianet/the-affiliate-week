@@ -6,16 +6,16 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="flex size-8 items-center justify-center rounded-md bg-navy-foreground font-display text-sm font-bold text-navy-deep">
-              A
+            <span className="flex size-8 items-center justify-center rounded-md bg-navy-foreground font-display text-xs font-bold text-navy-deep">
+              AW
             </span>
-            <span className="font-display text-lg font-bold">AffiliateX</span>
+            <span className="font-display text-lg font-bold">The Affiliate Week</span>
           </div>
           <p className="mt-3 max-w-xs text-sm text-navy-foreground/70">
             The weekly email for affiliate marketers — industry news, jobs, events and offers,
             every Thursday.
           </p>
-          <p className="mt-4 text-sm text-navy-foreground/60">affiliatex.co</p>
+          <p className="mt-4 text-sm text-navy-foreground/60">theaffiliateweek.com</p>
         </div>
 
         <div>
@@ -85,8 +85,8 @@ export function SiteFooter() {
           </h3>
           <ul className="mt-4 space-y-2 text-sm text-navy-foreground/70">
             <li>
-              <a href="mailto:hello@affiliatex.co" className="hover:text-navy-foreground">
-                hello@affiliatex.co
+              <a href="mailto:hello@theaffiliateweek.com" className="hover:text-navy-foreground">
+                hello@theaffiliateweek.com
               </a>
             </li>
             <li>
@@ -105,7 +105,7 @@ export function SiteFooter() {
 
       <div className="border-t border-navy-foreground/10">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} AffiliateX. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} The Affiliate Week. All rights reserved.</p>
           <p>
             Postal address: add your registered mailing address here (required on bulk email).
           </p>
