@@ -90,8 +90,8 @@ export function Hero() {
     <section id="newsletter" className="relative overflow-hidden border-b border-rule">
       {/* Background image */}
       <div
-        className="absolute inset-0 -z-10 bg-cover bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBg.url})`, backgroundPosition: "right bottom" }}
+        className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${heroBg.url})` }}
         aria-hidden="true"
       />
       {/* Subtle vignette for readability */}
