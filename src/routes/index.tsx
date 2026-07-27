@@ -9,7 +9,6 @@ import { WeeklyBoards } from "@/components/landing/WeeklyBoards";
 import { Faq, faqs } from "@/components/landing/Faq";
 import { EditorNote } from "@/components/landing/EditorNote";
 import { StickySubscribeBar } from "@/components/site/StickySubscribeBar";
-import { ClosingCta } from "@/components/landing/ClosingCta";
 import { SITE_URL } from "@/lib/site";
 
 
