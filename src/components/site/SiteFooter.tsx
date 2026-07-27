@@ -112,7 +112,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="relative border-t border-navy-foreground/10 bg-navy/40">
+      <div className="border-t border-navy-foreground/10">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} The Affiliate Week. All rights reserved.</p>
           <p>
