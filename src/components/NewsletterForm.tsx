@@ -109,7 +109,9 @@ export function NewsletterForm({
           className={cn(
             "mt-2 text-sm",
             isError
-              ? "text-destructive"
+              ? variant === "band"
+                ? "text-signal"
+                : "text-destructive"
               : variant === "light"
                 ? "text-muted-foreground"
                 : "text-navy-foreground/80",
