@@ -3,13 +3,13 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { TYPEFORM_SUBMIT_URL } from "@/lib/site";
 
 const links = [
   { label: "Archive", to: "/archive" as const },
   { label: "Jobs", to: "/jobs" as const },
   { label: "Deals", to: "/deals" as const },
   { label: "Events", to: "/events" as const },
-  { label: "Submit", to: "/submit" as const },
   { label: "Sponsor", to: "/sponsor" as const },
   { label: "FAQ", to: "/" as const, hash: "faq" },
 ];
@@ -44,9 +44,13 @@ export function SiteHeader() {
 
         <div className="hidden md:block">
           <Button asChild size="sm">
-            <Link to="/" hash="newsletter">
-              Subscribe free
-            </Link>
+            <a
+              href={TYPEFORM_SUBMIT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Submit
+            </a>
           </Button>
         </div>
 
@@ -75,9 +79,14 @@ export function SiteHeader() {
               </Link>
             ))}
             <Button asChild size="sm" className="mt-2">
-              <Link to="/" hash="newsletter" onClick={() => setOpen(false)}>
-                Subscribe free
-              </Link>
+              <a
+                href={TYPEFORM_SUBMIT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+              >
+                Submit
+              </a>
             </Button>
           </nav>
         </div>
