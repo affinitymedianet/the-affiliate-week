@@ -3,7 +3,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { issues } from "@/data/issues";
+import { issues, type Issue } from "@/data/issues";
 
 export const Route = createFileRoute("/issues/$slug")({
   head: ({ params }) => {
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/issues/$slug")({
         : [],
     };
   },
-  loader: ({ params }) => {
+  loader: ({ params }): Issue => {
     const issue = issues.find((i) => i.slug === params.slug);
     if (!issue) throw notFound();
     return issue;
@@ -71,7 +71,7 @@ function IssueMissing() {
 }
 
 function IssuePage() {
-  const issue = Route.useLoaderData();
+  const issue = Route.useLoaderData() as Issue;
 
   return (
     <div className="min-h-screen bg-background">
