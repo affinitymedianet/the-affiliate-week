@@ -162,59 +162,66 @@ function EventsPage() {
               events
             </p>
 
-            <ul className="mt-4 divide-y divide-border rounded-xl border border-border bg-card shadow-card">
-              {paged.items.map((event) => (
-                <li
-                  key={event.id}
-                  className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-6"
-                >
-                  <img
-                    src={event.image}
-                    alt={`${event.name} event`}
-                    loading="lazy"
-                    width={1024}
-                    height={640}
-                    className="h-28 w-full rounded-lg object-cover sm:h-20 sm:w-32"
-                  />
-                  <div className="flex-1">
-                    <span className="text-xs font-medium uppercase tracking-wide text-primary">
-                      {event.format}
-                    </span>
-                    <h2 className="mt-1 font-display text-lg font-semibold">
-                      <Link
-                        to="/events/$eventId"
-                        params={{ eventId: event.id }}
-                        className="hover:underline"
-                      >
-                        {event.name}
-                      </Link>
-                    </h2>
-                    <p className="mt-1 text-sm text-muted-foreground">{event.description}</p>
-                    <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1.5">
-                        <CalendarDays className="size-4" />
-                        {event.date}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <MapPin className="size-4" />
-                        {event.location}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Ticket className="size-4" />
-                        {event.price}
-                      </span>
-                    </div>
-                  </div>
-                  <Link
-                    to="/events/$eventId"
-                    params={{ eventId: event.id }}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-                  >
-                    Details <ArrowRight className="size-4" />
-                  </Link>
-                </li>
+            <div className="mt-4 space-y-10">
+              {groupByMonth(paged.items).map((group) => (
+                <div key={group.label}>
+                  <h2 className="border-b border-rule pb-2 font-display text-sm font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                    {group.label}
+                  </h2>
+                  <ul className="divide-y divide-rule">
+                    {group.events.map((event) => (
+                      <li key={event.id} className="flex gap-5 py-6">
+                        <div className="w-12 shrink-0 text-center">
+                          <p className="font-display text-2xl font-bold leading-none">
+                            {event.dateLabel.day}
+                          </p>
+                          <p className="mt-1 text-xs font-semibold uppercase text-signal">
+                            {event.dateLabel.month}
+                          </p>
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                            {event.format}
+                          </span>
+                          <h3 className="mt-1 font-display text-lg font-semibold">
+                            <Link
+                              to="/events/$eventId"
+                              params={{ eventId: event.id }}
+                              className="hover:underline"
+                            >
+                              {event.name}
+                            </Link>
+                          </h3>
+                          <p className="mt-1 text-sm text-muted-foreground">{event.description}</p>
+                          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1.5">
+                              <CalendarDays className="size-4" />
+                              {event.date}
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <MapPin className="size-4" />
+                              {event.location}
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <Ticket className="size-4" />
+                              {event.price}
+                            </span>
+                          </div>
+                        </div>
+                        <Link
+                          to="/events/$eventId"
+                          params={{ eventId: event.id }}
+                          className="hidden shrink-0 items-center gap-1.5 self-start text-sm font-medium text-primary hover:underline sm:inline-flex"
+                        >
+                          Details <ArrowRight className="size-4" />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
+
 
             {filtered.length === 0 ? (
               <p className="mt-6 text-center text-sm text-muted-foreground">

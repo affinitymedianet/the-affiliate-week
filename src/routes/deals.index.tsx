@@ -153,19 +153,26 @@ function DealsPage() {
               {paged.items.map((deal) => (
                 <li
                   key={deal.id}
-                  className="flex flex-col rounded-xl border border-border bg-card p-5 shadow-card transition-shadow hover:shadow-lift"
+                  className="flex flex-col border border-rule bg-card p-5 transition-colors hover:border-signal"
                 >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                      {deal.category}
-                    </span>
-                    {deal.exclusive ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-navy px-2.5 py-0.5 text-xs font-medium text-navy-foreground">
-                        <Sparkles className="size-3" /> Exclusive
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="border border-rule px-2 py-0.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        {deal.category}
+                      </span>
+                      {deal.exclusive ? (
+                        <span className="inline-flex items-center gap-1 bg-navy px-2 py-0.5 text-xs font-medium uppercase tracking-wide text-navy-foreground">
+                          <Sparkles className="size-3" /> Exclusive
+                        </span>
+                      ) : null}
+                    </div>
+                    {deal.discountLabel ? (
+                      <span className="shrink-0 font-display text-2xl font-bold leading-none text-signal">
+                        {deal.discountLabel}
                       </span>
                     ) : null}
                   </div>
-                  <h2 className="mt-3 font-display text-lg font-semibold">
+                  <h2 className="mt-4 font-display text-xl font-semibold leading-snug">
                     <Link
                       to="/deals/$dealId"
                       params={{ dealId: deal.id }}
@@ -174,16 +181,16 @@ function DealsPage() {
                       {deal.title}
                     </Link>
                   </h2>
-                  <p className="mt-1 text-sm text-muted-foreground">{deal.summary}</p>
-                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1.5">
+                  <p className="mt-1.5 flex-1 text-sm text-muted-foreground">{deal.summary}</p>
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-rule pt-4 text-sm">
+                    <span className="flex items-center gap-1.5 text-muted-foreground">
                       <Tag className="size-4" />
                       {deal.vendor}
                     </span>
-                    {deal.discountLabel ? (
-                      <span className="flex items-center gap-1.5 font-medium text-foreground">
-                        <BadgePercent className="size-4" />
-                        {deal.discountLabel}
+                    {deal.couponCode ? (
+                      <span className="inline-flex items-center gap-1.5 border border-dashed border-signal px-2 py-1 font-mono text-xs font-semibold">
+                        <BadgePercent className="size-3.5" />
+                        {deal.couponCode}
                       </span>
                     ) : null}
                   </div>
@@ -197,6 +204,7 @@ function DealsPage() {
                 </li>
               ))}
             </ul>
+
 
             {filtered.length === 0 ? (
               <p className="mt-6 text-center text-sm text-muted-foreground">
