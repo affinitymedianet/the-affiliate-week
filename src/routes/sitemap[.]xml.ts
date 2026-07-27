@@ -6,8 +6,10 @@ import { events } from "@/data/events";
 import { issues } from "@/data/issues";
 import { PAGE_SIZE } from "@/components/site/Pager";
 
-// Domain provided by the site owner.
-const BASE_URL = "https://affilitex.co";
+import { SITE_URL } from "@/lib/site";
+
+const BASE_URL = SITE_URL;
+
 
 interface SitemapEntry {
   path: string;
