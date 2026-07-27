@@ -8,8 +8,8 @@ export function ClosingCta() {
           Ready to find better affiliate opportunities?
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-navy-foreground/75">
-          Join 5,200+ marketers getting the week's affiliate news, jobs, events and offers every
-          Thursday.
+          One email every Thursday with the week's affiliate news, jobs, events and offers. Free,
+          five minutes, unsubscribe in one click.
         </p>
         <div className="mx-auto mt-8 max-w-md">
           <NewsletterForm source="cta" variant="dark" buttonLabel="Get the newsletter" />
