@@ -107,7 +107,7 @@ function JobDetail() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <section className="border-b border-border bg-surface py-12 lg:py-16">
+        <section className="border-b border-border bg-background py-12 lg:py-16">
           <div className="mx-auto max-w-3xl px-4">
             <Breadcrumbs items={[{ label: "Jobs", href: "/jobs" }, { label: job.title }]} />
             <Link
@@ -187,7 +187,7 @@ function JobDetail() {
               </div>
             ) : null}
 
-            <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-center">
+            <div className="mt-12 rounded-xl border border-border bg-background p-6 text-center">
               <h2 className="font-display text-xl font-semibold">
                 Get new affiliate roles every Thursday
               </h2>

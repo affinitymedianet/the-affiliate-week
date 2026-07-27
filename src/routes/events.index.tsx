@@ -101,7 +101,7 @@ function EventsPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <section className="border-b border-border bg-surface py-14 lg:py-20">
+        <section className="border-b border-border bg-background py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-4">
             <Breadcrumbs items={[{ label: "Events" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
@@ -253,7 +253,7 @@ function EventsPage() {
               label="Events pagination"
             />
 
-            <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-center">
+            <div className="mt-12 rounded-xl border border-border bg-background p-6 text-center">
               <h2 className="font-display text-xl font-semibold">
                 Get new events in your inbox weekly
               </h2>

@@ -120,7 +120,7 @@ function IssuePage() {
           </div>
 
 
-          <div className="mt-14 rounded-xl border border-border bg-surface p-6 text-center">
+          <div className="mt-14 rounded-xl border border-border bg-background p-6 text-center">
             <h2 className="font-display text-xl font-semibold">Want this every Thursday?</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Free, five minutes, one-click unsubscribe.
