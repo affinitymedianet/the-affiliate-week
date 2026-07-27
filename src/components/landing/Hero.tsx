@@ -7,7 +7,7 @@ import { sampleIssue } from "@/data/issues";
 import { events } from "@/data/events";
 import { listJobs } from "@/lib/jobs.functions";
 import { listDeals } from "@/lib/deals.functions";
-import heroBg from "@/assets/hero-bg-bands.jpg.asset.json";
+import heroBg from "@/assets/hero-bg-full.jpg.asset.json";
 import { cn } from "@/lib/utils";
 
 function PreviewCard({
