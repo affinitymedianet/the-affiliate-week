@@ -63,6 +63,7 @@ function Index() {
         <Hero />
         <WhatsInside />
         <EventsPreview />
+        <JobsPreview />
         <WhyRead />
         <Faq />
         <ClosingCta />
