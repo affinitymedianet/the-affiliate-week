@@ -1,36 +1,65 @@
-## AffiliateX — weekly affiliate newsletter landing site
+## Verified current state
 
-A single, long-scroll landing page at `/` modeled on the uploaded reference, plus supporting routes, built for affiliatex.co.
+Read: `src/routes/index.tsx`, `src/routes/events.tsx`, `SiteHeader`, `SiteFooter`, `Hero`, `WhatsInside`, `EventsPreview`, `Faq`, `Testimonials`, `ClosingCta`, `NewsletterForm`, `src/data/events.ts`.
 
-### Page structure (order follows the reference)
-1. **Sticky nav** — logo, links (Offers, Jobs, Events, Blog), "Subscribe" button.
-2. **Hero** — "Your complete affiliate marketing resource hub", subcopy about the weekly newsletter, email capture + Subscribe CTA, small social proof row (avatars + "5k+ marketers"), laptop/dashboard image on the right.
-3. **Everything You Need** — 6 category cards (Affiliate Offers, Tools, Jobs, Events, Networking, Blogs) with illustration art.
-4. **Featured Affiliate Offers** — 3 offer cards with payout badges and "View Details".
-5. **Featured Events** — 3 event cards with date chip, cover image, "View Details".
-6. **Limited-Time Deals** — 3 deal cards in a horizontal carousel with arrows.
-7. **Latest Insights & Tips** — 3 blog cards with cover, category, date, read time.
-8. **FAQ** — accordion, 6 questions about the newsletter.
-9. **Testimonials** — 3 quote cards with stars and author.
-10. **Trusted by** — logo strip of affiliate networks/brands.
-11. **Newsletter band** — dark navy band, email input + Subscribe.
-12. **Final CTA** — "Ready to find better affiliate opportunities?"
-13. **Footer** — 4 link columns + legal row.
+Today the site is: one landing page (hero + signup, what's inside, 3 events, FAQ, testimonials, closing CTA), one `/events` list page, and a `subscribers` table insert on submit. There is no archive, no sample issue, no confirmation/welcome email, no legal pages, no submission forms, no sponsor page.
 
-### Newsletter signup
-Signups are real, not decorative: Lovable Cloud stores subscribers in a `subscribers` table (email unique, source, created_at) with insert-only public access and no public reads. Both the hero and footer forms write to it, with duplicate-safe handling and inline success/error states.
+## The review (what I'd change and why)
 
-### Design system
-Navy/white/blue palette taken from the reference — deep navy (`#152238`-ish) for dark bands and CTAs, bright blue accent for buttons and badges, off-white section backgrounds alternating with white. Clean geometric sans (Plus Jakarta Sans headings / Inter-alternative body via a distinctive pairing), medium radius cards, soft shadows. All values go into `src/styles.css` as oklch tokens — no hardcoded colors in components.
+**1. The trust claims are invented — that's the biggest risk.**
+The hero says "Joined by 5,200+ affiliates" and there are three named testimonials with roles ("Jade Ortiz, Cove Commerce") for a newsletter that hasn't shipped issue #1. In this industry people check. Getting caught fabricating social proof kills a newsletter permanently. Replace with honest launch-stage proof: "Issue #1 ships Thursday — be one of the first readers", founder credibility line, and a real testimonial slot to fill later.
 
-### Images
-Generated assets under `src/assets/`: hero dashboard laptop shot, 6 category illustrations, 3 event covers, 3 deal covers, 3 blog covers. Uploaded screenshot is reference only, not embedded.
+**2. Nobody subscribes to a newsletter they can't read first.**
+The single highest-converting element for a newsletter site is a visible sample issue. Right now a visitor has zero idea of tone, length or quality. Needs a `/archive` page and one full sample issue page linked from the hero ("Read a sample issue →").
 
-### Content
-Placeholder-but-realistic affiliate industry copy (offers with payouts, real-sounding event names, job/blog titles) that you can swap later.
+**3. The signup does nothing after the click.**
+It writes a row and shows a message. No confirmation email, no welcome email, no expectation-setting. Welcome emails have the highest open rate you'll ever get — wasting it is the classic mistake. Needs a double opt-in confirm + welcome email via the app's email infrastructure (requires a verified `affiliatex.co` sender domain).
 
-### Technical notes
-- TanStack Start file routes: `src/routes/index.tsx` rewritten as the landing page; sections split into components under `src/components/landing/`.
-- Deals carousel uses embla (shadcn Carousel); FAQ uses shadcn Accordion.
-- SEO: unique title/description/og/twitter in `index.tsx` head(), single H1, semantic sections, alt text, JSON-LD `Organization` + `NewsletterService`.
-- Lovable Cloud enabled for the subscriber table; signup happens through a server function so the table stays write-only to the public.
+**4. You're not capturing the free content you promised.**
+The newsletter covers jobs, events and offers, but there's no way for anyone to submit them. Free inbound submissions are what keeps a curated newsletter cheap to run. Needs a `/submit` page (event / job / offer) writing to the backend.
+
+**5. No revenue path.**
+Footer says "Advertise with us" → a mailto. Sponsors need numbers, formats and prices before they email. Needs a `/sponsor` page with audience profile, placements and a booking form.
+
+**6. Legal + deliverability gaps.**
+No privacy policy, no terms, no physical/postal contact line, no explicit consent wording at the form. CAN-SPAM/GDPR basics — and mailbox providers weigh them.
+
+**7. Events page is under-used as an SEO and habit asset.**
+Eight hardcoded events with `url: "#"` — no real links, no filters, no per-event pages, no `Event` JSON-LD. This is the page that earns search traffic and repeat visits between issues.
+
+**8. Smaller conversion fixes.**
+Hero fake dashboard image should be replaced by a newsletter preview mock; sticky mobile subscribe bar; "5 minute read, every Thursday, free forever" reassurance next to every form; source attribution already exists in the table but isn't reviewable anywhere.
+
+## Proposed build (in priority order)
+
+**Phase 1 — credibility & conversion**
+- Rewrite `Hero` + `ClosingCta` social proof to launch-honest copy; remove the 5,200 figure.
+- Replace `Testimonials` with a "Why read AffiliateX" / editor credibility section until real quotes exist.
+- New `/archive` route + one full sample issue route, linked from hero, header and footer.
+- Swap hero image for a newsletter-issue preview.
+
+**Phase 2 — lifecycle**
+- Double opt-in: token column on `subscribers`, confirm route, confirmation + welcome emails through Lovable's managed email (needs `affiliatex.co` sender domain set up first).
+- `/thanks` page after signup with a "what happens next" sequence.
+
+**Phase 3 — content flywheel**
+- `/submit` page with event/job/offer forms → new `submissions` table (RLS: anon insert only).
+- Events upgrade: real URLs, format/location/price filters, per-event detail routes, `Event` JSON-LD.
+
+**Phase 4 — money & compliance**
+- `/sponsor` page: audience stats, placements, rates, enquiry form → `sponsor_enquiries` table.
+- `/privacy` and `/terms`, consent line under every form, postal contact in footer.
+
+## Technical notes
+
+- New tables (`submissions`, `sponsor_enquiries`, opt-in columns on `subscribers`) each get explicit GRANTs plus anon-insert-only RLS; no anon reads.
+- Emails go through the project's managed email routes — this is blocked until a sender domain you own is verified, so Phase 2 may lag Phase 1.
+- Archive/sample issue content will be authored as typed data in `src/data/issues.ts` (same pattern as `events.ts`) unless you want it database-backed and editable later.
+- Every new route gets its own unique title/description/og tags; archive and event detail pages get JSON-LD.
+
+## What I need from you
+
+- Real subscriber count (or confirm we go launch-honest with no number).
+- Whether you own `affiliatex.co` DNS access, for the sending domain.
+- Real content for one sample issue, or should I draft a realistic one you edit?
+- Sponsorship rates, or placeholder "request rates" form?
