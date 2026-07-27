@@ -34,18 +34,19 @@ export const faqs = [
 
 export function Faq() {
   return (
-    <section id="faq" className="border-b border-border py-16 lg:py-24">
+    <section id="faq" className="border-b border-rule bg-surface py-16 lg:py-20">
       <div className="mx-auto max-w-3xl px-4">
-        <div className="text-center">
-          <h2 className="font-display text-3xl font-bold sm:text-4xl">
-            Frequently asked questions
-          </h2>
-        </div>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-signal">Questions</p>
+        <h2 className="mt-1.5 font-display text-2xl font-bold tracking-tight sm:text-3xl">
+          Frequently asked questions
+        </h2>
 
-        <Accordion type="single" collapsible className="mt-10 w-full">
+        <Accordion type="single" collapsible className="mt-8 w-full border-t border-rule">
           {faqs.map((item, i) => (
-            <AccordionItem key={item.q} value={`item-${i}`}>
-              <AccordionTrigger className="text-left font-medium">{item.q}</AccordionTrigger>
+            <AccordionItem key={item.q} value={`item-${i}`} className="border-rule">
+              <AccordionTrigger className="text-left font-display text-base font-semibold">
+                {item.q}
+              </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">{item.a}</AccordionContent>
             </AccordionItem>
           ))}
@@ -53,4 +54,5 @@ export function Faq() {
       </div>
     </section>
   );
+
 }

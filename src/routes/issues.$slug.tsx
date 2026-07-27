@@ -78,25 +78,38 @@ function IssuePage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <article className="mx-auto max-w-3xl px-4 py-14 lg:py-20">
+        <article className="mx-auto max-w-2xl px-4 py-14 lg:py-20">
           <Breadcrumbs
             items={[{ label: "Archive", href: "/archive" }, { label: `Issue #${issue.number}` }]}
           />
-          <p className="mt-5 text-xs font-medium uppercase tracking-wide text-primary">
-            Issue #{issue.number} · {issue.date} · {issue.readingTime}
-          </p>
-          <h1 className="mt-3 font-display text-3xl font-bold sm:text-4xl">{issue.title}</h1>
-          <p className="mt-4 text-lg text-muted-foreground">{issue.summary}</p>
 
-          <div className="mt-10 space-y-10">
+          <header className="mt-6 border-y border-rule py-6">
+            <p className="font-display text-xs font-semibold uppercase tracking-[0.22em] text-signal">
+              AffiliateX · Issue #{issue.number}
+            </p>
+            <h1 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+              {issue.title}
+            </h1>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {issue.date} · {issue.readingTime}
+            </p>
+          </header>
+
+          <p className="mt-8 text-xl leading-relaxed text-muted-foreground">{issue.summary}</p>
+
+          <div className="mt-12 space-y-12">
             {issue.sections.map((section) => (
               <section key={section.heading}>
-                <h2 className="font-display text-xl font-semibold">{section.heading}</h2>
-                <div className="mt-4 space-y-5 border-l-2 border-border pl-5">
+                <h2 className="border-b border-rule pb-2 font-display text-sm font-bold uppercase tracking-[0.18em]">
+                  {section.heading}
+                </h2>
+                <div className="mt-6 space-y-8">
                   {section.items.map((item) => (
                     <div key={item.title}>
-                      <h3 className="font-medium">{item.title}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                      <h3 className="font-display text-xl font-semibold leading-snug">
+                        {item.title}
+                      </h3>
+                      <p className="mt-2 text-lg leading-relaxed text-muted-foreground">
                         {item.body}
                       </p>
                     </div>
@@ -105,6 +118,7 @@ function IssuePage() {
               </section>
             ))}
           </div>
+
 
           <div className="mt-14 rounded-xl border border-border bg-surface p-6 text-center">
             <h2 className="font-display text-xl font-semibold">Want this every Thursday?</h2>
