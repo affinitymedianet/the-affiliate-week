@@ -3,14 +3,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Hero } from "@/components/landing/Hero";
+import { InsideThisIssue } from "@/components/landing/InsideThisIssue";
 import { WhatsInside } from "@/components/landing/WhatsInside";
-import { EventsPreview } from "@/components/landing/EventsPreview";
-import { JobsPreview } from "@/components/landing/JobsPreview";
-import { DealsPreview } from "@/components/landing/DealsPreview";
+import { WeeklyBoards } from "@/components/landing/WeeklyBoards";
 import { Faq, faqs } from "@/components/landing/Faq";
-import { WhyRead } from "@/components/landing/WhyRead";
+import { EditorNote } from "@/components/landing/EditorNote";
 import { StickySubscribeBar } from "@/components/site/StickySubscribeBar";
 import { ClosingCta } from "@/components/landing/ClosingCta";
+import { SITE_URL } from "@/lib/site";
+
 
 const title = "AffiliateX — The weekly affiliate marketing newsletter";
 const description =
