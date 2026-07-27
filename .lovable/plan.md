@@ -1,65 +1,42 @@
-## Verified current state
+## Goal
 
-Read: `src/routes/index.tsx`, `src/routes/events.tsx`, `SiteHeader`, `SiteFooter`, `Hero`, `WhatsInside`, `EventsPreview`, `Faq`, `Testimonials`, `ClosingCta`, `NewsletterForm`, `src/data/events.ts`.
+A jobs section for AffiliateX: a browsable list of affiliate industry roles, each with a detail page and an "Apply" button that sends the reader to the employer's own application page.
 
-Today the site is: one landing page (hero + signup, what's inside, 3 events, FAQ, testimonials, closing CTA), one `/events` list page, and a `subscribers` table insert on submit. There is no archive, no sample issue, no confirmation/welcome email, no legal pages, no submission forms, no sponsor page.
+## Database
 
-## The review (what I'd change and why)
+New `jobs` table in the backend:
 
-**1. The trust claims are invented — that's the biggest risk.**
-The hero says "Joined by 5,200+ affiliates" and there are three named testimonials with roles ("Jade Ortiz, Cove Commerce") for a newsletter that hasn't shipped issue #1. In this industry people check. Getting caught fabricating social proof kills a newsletter permanently. Replace with honest launch-stage proof: "Issue #1 ships Thursday — be one of the first readers", founder credibility line, and a real testimonial slot to fill later.
+- title, company, location, work type (remote / hybrid / onsite), employment type (full-time / contract / part-time), salary range (text, optional), short summary, full description, apply URL, posted date, expiry date (optional), featured flag, published flag.
+- Public read access for published jobs only (anyone can browse); no public write. New roles get added by me or through the existing `/submit` form (kind = `job`), which stays a private review queue.
+- Seeded in the same migration with a handful of realistic affiliate-industry roles so the page is never empty.
 
-**2. Nobody subscribes to a newsletter they can't read first.**
-The single highest-converting element for a newsletter site is a visible sample issue. Right now a visitor has zero idea of tone, length or quality. Needs a `/archive` page and one full sample issue page linked from the hero ("Read a sample issue →").
+## Pages
 
-**3. The signup does nothing after the click.**
-It writes a row and shows a message. No confirmation email, no welcome email, no expectation-setting. Welcome emails have the highest open rate you'll ever get — wasting it is the classic mistake. Needs a double opt-in confirm + welcome email via the app's email infrastructure (requires a verified `affiliatex.co` sender domain).
+**`/jobs` — listing**
+- Header, intro line, and a count of open roles.
+- Filters: work type, employment type, location — same pattern and styling as the events page.
+- Cards showing title, company, location, work type badge, salary if present, and posted date. Featured roles pinned at top.
+- Empty state when filters match nothing.
+- Sidebar/inline CTA: newsletter signup ("jobs go out every Thursday") and a link to `/submit` for employers posting a role.
 
-**4. You're not capturing the free content you promised.**
-The newsletter covers jobs, events and offers, but there's no way for anyone to submit them. Free inbound submissions are what keeps a curated newsletter cheap to run. Needs a `/submit` page (event / job / offer) writing to the backend.
+**`/jobs/$jobId` — detail**
+- Full description, all metadata, "Apply on company site" button opening the apply URL in a new tab (`rel="noopener noreferrer"`), plus a back link and a newsletter CTA under the listing.
+- Not-found handling for unknown or unpublished IDs.
 
-**5. No revenue path.**
-Footer says "Advertise with us" → a mailto. Sponsors need numbers, formats and prices before they email. Needs a `/sponsor` page with audience profile, placements and a booking form.
+## Navigation & cross-links
 
-**6. Legal + deliverability gaps.**
-No privacy policy, no terms, no physical/postal contact line, no explicit consent wording at the form. CAN-SPAM/GDPR basics — and mailbox providers weigh them.
+- "Jobs" added to the header nav and footer nav.
+- A small "Latest jobs" preview block on the home page (3 roles → `/jobs`), matching the existing events preview.
+- Events page and jobs page cross-link each other.
 
-**7. Events page is under-used as an SEO and habit asset.**
-Eight hardcoded events with `url: "#"` — no real links, no filters, no per-event pages, no `Event` JSON-LD. This is the page that earns search traffic and repeat visits between issues.
+## SEO
 
-**8. Smaller conversion fixes.**
-Hero fake dashboard image should be replaced by a newsletter preview mock; sticky mobile subscribe bar; "5 minute read, every Thursday, free forever" reassurance next to every form; source attribution already exists in the table but isn't reviewable anywhere.
-
-## Proposed build (in priority order)
-
-**Phase 1 — credibility & conversion**
-- Rewrite `Hero` + `ClosingCta` social proof to launch-honest copy; remove the 5,200 figure.
-- Replace `Testimonials` with a "Why read AffiliateX" / editor credibility section until real quotes exist.
-- New `/archive` route + one full sample issue route, linked from hero, header and footer.
-- Swap hero image for a newsletter-issue preview.
-
-**Phase 2 — lifecycle**
-- Double opt-in: token column on `subscribers`, confirm route, confirmation + welcome emails through Lovable's managed email (needs `affiliatex.co` sender domain set up first).
-- `/thanks` page after signup with a "what happens next" sequence.
-
-**Phase 3 — content flywheel**
-- `/submit` page with event/job/offer forms → new `submissions` table (RLS: anon insert only).
-- Events upgrade: real URLs, format/location/price filters, per-event detail routes, `Event` JSON-LD.
-
-**Phase 4 — money & compliance**
-- `/sponsor` page: audience stats, placements, rates, enquiry form → `sponsor_enquiries` table.
-- `/privacy` and `/terms`, consent line under every form, postal contact in footer.
+- Unique title/description/og tags on both routes.
+- `JobPosting` JSON-LD on each detail page (title, hiring organisation, location, employment type, dates, apply URL) so roles can appear in Google Jobs.
+- Single H1 per page, semantic markup.
 
 ## Technical notes
 
-- New tables (`submissions`, `sponsor_enquiries`, opt-in columns on `subscribers`) each get explicit GRANTs plus anon-insert-only RLS; no anon reads.
-- Emails go through the project's managed email routes — this is blocked until a sender domain you own is verified, so Phase 2 may lag Phase 1.
-- Archive/sample issue content will be authored as typed data in `src/data/issues.ts` (same pattern as `events.ts`) unless you want it database-backed and editable later.
-- Every new route gets its own unique title/description/og tags; archive and event detail pages get JSON-LD.
-
-## What I need from you
-
-- Real subscriber count (or confirm we go launch-honest with no number).
-- Whether you own `affiliatex.co` DNS access, for the sending domain.
-- Real content for one sample issue, or should I draft a realistic one you edit?
-- Sponsorship rates, or placeholder "request rates" form?
+- Reads happen through a public server function using the publishable key against a narrow anon-select policy limited to published rows — same approach as other public data, no admin client.
+- Listing and detail fetched in the route loader via TanStack Query so pages render server-side for crawlers; both routes get `errorComponent` and `notFoundComponent`.
+- Apply URLs are validated to http/https before rendering the button.
