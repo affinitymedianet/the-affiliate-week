@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   LogOut,
   Mail,
+  Newspaper,
   Menu,
   Settings,
   Tag,
@@ -31,6 +32,7 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/admin/issues", label: "Issues", icon: Newspaper },
   { to: "/admin/jobs", label: "Jobs", icon: Briefcase },
   { to: "/admin/deals", label: "Deals", icon: Tag },
   { to: "/admin/events", label: "Events", icon: CalendarDays },
