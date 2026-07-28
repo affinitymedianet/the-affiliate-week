@@ -10,11 +10,12 @@ export function SiteFooter() {
     <footer className="bg-navy-deep pb-20 text-navy-foreground md:pb-0">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="flex size-8 items-center justify-center rounded-md bg-primary font-display text-xs font-bold text-primary-foreground">
-              AW
-            </span>
-            <span className="font-display text-lg font-bold">The Affiliate Week</span>
+          <div className="flex items-center">
+            <img
+              src={logoAsset.url}
+              alt="The Affiliate Week"
+              className="h-10 w-auto"
+            />
           </div>
 
           <p className="mt-3 max-w-xs text-sm text-navy-foreground/70">
