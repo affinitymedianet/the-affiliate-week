@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 
-import { supabase } from "@/integrations/supabase/client";
+import { currentUser, signIn } from "@/integrations/firebase/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,8 +41,8 @@ function AuthPage() {
   const attempts = useRef(0);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/admin", replace: true });
+    currentUser().then((user) => {
+      if (user) navigate({ to: "/admin", replace: true });
     });
   }, [navigate]);
 
@@ -52,11 +52,7 @@ function AuthPage() {
     setBusy(true);
     setError(null);
     try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password,
-      });
-      if (signInError) throw signInError;
+      await signIn(email, password);
       attempts.current = 0;
       navigate({ to: "/admin", replace: true });
     } catch {

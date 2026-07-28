@@ -16,7 +16,7 @@ import {
   X,
 } from "lucide-react";
 
-import { supabase } from "@/integrations/supabase/client";
+import { signOut as firebaseSignOut } from "@/integrations/firebase/auth";
 import { getMyAccess } from "@/lib/admin.functions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -62,7 +62,7 @@ export function AdminShell() {
   async function signOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
-    await supabase.auth.signOut();
+    await firebaseSignOut();
     navigate({ to: "/a6b8", replace: true });
   }
 

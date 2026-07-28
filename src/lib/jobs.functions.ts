@@ -1,6 +1,5 @@
-import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
+import { COLLECTIONS } from "@/integrations/firebase/config";
+import { fsGet, fsQuery, type Row } from "@/integrations/firebase/firestore";
 
 export type JobListing = {
   id: string;
@@ -18,27 +17,8 @@ export type JobListing = {
   featured: boolean;
 };
 
-const COLUMNS =
-  "id, title, company, location, work_type, employment_type, salary_range, summary, description, apply_url, posted_on, expires_on, featured";
-
-type JobRow = {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  work_type: string;
-  employment_type: string;
-  salary_range: string | null;
-  summary: string;
-  description: string;
-  apply_url: string | null;
-  posted_on: string;
-  expires_on: string | null;
-  featured: boolean;
-};
-
-function safeUrl(url: string | null): string | null {
-  if (!url) return null;
+function safeUrl(url: unknown): string | null {
+  if (typeof url !== "string" || !url) return null;
   try {
     const parsed = new URL(url);
     return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.toString() : null;
@@ -47,71 +27,50 @@ function safeUrl(url: string | null): string | null {
   }
 }
 
-function toDto(row: JobRow): JobListing {
+const str = (value: unknown, fallback = "") => (typeof value === "string" ? value : fallback);
+
+function toDto(row: Row): JobListing {
   return {
-    id: row.id,
-    title: row.title,
-    company: row.company,
-    location: row.location,
-    workType: row.work_type,
-    employmentType: row.employment_type,
-    salaryRange: row.salary_range,
-    summary: row.summary,
-    description: row.description,
+    id: String(row.id),
+    title: str(row.title),
+    company: str(row.company),
+    location: str(row.location),
+    workType: str(row.work_type, "Remote"),
+    employmentType: str(row.employment_type, "Full-time"),
+    salaryRange: str(row.salary_range) || null,
+    summary: str(row.summary),
+    description: str(row.description),
     applyUrl: safeUrl(row.apply_url),
-    postedOn: row.posted_on,
-    expiresOn: row.expires_on,
-    featured: row.featured,
+    postedOn: str(row.posted_on),
+    expiresOn: str(row.expires_on) || null,
+    featured: row.featured === true,
   };
 }
 
-function getPublicClient() {
-  const url = process.env.SUPABASE_URL!;
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
-  return createClient<Database>(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) {
-          h.delete("Authorization");
-        }
-        h.set("apikey", key);
-        return fetch(input, { ...init, headers: h });
-      },
-    },
-  });
+/** Published and past its scheduled publish time. */
+export function isLive(row: Row): boolean {
+  if (row.published !== true) return false;
+  const publishAt = str(row.publish_at);
+  return !publishAt || publishAt <= new Date().toISOString();
 }
 
-export const listJobs = createServerFn({ method: "GET" }).handler(async (): Promise<JobListing[]> => {
-  const supabase = getPublicClient();
-  const { data, error } = await supabase
-    .from("jobs")
-    .select(COLUMNS)
-    .eq("published", true)
-      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
-    .order("featured", { ascending: false })
-    .order("posted_on", { ascending: false });
-
-  if (error) throw new Error(error.message);
-  return ((data ?? []) as JobRow[]).map(toDto);
-});
-
-export const getJob = createServerFn({ method: "GET" })
-  .inputValidator((data: { id: string }) => data)
-  .handler(async ({ data }): Promise<JobListing | null> => {
-    const isUuid =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.id);
-    if (!isUuid) return null;
-    const supabase = getPublicClient();
-    const { data: row, error } = await supabase
-      .from("jobs")
-      .select(COLUMNS)
-      .eq("published", true)
-      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
-      .eq("id", data.id)
-      .maybeSingle();
-
-    if (error) throw new Error(error.message);
-    return row ? toDto(row as JobRow) : null;
+export async function listJobs(): Promise<JobListing[]> {
+  const rows = await fsQuery(COLLECTIONS.jobs, {
+    where: [{ field: "published", op: "EQUAL", value: true }],
+    limit: 1000,
   });
+  return rows
+    .filter(isLive)
+    .sort((a, b) => {
+      if (a.featured !== b.featured) return a.featured === true ? -1 : 1;
+      return str(b.posted_on).localeCompare(str(a.posted_on));
+    })
+    .map(toDto);
+}
+
+export async function getJob({ data }: { data: { id: string } }): Promise<JobListing | null> {
+  if (!data.id) return null;
+  const row = await fsGet(COLLECTIONS.jobs, data.id);
+  if (!row || !isLive(row)) return null;
+  return toDto(row);
+}

@@ -37,7 +37,6 @@ import { Route as AuthenticatedAdminJobsIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminIssuesIndexRouteImport } from './routes/_authenticated/admin.issues.index'
 import { Route as AuthenticatedAdminEventsIndexRouteImport } from './routes/_authenticated/admin.events.index'
 import { Route as AuthenticatedAdminDealsIndexRouteImport } from './routes/_authenticated/admin.deals.index'
-import { Route as ApiPublicBrandSplatRouteImport } from './routes/api/public/brand.$'
 import { Route as AuthenticatedAdminSubmissionsIdRouteImport } from './routes/_authenticated/admin.submissions.$id'
 import { Route as AuthenticatedAdminSponsorsIdRouteImport } from './routes/_authenticated/admin.sponsors.$id'
 import { Route as AuthenticatedAdminJobsNewRouteImport } from './routes/_authenticated/admin.jobs.new'
@@ -196,11 +195,6 @@ const AuthenticatedAdminDealsIndexRoute =
     path: '/deals/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const ApiPublicBrandSplatRoute = ApiPublicBrandSplatRouteImport.update({
-  id: '/api/public/brand/$',
-  path: '/api/public/brand/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedAdminSubmissionsIdRoute =
   AuthenticatedAdminSubmissionsIdRouteImport.update({
     id: '/submissions/$id',
@@ -294,7 +288,6 @@ export interface FileRoutesByFullPath {
   '/admin/jobs/new': typeof AuthenticatedAdminJobsNewRoute
   '/admin/sponsors/$id': typeof AuthenticatedAdminSponsorsIdRoute
   '/admin/submissions/$id': typeof AuthenticatedAdminSubmissionsIdRoute
-  '/api/public/brand/$': typeof ApiPublicBrandSplatRoute
   '/admin/deals/': typeof AuthenticatedAdminDealsIndexRoute
   '/admin/events/': typeof AuthenticatedAdminEventsIndexRoute
   '/admin/issues/': typeof AuthenticatedAdminIssuesIndexRoute
@@ -333,7 +326,6 @@ export interface FileRoutesByTo {
   '/admin/jobs/new': typeof AuthenticatedAdminJobsNewRoute
   '/admin/sponsors/$id': typeof AuthenticatedAdminSponsorsIdRoute
   '/admin/submissions/$id': typeof AuthenticatedAdminSubmissionsIdRoute
-  '/api/public/brand/$': typeof ApiPublicBrandSplatRoute
   '/admin/deals': typeof AuthenticatedAdminDealsIndexRoute
   '/admin/events': typeof AuthenticatedAdminEventsIndexRoute
   '/admin/issues': typeof AuthenticatedAdminIssuesIndexRoute
@@ -375,7 +367,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/jobs/new': typeof AuthenticatedAdminJobsNewRoute
   '/_authenticated/admin/sponsors/$id': typeof AuthenticatedAdminSponsorsIdRoute
   '/_authenticated/admin/submissions/$id': typeof AuthenticatedAdminSubmissionsIdRoute
-  '/api/public/brand/$': typeof ApiPublicBrandSplatRoute
   '/_authenticated/admin/deals/': typeof AuthenticatedAdminDealsIndexRoute
   '/_authenticated/admin/events/': typeof AuthenticatedAdminEventsIndexRoute
   '/_authenticated/admin/issues/': typeof AuthenticatedAdminIssuesIndexRoute
@@ -417,7 +408,6 @@ export interface FileRouteTypes {
     | '/admin/jobs/new'
     | '/admin/sponsors/$id'
     | '/admin/submissions/$id'
-    | '/api/public/brand/$'
     | '/admin/deals/'
     | '/admin/events/'
     | '/admin/issues/'
@@ -456,7 +446,6 @@ export interface FileRouteTypes {
     | '/admin/jobs/new'
     | '/admin/sponsors/$id'
     | '/admin/submissions/$id'
-    | '/api/public/brand/$'
     | '/admin/deals'
     | '/admin/events'
     | '/admin/issues'
@@ -497,7 +486,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/jobs/new'
     | '/_authenticated/admin/sponsors/$id'
     | '/_authenticated/admin/submissions/$id'
-    | '/api/public/brand/$'
     | '/_authenticated/admin/deals/'
     | '/_authenticated/admin/events/'
     | '/_authenticated/admin/issues/'
@@ -524,7 +512,6 @@ export interface RootRouteChildren {
   DealsIndexRoute: typeof DealsIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
   JobsIndexRoute: typeof JobsIndexRoute
-  ApiPublicBrandSplatRoute: typeof ApiPublicBrandSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -725,13 +712,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDealsIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/api/public/brand/$': {
-      id: '/api/public/brand/$'
-      path: '/api/public/brand/$'
-      fullPath: '/api/public/brand/$'
-      preLoaderRoute: typeof ApiPublicBrandSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated/admin/submissions/$id': {
       id: '/_authenticated/admin/submissions/$id'
       path: '/submissions/$id'
@@ -884,7 +864,6 @@ const rootRouteChildren: RootRouteChildren = {
   DealsIndexRoute: DealsIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   JobsIndexRoute: JobsIndexRoute,
-  ApiPublicBrandSplatRoute: ApiPublicBrandSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

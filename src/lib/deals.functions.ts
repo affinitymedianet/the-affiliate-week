@@ -1,6 +1,6 @@
-import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
+import { COLLECTIONS } from "@/integrations/firebase/config";
+import { fsGet, fsQuery, type Row } from "@/integrations/firebase/firestore";
+import { isLive } from "./jobs.functions";
 
 export type Deal = {
   id: string;
@@ -19,28 +19,10 @@ export type Deal = {
   expiresOn: string | null;
 };
 
-const COLUMNS =
-  "id, title, vendor, category, deal_type, discount_label, summary, description, coupon_code, deal_url, exclusive, featured, starts_on, expires_on";
+const str = (value: unknown, fallback = "") => (typeof value === "string" ? value : fallback);
 
-type DealRow = {
-  id: string;
-  title: string;
-  vendor: string;
-  category: string;
-  deal_type: string;
-  discount_label: string | null;
-  summary: string;
-  description: string;
-  coupon_code: string | null;
-  deal_url: string;
-  exclusive: boolean;
-  featured: boolean;
-  starts_on: string;
-  expires_on: string | null;
-};
-
-function safeUrl(url: string | null): string | null {
-  if (!url) return null;
+function safeUrl(url: unknown): string | null {
+  if (typeof url !== "string" || !url) return null;
   try {
     const parsed = new URL(url);
     return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.toString() : null;
@@ -49,71 +31,42 @@ function safeUrl(url: string | null): string | null {
   }
 }
 
-function toDto(row: DealRow): Deal {
+function toDto(row: Row): Deal {
   return {
-    id: row.id,
-    title: row.title,
-    vendor: row.vendor,
-    category: row.category,
-    dealType: row.deal_type,
-    discountLabel: row.discount_label,
-    summary: row.summary,
-    description: row.description,
-    couponCode: row.coupon_code,
+    id: String(row.id),
+    title: str(row.title),
+    vendor: str(row.vendor),
+    category: str(row.category, "Software"),
+    dealType: str(row.deal_type, "Discount"),
+    discountLabel: str(row.discount_label) || null,
+    summary: str(row.summary),
+    description: str(row.description),
+    couponCode: str(row.coupon_code) || null,
     dealUrl: safeUrl(row.deal_url),
-    exclusive: row.exclusive,
-    featured: row.featured,
-    startsOn: row.starts_on,
-    expiresOn: row.expires_on,
+    exclusive: row.exclusive === true,
+    featured: row.featured === true,
+    startsOn: str(row.starts_on),
+    expiresOn: str(row.expires_on) || null,
   };
 }
 
-function getPublicClient() {
-  const url = process.env.SUPABASE_URL!;
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
-  return createClient<Database>(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) {
-          h.delete("Authorization");
-        }
-        h.set("apikey", key);
-        return fetch(input, { ...init, headers: h });
-      },
-    },
+export async function listDeals(): Promise<Deal[]> {
+  const rows = await fsQuery(COLLECTIONS.deals, {
+    where: [{ field: "published", op: "EQUAL", value: true }],
+    limit: 1000,
   });
+  return rows
+    .filter(isLive)
+    .sort((a, b) => {
+      if (a.featured !== b.featured) return a.featured === true ? -1 : 1;
+      return str(b.created_at).localeCompare(str(a.created_at));
+    })
+    .map(toDto);
 }
 
-export const listDeals = createServerFn({ method: "GET" }).handler(async (): Promise<Deal[]> => {
-  const supabase = getPublicClient();
-  const { data, error } = await supabase
-    .from("deals")
-    .select(COLUMNS)
-    .eq("published", true)
-      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
-    .order("featured", { ascending: false })
-    .order("created_at", { ascending: false });
-
-  if (error) throw new Error(error.message);
-  return ((data ?? []) as DealRow[]).map(toDto);
-});
-
-export const getDeal = createServerFn({ method: "GET" })
-  .inputValidator((data: { id: string }) => data)
-  .handler(async ({ data }): Promise<Deal | null> => {
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.id);
-    if (!isUuid) return null;
-    const supabase = getPublicClient();
-    const { data: row, error } = await supabase
-      .from("deals")
-      .select(COLUMNS)
-      .eq("published", true)
-      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
-      .eq("id", data.id)
-      .maybeSingle();
-
-    if (error) throw new Error(error.message);
-    return row ? toDto(row as DealRow) : null;
-  });
+export async function getDeal({ data }: { data: { id: string } }): Promise<Deal | null> {
+  if (!data.id) return null;
+  const row = await fsGet(COLLECTIONS.deals, data.id);
+  if (!row || !isLive(row)) return null;
+  return toDto(row);
+}
