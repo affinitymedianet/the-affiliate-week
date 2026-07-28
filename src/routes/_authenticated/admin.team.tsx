@@ -2,7 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { adminListTeam, adminSetRole } from "@/lib/admin.functions";
+import { useState } from "react";
+
+import { adminCreateStaff, adminListTeam, adminSetRole } from "@/lib/admin.functions";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/admin/AdminShell";
 
@@ -15,6 +18,21 @@ function TeamPage() {
   const { data: members = [], isLoading } = useQuery({
     queryKey: ["admin", "team"],
     queryFn: () => adminListTeam(),
+  });
+
+  const [email, setEmail] = useState("");
+  const [role, setRole2] = useState<"editor" | "admin">("editor");
+  const [issued, setIssued] = useState<{ email: string; password: string } | null>(null);
+
+  const createStaff = useMutation({
+    mutationFn: () => adminCreateStaff({ data: { email, role } }),
+    onSuccess: (result) => {
+      setIssued(result);
+      setEmail("");
+      toast.success("Account created");
+      queryClient.invalidateQueries({ queryKey: ["admin", "team"] });
+    },
+    onError: (err: Error) => toast.error(err.message),
   });
 
   const setRole = useMutation({
@@ -31,8 +49,41 @@ function TeamPage() {
     <div className="max-w-3xl">
       <PageHeading
         title="Team & roles"
-        description="Anyone can create an account, but only people with a role here can reach the control room. Admins manage settings, roles and deletions; editors manage content."
+        description="Public sign-up is disabled — staff accounts are created here. Admins manage settings, roles and deletions; editors manage content."
       />
+
+      <div className="mb-8 rounded-lg border border-border p-4">
+        <h2 className="font-display text-lg font-semibold">Add a staff account</h2>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <Input
+            type="email"
+            placeholder="name@theaffiliateweek.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            maxLength={255}
+            className="w-64"
+          />
+          <select
+            value={role}
+            onChange={(e) => setRole2(e.target.value as "editor" | "admin")}
+            className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+          >
+            <option value="editor">Editor</option>
+            <option value="admin">Admin</option>
+          </select>
+          <Button onClick={() => createStaff.mutate()} disabled={createStaff.isPending || !email}>
+            Create account
+          </Button>
+        </div>
+        {issued ? (
+          <p className="mt-3 rounded-md bg-muted p-3 text-sm">
+            One-time password for <strong>{issued.email}</strong>:{" "}
+            <code className="font-mono">{issued.password}</code>
+            <br />
+            Share it securely and ask them to change it after signing in. It will not be shown again.
+          </p>
+        ) : null}
+      </div>
 
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>

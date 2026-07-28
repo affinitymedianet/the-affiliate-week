@@ -331,17 +331,41 @@ export const adminStats = createServerFn({ method: "GET" })
     };
   });
 
-/** One-time bootstrap: the very first signed-in user can claim owner access. */
-export const claimFirstAdmin = createServerFn({ method: "POST" })
+/** Admin-only: create a staff account with a one-time password (public signup is disabled). */
+export const adminCreateStaff = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<{ ok: boolean }> => {
-    const { adminClient } = await import("@/lib/admin.server");
+  .inputValidator((data: { email: string; role: string }) => {
+    const email = String(data.email ?? "").trim().toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 255) {
+      throw new Error("Enter a valid email address");
+    }
+    if (data.role !== "admin" && data.role !== "editor") throw new Error("Unknown role");
+    return { email, role: data.role as "admin" | "editor" };
+  })
+  .handler(async ({ data, context }): Promise<{ email: string; password: string }> => {
+    const { requireAdmin, adminClient, writeAudit } = await import("@/lib/admin.server");
+    const identity = await requireAdmin(context);
     const supabase = adminClient();
-    const { count } = await supabase.from("user_roles").select("id", { count: "exact", head: true });
-    if ((count ?? 0) > 0) throw new Error("An admin already exists — ask them to grant you access.");
-    const { error } = await supabase
+
+    const bytes = new Uint8Array(18);
+    crypto.getRandomValues(bytes);
+    const password = `Aw1!${btoa(String.fromCharCode(...bytes)).replace(/[^a-zA-Z0-9]/g, "x")}`;
+
+    const { data: created, error } = await supabase.auth.admin.createUser({
+      email: data.email,
+      password,
+      email_confirm: true,
+    });
+    if (error || !created.user) throw new Error(error?.message ?? "Could not create the account");
+
+    const { error: roleError } = await supabase
       .from("user_roles")
-      .insert({ user_id: context.userId, role: "admin" });
-    if (error) throw new Error(error.message);
-    return { ok: true };
+      .upsert({ user_id: created.user.id, role: data.role }, { onConflict: "user_id,role" });
+    if (roleError) throw new Error(roleError.message);
+
+    await writeAudit(identity, "create_staff", "user_roles", created.user.id, {
+      email: data.email,
+      role: data.role,
+    });
+    return { email: data.email, password };
   });

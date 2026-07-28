@@ -14,8 +14,8 @@ import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as SponsorRouteImport } from './routes/sponsor'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ArchiveRouteImport } from './routes/archive'
+import { Route as A6b8RouteImport } from './routes/a6b8'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
@@ -61,14 +61,14 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ArchiveRoute = ArchiveRouteImport.update({
   id: '/archive',
   path: '/archive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const A6b8Route = A6b8RouteImport.update({
+  id: '/a6b8',
+  path: '/a6b8',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -173,8 +173,8 @@ const AuthenticatedAdminDealsRoute = AuthenticatedAdminDealsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/a6b8': typeof A6b8Route
   '/archive': typeof ArchiveRoute
-  '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsor': typeof SponsorRoute
@@ -200,8 +200,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/a6b8': typeof A6b8Route
   '/archive': typeof ArchiveRoute
-  '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsor': typeof SponsorRoute
@@ -228,8 +228,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/a6b8': typeof A6b8Route
   '/archive': typeof ArchiveRoute
-  '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsor': typeof SponsorRoute
@@ -257,8 +257,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/a6b8'
     | '/archive'
-    | '/auth'
     | '/privacy'
     | '/sitemap.xml'
     | '/sponsor'
@@ -284,8 +284,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/a6b8'
     | '/archive'
-    | '/auth'
     | '/privacy'
     | '/sitemap.xml'
     | '/sponsor'
@@ -311,8 +311,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/a6b8'
     | '/archive'
-    | '/auth'
     | '/privacy'
     | '/sitemap.xml'
     | '/sponsor'
@@ -340,8 +340,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  A6b8Route: typeof A6b8Route
   ArchiveRoute: typeof ArchiveRoute
-  AuthRoute: typeof AuthRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SponsorRoute: typeof SponsorRoute
@@ -393,18 +393,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/archive': {
       id: '/archive'
       path: '/archive'
       fullPath: '/archive'
       preLoaderRoute: typeof ArchiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/a6b8': {
+      id: '/a6b8'
+      path: '/a6b8'
+      fullPath: '/a6b8'
+      preLoaderRoute: typeof A6b8RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -584,8 +584,8 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  A6b8Route: A6b8Route,
   ArchiveRoute: ArchiveRoute,
-  AuthRoute: AuthRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SponsorRoute: SponsorRoute,
