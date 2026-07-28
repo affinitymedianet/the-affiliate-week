@@ -14,7 +14,7 @@ export function SiteFooter() {
             <img
               src={logoAsset.url}
               alt="The Affiliate Week"
-              className="h-10 w-auto"
+              className="h-10 w-auto brightness-0 invert"
             />
           </div>
 
