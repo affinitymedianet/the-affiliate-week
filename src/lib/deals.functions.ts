@@ -92,6 +92,7 @@ export const listDeals = createServerFn({ method: "GET" }).handler(async (): Pro
     .from("deals")
     .select(COLUMNS)
     .eq("published", true)
+      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
     .order("featured", { ascending: false })
     .order("created_at", { ascending: false });
 
@@ -109,6 +110,7 @@ export const getDeal = createServerFn({ method: "GET" })
       .from("deals")
       .select(COLUMNS)
       .eq("published", true)
+      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
       .eq("id", data.id)
       .maybeSingle();
 

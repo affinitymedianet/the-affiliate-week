@@ -82,6 +82,7 @@ export const listEvents = createServerFn({ method: "GET" }).handler(
       .from("events")
       .select(COLUMNS)
       .eq("published", true)
+      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
       .order("starts_on", { ascending: true });
 
     if (error) throw new Error(error.message);
@@ -97,6 +98,7 @@ export const getEvent = createServerFn({ method: "GET" })
       .from("events")
       .select(COLUMNS)
       .eq("published", true)
+      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
       .eq("slug", data.slug)
       .maybeSingle();
 
