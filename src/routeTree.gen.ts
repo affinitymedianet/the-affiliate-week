@@ -35,6 +35,7 @@ import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminJobsRouteImport } from './routes/_authenticated/admin.jobs'
 import { Route as AuthenticatedAdminEventsRouteImport } from './routes/_authenticated/admin.events'
 import { Route as AuthenticatedAdminDealsRouteImport } from './routes/_authenticated/admin.deals'
+import { Route as ApiPublicBrandSplatRouteImport } from './routes/api/public/brand.$'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -170,6 +171,11 @@ const AuthenticatedAdminDealsRoute = AuthenticatedAdminDealsRouteImport.update({
   path: '/deals',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const ApiPublicBrandSplatRoute = ApiPublicBrandSplatRouteImport.update({
+  id: '/api/public/brand/$',
+  path: '/api/public/brand/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/brand/$': typeof ApiPublicBrandSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -223,6 +230,7 @@ export interface FileRoutesByTo {
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/api/public/brand/$': typeof ApiPublicBrandSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -252,6 +260,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/_authenticated/admin/team': typeof AuthenticatedAdminTeamRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/brand/$': typeof ApiPublicBrandSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -281,6 +290,7 @@ export interface FileRouteTypes {
     | '/admin/subscribers'
     | '/admin/team'
     | '/admin/'
+    | '/api/public/brand/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/admin/subscribers'
     | '/admin/team'
     | '/admin'
+    | '/api/public/brand/$'
   id:
     | '__root__'
     | '/'
@@ -335,6 +346,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/subscribers'
     | '/_authenticated/admin/team'
     | '/_authenticated/admin/'
+    | '/api/public/brand/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -354,6 +366,7 @@ export interface RootRouteChildren {
   DealsIndexRoute: typeof DealsIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
   JobsIndexRoute: typeof JobsIndexRoute
+  ApiPublicBrandSplatRoute: typeof ApiPublicBrandSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -540,6 +553,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDealsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/public/brand/$': {
+      id: '/api/public/brand/$'
+      path: '/api/public/brand/$'
+      fullPath: '/api/public/brand/$'
+      preLoaderRoute: typeof ApiPublicBrandSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -598,6 +618,7 @@ const rootRouteChildren: RootRouteChildren = {
   DealsIndexRoute: DealsIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   JobsIndexRoute: JobsIndexRoute,
+  ApiPublicBrandSplatRoute: ApiPublicBrandSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
