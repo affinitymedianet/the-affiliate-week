@@ -33,7 +33,7 @@ export function SiteHeader() {
             <Link
               key={link.label}
               to={link.to}
-              hash={link.hash}
+
               className="font-display text-sm font-semibold text-foreground transition-colors hover:text-primary"
             >
               {link.label}
@@ -70,7 +70,7 @@ export function SiteHeader() {
               <Link
                 key={link.label}
                 to={link.to}
-                hash={link.hash}
+
                 onClick={() => setOpen(false)}
                 className="rounded-md px-2 py-3 font-display text-base font-semibold text-foreground hover:bg-muted hover:text-primary"
               >
