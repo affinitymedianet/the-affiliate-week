@@ -19,6 +19,7 @@ import {
   adminSetPublished,
 } from "@/lib/admin.functions";
 import { downloadCsv, parseCsv, toCsv } from "@/lib/csv";
+import { AssetUpload } from "@/components/admin/AssetUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -81,10 +82,36 @@ function FieldInput({
             </option>
           ))}
         </select>
+      ) : field.type === "json" ? (
+        <Textarea
+          id={id}
+          value={
+            typeof value === "string" ? value : JSON.stringify(value ?? [], null, 2)
+          }
+          onChange={(e) => onChange(e.target.value)}
+          rows={12}
+          className="mt-1.5 font-mono text-xs"
+        />
+      ) : field.type === "image" ? (
+        <AssetUpload
+          id={id}
+          value={(value as string) ?? ""}
+          onChange={(next) => onChange(next)}
+        />
       ) : (
         <Input
           id={id}
-          type={field.type === "date" ? "date" : field.type === "url" ? "url" : "text"}
+          type={
+            field.type === "date"
+              ? "date"
+              : field.type === "datetime"
+                ? "datetime-local"
+                : field.type === "number"
+                  ? "number"
+                  : field.type === "url"
+                    ? "url"
+                    : "text"
+          }
           value={(value as string) ?? ""}
           onChange={(e) => onChange(e.target.value)}
           className="mt-1.5"
@@ -93,6 +120,33 @@ function FieldInput({
       )}
       {field.help ? <p className="mt-1 text-xs text-muted-foreground">{field.help}</p> : null}
     </div>
+  );
+}
+
+function StatusBadge({ row }: { row: AdminRow }) {
+  const scheduled =
+    !!row.publish_at && new Date(String(row.publish_at)).getTime() > Date.now();
+  if (!row.published) {
+    return (
+      <span className="rounded bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">
+        Draft
+      </span>
+    );
+  }
+  if (scheduled) {
+    return (
+      <span
+        className="rounded bg-signal/15 px-2 py-0.5 text-xs font-semibold text-signal"
+        title={new Date(String(row.publish_at)).toLocaleString("en-GB")}
+      >
+        Scheduled
+      </span>
+    );
+  }
+  return (
+    <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+      Live
+    </span>
   );
 }
 
@@ -325,15 +379,7 @@ export function RecordManager({ entityKey }: { entityKey: EntityKey }) {
                       </td>
                     ))}
                     <td className="p-3">
-                      <span
-                        className={
-                          row.published
-                            ? "rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary"
-                            : "rounded bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground"
-                        }
-                      >
-                        {row.published ? "Live" : "Draft"}
-                      </span>
+                      <StatusBadge row={row} />
                     </td>
                     <td className="p-3 text-right">
                       <Button size="sm" variant="ghost" onClick={() => setEditing(row)}>
@@ -368,6 +414,9 @@ export function RecordManager({ entityKey }: { entityKey: EntityKey }) {
                 for (const field of entity.fields) values[field.name] = editing[field.name] ?? null;
                 if (entityKey === "events" && !values.slug && values.name) {
                   values.slug = slugify(String(values.name));
+                }
+                if (entityKey === "issues" && !values.slug && values.title) {
+                  values.slug = slugify(String(values.title));
                 }
                 saveMutation.mutate({ id: editing.id ? String(editing.id) : null, values });
               }}
