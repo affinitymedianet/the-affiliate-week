@@ -52,7 +52,10 @@ function TeamPage() {
   });
 
   const sendReset = useMutation({
-    mutationFn: (input: { email: string }) => adminSendPasswordReset({ data: input }),
+    mutationFn: (input: { email: string }) =>
+      adminSendPasswordReset({
+        data: { email: input.email, redirectTo: `${window.location.origin}/a6b8` },
+      }),
     onSuccess: () => toast.success("Reset link sent"),
     onError: (err: Error) => toast.error(err.message),
   });

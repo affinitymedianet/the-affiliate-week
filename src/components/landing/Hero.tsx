@@ -4,6 +4,7 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 import { useLatestIssue } from "@/hooks/use-latest-issue";
 
 export function Hero() {
+  const latestIssue = useLatestIssue();
   return (
     <section id="newsletter" className="bg-primary text-primary-foreground">
       <div className="mx-auto grid max-w-6xl gap-8 px-5 sm:px-6 lg:px-8 py-14 lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-20">
