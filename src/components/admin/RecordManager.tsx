@@ -112,8 +112,16 @@ function FieldInput({
                     ? "url"
                     : "text"
           }
-          value={(value as string) ?? ""}
-          onChange={(e) => onChange(e.target.value)}
+          value={
+            field.type === "datetime" ? toLocalInput(value as string | null) : ((value as string) ?? "")
+          }
+          onChange={(e) =>
+            onChange(
+              field.type === "datetime" && e.target.value
+                ? new Date(e.target.value).toISOString()
+                : e.target.value,
+            )
+          }
           className="mt-1.5"
           required={field.required}
         />
