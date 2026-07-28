@@ -12,7 +12,6 @@ const links = [
   { label: "Deals", to: "/deals" as const },
   { label: "Events", to: "/events" as const },
   { label: "Sponsor", to: "/sponsor" as const },
-  { label: "FAQ", to: "/" as const, hash: "faq" },
 ];
 
 export function SiteHeader() {
@@ -34,7 +33,7 @@ export function SiteHeader() {
             <Link
               key={link.label}
               to={link.to}
-              hash={link.hash}
+
               className="font-display text-sm font-semibold text-foreground transition-colors hover:text-primary"
             >
               {link.label}
@@ -71,7 +70,7 @@ export function SiteHeader() {
               <Link
                 key={link.label}
                 to={link.to}
-                hash={link.hash}
+
                 onClick={() => setOpen(false)}
                 className="rounded-md px-2 py-3 font-display text-base font-semibold text-foreground hover:bg-muted hover:text-primary"
               >
