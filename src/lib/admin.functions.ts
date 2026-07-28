@@ -66,7 +66,7 @@ export const adminSave = createServerFn({ method: "POST" })
     const supabase = adminClient();
 
     if (data.id) {
-      const { error } = await supabase.from(entity.table).update(payload).eq("id", data.id);
+      const { error } = await supabase.from(entity.table).update(payload as never).eq("id", data.id);
       if (error) throw new Error(error.message);
       await writeAudit(identity, "update", entity.table, data.id, payload);
       return { id: data.id };
@@ -74,7 +74,7 @@ export const adminSave = createServerFn({ method: "POST" })
 
     const { data: row, error } = await supabase
       .from(entity.table)
-      .insert(payload)
+      .insert(payload as never)
       .select("id")
       .single();
     if (error) throw new Error(error.message);
@@ -98,7 +98,7 @@ export const adminBulkInsert = createServerFn({ method: "POST" })
     const supabase = adminClient();
     const { error, count } = await supabase
       .from(entity.table)
-      .insert(payload, { count: "exact" });
+      .insert(payload as never, { count: "exact" });
     if (error) throw new Error(error.message);
     await writeAudit(identity, "bulk_import", entity.table, null, { rows: payload.length });
     return { inserted: count ?? payload.length };
@@ -184,7 +184,7 @@ export const adminUpdateInboxItem = createServerFn({ method: "POST" })
     if (data.status !== undefined) patch.status = data.status;
     if (data.admin_notes !== undefined) patch.admin_notes = data.admin_notes.slice(0, 2000);
     const supabase = adminClient();
-    const { error } = await supabase.from(data.kind).update(patch).eq("id", data.id);
+    const { error } = await supabase.from(data.kind).update(patch as never).eq("id", data.id);
     if (error) throw new Error(error.message);
     await writeAudit(identity, "update", data.kind, data.id, patch);
     return { ok: true };
@@ -216,7 +216,7 @@ export const adminSaveSettings = createServerFn({ method: "POST" })
       if (key in data.values) patch[key] = data.values[key];
     }
     const supabase = adminClient();
-    const { error } = await supabase.from("site_settings").update(patch).eq("id", true);
+    const { error } = await supabase.from("site_settings").update(patch as never).eq("id", true);
     if (error) throw new Error(error.message);
     await writeAudit(identity, "update", "site_settings", "singleton", patch);
     return { ok: true };
