@@ -90,13 +90,13 @@ function SubmitPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <section className="border-b border-border bg-background py-14 lg:py-20">
+        <section className="bg-primary text-primary-foreground py-14 lg:py-20">
           <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Submit" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Submit an event, job or offer
             </h1>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-4 text-primary-foreground/85">
               Listings are editorial and free — we include what's genuinely useful to readers.
               Paid placement is handled separately on the sponsor page.
             </p>

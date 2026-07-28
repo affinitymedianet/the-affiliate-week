@@ -92,13 +92,13 @@ function SponsorPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <section className="border-b border-border bg-background py-14 lg:py-20">
+        <section className="bg-primary text-primary-foreground py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Sponsor" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Sponsor the newsletter
             </h1>
-            <p className="mt-4 max-w-2xl text-muted-foreground">
+            <p className="mt-4 max-w-2xl text-primary-foreground/85">
               The Affiliate Week goes to people who buy media, run programmes and choose networks — a
               small, specific audience rather than a large general one.
             </p>
