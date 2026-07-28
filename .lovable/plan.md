@@ -1,38 +1,55 @@
-## Admin review — what is genuinely missing
+## Goal
 
-I checked the Control Room against what a weekly newsletter actually needs to run. Five gaps are mandatory; everything else can wait.
+Every admin record type gets real pages instead of dialogs and expandable rows: a list page, a "new" page, and an edit page — each with full create/read/update/delete, search, filters and pagination that survive refresh and back/forward.
 
-### 1. Issues are not manageable (biggest gap)
-The archive and every `/issues/...` page read from a hardcoded file in the codebase. That means you cannot publish this week's issue without a code change — the core weekly workflow has no admin screen.
+## New admin URL map
 
-Fix: an `issues` table (slug, title, dek, issue number, published date, cover, body sections, published flag) plus an **Issues** section in the Control Room using the same manager pattern as Jobs/Deals/Events, and switch the archive, issue pages, homepage "Inside this issue" and sitemap to read from the database.
+```text
+/admin/jobs                 list (search, filters, pagination, bulk actions)
+/admin/jobs/new             create form (full page)
+/admin/jobs/<id>            edit form + delete + publish toggle
+   ... same for /admin/deals, /admin/events, /admin/issues
 
-### 2. Scheduled publishing does nothing
-Jobs, deals and events already have a `publish_at` field, but nothing on the public site respects it — a record is either live or not. Anything scheduled for later shows immediately.
+/admin/submissions          list (search, status filter, pagination)
+/admin/submissions/<id>     detail page: full record, status buttons, internal notes
+/admin/sponsors             list + /admin/sponsors/<id> detail page
 
-Fix: honour `publish_at` in every public query and in the sitemap, surface a "Scheduled" status in the admin list, and add a date/time picker to the editor.
+/admin/subscribers          list (search, status filter, pagination, bulk delete)
+/admin/team                 staff list + role/reset/deactivate actions
+/admin/settings             settings form (already a full page)
+```
 
-### 3. No file uploads for brand assets
-Settings only accepts URLs for logo, dark logo, favicon and share image, and there is no storage set up. You currently have nowhere to host those files.
+## What changes
 
-Fix: create a public `brand` storage bucket (staff-only writes), and add drag-and-drop upload to Settings and to event/deal cover images, with instant preview.
+**1. Shared list component (`RecordTable`)**
+- Table with sortable-by-default ordering, checkbox multi-select, per-row "Edit" link to the record page.
+- Search box, plus status filter (All / Live / Scheduled / Draft) and — where relevant — a category/type filter.
+- Pagination footer (25 per page) with page numbers, prev/next and a "showing X–Y of Z" line.
+- Bulk publish / unpublish / delete, CSV template, bulk import, export — kept from today, moved above the table.
+- Search, filter and page live in the URL (`?q=&status=&page=`) using `validateSearch`, so a refresh or shared link keeps the view. Search is debounced and resets to page 1.
 
-### 4. Subscriber list has no hygiene tools
-You can export CSV, but you cannot search, remove a subscriber, or handle an unsubscribe request. That is a legal requirement under GDPR/CAN-SPAM as soon as you send.
+**2. Shared form page component (`RecordForm`)**
+- Full-width page with breadcrumb ("Jobs → New job" / "Jobs → <title>"), grouped fields, and a sticky action bar: Save, Save & publish, Cancel, and Delete (edit mode only, with confirm).
+- Keeps every field type already supported: text, textarea, date, datetime, boolean, select, url, number, JSON section editor, image upload.
+- Unsaved-changes guard when navigating away.
+- After create, redirects to the edit page for that record; after delete, back to the list.
 
-Fix: search + pagination on the subscribers table, admin delete, a `status` field (active / unsubscribed / bounced), and a public one-click `/unsubscribe` page linked from your emails.
+**3. Inbox detail pages**
+- The accordion in Submissions and Sponsor enquiries is replaced by a list of rows linking to `/admin/submissions/<id>` and `/admin/sponsors/<id>`.
+- Detail page shows all fields, the status control, internal notes with an explicit Save, "Delete enquiry" for admins, and prev/next links to move through the queue.
+- Submission detail also gets a "Create job/event/deal from this" button that pre-fills the matching new-record form.
 
-### 5. Staff account controls are incomplete
-Admins can create staff and set roles, but there is no way to send a password reset, or revoke access from someone who has left (role removal alone leaves the login working).
+**4. Subscribers and Team**
+- Subscribers already has search, status filter and pagination — moved onto URL search params for consistency.
+- Team keeps a single page (no per-record form needed), with the existing role, reset-link and deactivate actions.
 
-Fix: "Send reset link" and "Deactivate account" actions on the Team page, both admin-only and both written to the audit log.
+**5. Dialogs removed**
+- `RecordManager`'s edit `Dialog` and the CSV import preview dialog are removed; import preview becomes an inline confirm panel on the list page.
 
-### Explicitly not doing now
-Newsletter provider API sync (Beehiiv/Mailchimp) — the settings fields exist but real syncing should wait until you have chosen a sending platform. Analytics dashboards, comment threads and A/B tools are premature.
+## Technical notes
 
-### Technical notes
-- New table `public.issues` with GRANTs, RLS mirroring the deals/jobs pattern (public read where `published` and `publish_at` has passed, staff write, admin delete), and the existing `update_updated_at_column` trigger.
-- `subscribers` gains `status` and `unsubscribed_at`; the unsubscribe page uses a signed token via a public server route so no auth is required.
-- Public list queries in `deals.functions.ts`, `jobs.functions.ts`, `events.functions.ts` and the new issues module all get an `or(publish_at.is.null,publish_at.lte.now)` filter.
-- Storage bucket `brand`, public read, insert/update restricted to `is_staff(auth.uid())`.
-- Password reset and deactivation run through admin-only server functions with a role check before touching the admin client, logged to `audit_log`.
+- Route files are split so each entity has `admin.<entity>.index.tsx` (list), `admin.<entity>.new.tsx`, and `admin.<entity>.$id.tsx`; the current single-leaf `admin.<entity>.tsx` files are removed so the router does not treat them as layouts.
+- Two new server functions in `src/lib/admin.functions.ts`: `adminGetRecord({ entity, id })` and `adminGetInboxItem({ kind, id })`, both behind the existing staff check, so an edit page can load directly by URL.
+- Pagination is client-side over the existing capped list query (1000 rows) to start; if any board grows past that, the list query moves to server-side range + count in a follow-up.
+- List and detail routes prime the cache in their loaders under `_authenticated`, so pages render populated on first paint.
+- `src/components/admin/RecordManager.tsx` and `InboxManager.tsx` are replaced by `RecordTable.tsx`, `RecordForm.tsx`, `InboxTable.tsx` and `InboxDetail.tsx`; the schema in `src/lib/admin-schema.ts` stays the single source of truth for fields.
