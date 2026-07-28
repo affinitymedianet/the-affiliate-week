@@ -17,8 +17,17 @@ function read(key: string, fallback = ""): string {
   return fallback;
 }
 
+/**
+ * The API key is injected at build time (see vite.config.ts) from the stored
+ * GOOGLE_API_KEY, with the usual VITE_/process.env fallbacks. The literal
+ * `import.meta.env.VITE_FIREBASE_API_KEY` reference is required for the
+ * build-time replacement to apply.
+ */
+const injectedApiKey = import.meta.env.VITE_FIREBASE_API_KEY as string | undefined;
+
 export const firebaseConfig = {
-  apiKey: read("FIREBASE_API_KEY"),
+  apiKey: injectedApiKey || read("FIREBASE_API_KEY") || read("GOOGLE_API_KEY"),
+
   authDomain: read("FIREBASE_AUTH_DOMAIN", "the-affiliate-week.firebaseapp.com"),
   projectId: read("FIREBASE_PROJECT_ID", "the-affiliate-week"),
   storageBucket: read("FIREBASE_STORAGE_BUCKET", "the-affiliate-week.firebasestorage.app"),
