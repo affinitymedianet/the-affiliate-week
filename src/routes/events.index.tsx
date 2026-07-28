@@ -8,7 +8,8 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Pager, paginate } from "@/components/site/Pager";
 import { Button } from "@/components/ui/button";
-import { events, type AffiliateEvent } from "@/data/events";
+import { type AffiliateEvent } from "@/data/events";
+import { listEvents } from "@/lib/events.functions";
 
 const title = "Affiliate marketing events calendar — The Affiliate Week";
 const description =
@@ -40,17 +41,14 @@ export const Route = createFileRoute("/events/")({
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "ItemList",
+          "@type": "CollectionPage",
           name: "Affiliate marketing events",
-          itemListElement: events.map((e, i) => ({
-            "@type": "ListItem",
-            position: i + 1,
-            name: e.name,
-          })),
+          description,
         }),
       },
     ],
   }),
+  loader: () => listEvents(),
   component: EventsPage,
 });
 
@@ -74,6 +72,7 @@ function groupByMonth(items: AffiliateEvent[]) {
 
 function EventsPage() {
   const { q, format, place, free: freeOnly, page } = Route.useSearch();
+  const events = Route.useLoaderData() as AffiliateEvent[];
   const navigate = useNavigate({ from: "/events" });
   const setSearch = (next: Partial<EventsSearch>) =>
     navigate({ search: (prev: EventsSearch) => ({ ...prev, page: 1, ...next }) });
@@ -92,7 +91,7 @@ function EventsPage() {
         }
         return true;
       }),
-    [format, place, freeOnly, q],
+    [events, format, place, freeOnly, q],
   );
 
   const paged = paginate(filtered, page);
