@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { listDeals } from "@/lib/deals.functions";
 import { listJobs } from "@/lib/jobs.functions";
 import { listEvents } from "@/lib/events.functions";
-import { issues } from "@/data/issues";
+import { listIssues } from "@/lib/issues.functions";
 import { PAGE_SIZE } from "@/components/site/Pager";
 
 import { SITE_URL } from "@/lib/site";
@@ -34,10 +34,11 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const [deals, jobs, events] = await Promise.all([
+        const [deals, jobs, events, issues] = await Promise.all([
           listDeals().catch(() => []),
           listJobs().catch(() => []),
           listEvents().catch(() => []),
+          listIssues().catch(() => []),
         ]);
 
         const entries: SitemapEntry[] = [

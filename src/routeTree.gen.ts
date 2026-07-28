@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as SponsorRouteImport } from './routes/sponsor'
@@ -33,9 +34,16 @@ import { Route as AuthenticatedAdminSubmissionsRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminSponsorsRouteImport } from './routes/_authenticated/admin.sponsors'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminJobsRouteImport } from './routes/_authenticated/admin.jobs'
+import { Route as AuthenticatedAdminIssuesRouteImport } from './routes/_authenticated/admin.issues'
 import { Route as AuthenticatedAdminEventsRouteImport } from './routes/_authenticated/admin.events'
 import { Route as AuthenticatedAdminDealsRouteImport } from './routes/_authenticated/admin.deals'
+import { Route as ApiPublicBrandSplatRouteImport } from './routes/api/public/brand.$'
 
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -159,6 +167,12 @@ const AuthenticatedAdminJobsRoute = AuthenticatedAdminJobsRouteImport.update({
   path: '/jobs',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminIssuesRoute =
+  AuthenticatedAdminIssuesRouteImport.update({
+    id: '/issues',
+    path: '/issues',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminEventsRoute =
   AuthenticatedAdminEventsRouteImport.update({
     id: '/events',
@@ -170,6 +184,11 @@ const AuthenticatedAdminDealsRoute = AuthenticatedAdminDealsRouteImport.update({
   path: '/deals',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const ApiPublicBrandSplatRoute = ApiPublicBrandSplatRouteImport.update({
+  id: '/api/public/brand/$',
+  path: '/api/public/brand/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -180,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
@@ -190,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/jobs/': typeof JobsIndexRoute
   '/admin/deals': typeof AuthenticatedAdminDealsRoute
   '/admin/events': typeof AuthenticatedAdminEventsRoute
+  '/admin/issues': typeof AuthenticatedAdminIssuesRoute
   '/admin/jobs': typeof AuthenticatedAdminJobsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
@@ -197,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/brand/$': typeof ApiPublicBrandSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -207,6 +229,7 @@ export interface FileRoutesByTo {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
@@ -216,6 +239,7 @@ export interface FileRoutesByTo {
   '/jobs': typeof JobsIndexRoute
   '/admin/deals': typeof AuthenticatedAdminDealsRoute
   '/admin/events': typeof AuthenticatedAdminEventsRoute
+  '/admin/issues': typeof AuthenticatedAdminIssuesRoute
   '/admin/jobs': typeof AuthenticatedAdminJobsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
@@ -223,6 +247,7 @@ export interface FileRoutesByTo {
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/api/public/brand/$': typeof ApiPublicBrandSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -235,6 +260,7 @@ export interface FileRoutesById {
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
@@ -245,6 +271,7 @@ export interface FileRoutesById {
   '/jobs/': typeof JobsIndexRoute
   '/_authenticated/admin/deals': typeof AuthenticatedAdminDealsRoute
   '/_authenticated/admin/events': typeof AuthenticatedAdminEventsRoute
+  '/_authenticated/admin/issues': typeof AuthenticatedAdminIssuesRoute
   '/_authenticated/admin/jobs': typeof AuthenticatedAdminJobsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
@@ -252,6 +279,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/_authenticated/admin/team': typeof AuthenticatedAdminTeamRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/brand/$': typeof ApiPublicBrandSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -264,6 +292,7 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/unsubscribe'
     | '/admin'
     | '/deals/$dealId'
     | '/events/$eventId'
@@ -274,6 +303,7 @@ export interface FileRouteTypes {
     | '/jobs/'
     | '/admin/deals'
     | '/admin/events'
+    | '/admin/issues'
     | '/admin/jobs'
     | '/admin/settings'
     | '/admin/sponsors'
@@ -281,6 +311,7 @@ export interface FileRouteTypes {
     | '/admin/subscribers'
     | '/admin/team'
     | '/admin/'
+    | '/api/public/brand/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -291,6 +322,7 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/unsubscribe'
     | '/deals/$dealId'
     | '/events/$eventId'
     | '/issues/$slug'
@@ -300,6 +332,7 @@ export interface FileRouteTypes {
     | '/jobs'
     | '/admin/deals'
     | '/admin/events'
+    | '/admin/issues'
     | '/admin/jobs'
     | '/admin/settings'
     | '/admin/sponsors'
@@ -307,6 +340,7 @@ export interface FileRouteTypes {
     | '/admin/subscribers'
     | '/admin/team'
     | '/admin'
+    | '/api/public/brand/$'
   id:
     | '__root__'
     | '/'
@@ -318,6 +352,7 @@ export interface FileRouteTypes {
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/unsubscribe'
     | '/_authenticated/admin'
     | '/deals/$dealId'
     | '/events/$eventId'
@@ -328,6 +363,7 @@ export interface FileRouteTypes {
     | '/jobs/'
     | '/_authenticated/admin/deals'
     | '/_authenticated/admin/events'
+    | '/_authenticated/admin/issues'
     | '/_authenticated/admin/jobs'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/sponsors'
@@ -335,6 +371,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/subscribers'
     | '/_authenticated/admin/team'
     | '/_authenticated/admin/'
+    | '/api/public/brand/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -347,6 +384,7 @@ export interface RootRouteChildren {
   SponsorRoute: typeof SponsorRoute
   SubmitRoute: typeof SubmitRoute
   TermsRoute: typeof TermsRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
   DealsDealIdRoute: typeof DealsDealIdRoute
   EventsEventIdRoute: typeof EventsEventIdRoute
   IssuesSlugRoute: typeof IssuesSlugRoute
@@ -354,10 +392,18 @@ export interface RootRouteChildren {
   DealsIndexRoute: typeof DealsIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
   JobsIndexRoute: typeof JobsIndexRoute
+  ApiPublicBrandSplatRoute: typeof ApiPublicBrandSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -526,6 +572,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminJobsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/issues': {
+      id: '/_authenticated/admin/issues'
+      path: '/issues'
+      fullPath: '/admin/issues'
+      preLoaderRoute: typeof AuthenticatedAdminIssuesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/events': {
       id: '/_authenticated/admin/events'
       path: '/events'
@@ -540,12 +593,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDealsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/public/brand/$': {
+      id: '/api/public/brand/$'
+      path: '/api/public/brand/$'
+      fullPath: '/api/public/brand/$'
+      preLoaderRoute: typeof ApiPublicBrandSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminDealsRoute: typeof AuthenticatedAdminDealsRoute
   AuthenticatedAdminEventsRoute: typeof AuthenticatedAdminEventsRoute
+  AuthenticatedAdminIssuesRoute: typeof AuthenticatedAdminIssuesRoute
   AuthenticatedAdminJobsRoute: typeof AuthenticatedAdminJobsRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminSponsorsRoute: typeof AuthenticatedAdminSponsorsRoute
@@ -558,6 +619,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminDealsRoute: AuthenticatedAdminDealsRoute,
   AuthenticatedAdminEventsRoute: AuthenticatedAdminEventsRoute,
+  AuthenticatedAdminIssuesRoute: AuthenticatedAdminIssuesRoute,
   AuthenticatedAdminJobsRoute: AuthenticatedAdminJobsRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminSponsorsRoute: AuthenticatedAdminSponsorsRoute,
@@ -591,6 +653,7 @@ const rootRouteChildren: RootRouteChildren = {
   SponsorRoute: SponsorRoute,
   SubmitRoute: SubmitRoute,
   TermsRoute: TermsRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
   DealsDealIdRoute: DealsDealIdRoute,
   EventsEventIdRoute: EventsEventIdRoute,
   IssuesSlugRoute: IssuesSlugRoute,
@@ -598,6 +661,7 @@ const rootRouteChildren: RootRouteChildren = {
   DealsIndexRoute: DealsIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   JobsIndexRoute: JobsIndexRoute,
+  ApiPublicBrandSplatRoute: ApiPublicBrandSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

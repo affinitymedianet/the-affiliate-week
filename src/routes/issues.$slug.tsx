@@ -4,11 +4,11 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { issues, type Issue } from "@/data/issues";
+import { getIssue, type Issue } from "@/lib/issues.functions";
 
 export const Route = createFileRoute("/issues/$slug")({
-  head: ({ params }) => {
-    const issue = issues.find((i) => i.slug === params.slug);
+  head: ({ params, loaderData }) => {
+    const issue = loaderData as Issue | undefined;
     const title = issue
       ? `${issue.title} — The Affiliate Week`
       : "Issue not found — The Affiliate Week newsletter";
@@ -43,8 +43,8 @@ export const Route = createFileRoute("/issues/$slug")({
         : [],
     };
   },
-  loader: ({ params }): Issue => {
-    const issue = issues.find((i) => i.slug === params.slug);
+  loader: async ({ params }): Promise<Issue> => {
+    const issue = await getIssue({ data: { slug: params.slug } });
     if (!issue) throw notFound();
     return issue;
   },

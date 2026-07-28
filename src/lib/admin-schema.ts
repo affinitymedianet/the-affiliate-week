@@ -1,6 +1,16 @@
 export type AdminRow = Record<string, string | number | boolean | null>;
 
-export type FieldType = "text" | "textarea" | "date" | "boolean" | "select" | "url" | "number";
+export type FieldType =
+  | "text"
+  | "textarea"
+  | "date"
+  | "datetime"
+  | "boolean"
+  | "select"
+  | "url"
+  | "number"
+  | "json"
+  | "image";
 
 export type FieldDef = {
   name: string;
@@ -13,7 +23,7 @@ export type FieldDef = {
   hideInTable?: boolean;
 };
 
-export type EntityKey = "jobs" | "deals" | "events";
+export type EntityKey = "jobs" | "deals" | "events" | "issues";
 
 export type EntityDef = {
   key: EntityKey;
@@ -51,6 +61,13 @@ const JOB_FIELDS: FieldDef[] = [
   { name: "posted_on", label: "Posted on", type: "date" },
   { name: "expires_on", label: "Expires on", type: "date", help: "Leave blank for no expiry." },
   { name: "featured", label: "Featured", type: "boolean" },
+  {
+    name: "publish_at",
+    label: "Scheduled go-live",
+    type: "datetime",
+    hideInTable: true,
+    help: "Leave blank to go live immediately once published.",
+  },
   { name: "published", label: "Published", type: "boolean" },
 ];
 
@@ -80,6 +97,13 @@ const DEAL_FIELDS: FieldDef[] = [
   { name: "expires_on", label: "Expires on", type: "date" },
   { name: "exclusive", label: "Exclusive", type: "boolean" },
   { name: "featured", label: "Featured", type: "boolean" },
+  {
+    name: "publish_at",
+    label: "Scheduled go-live",
+    type: "datetime",
+    hideInTable: true,
+    help: "Leave blank to go live immediately once published.",
+  },
   { name: "published", label: "Published", type: "boolean" },
 ];
 
@@ -104,9 +128,41 @@ const EVENT_FIELDS: FieldDef[] = [
     options: ["conference", "meetup", "webinar", "summit"],
     hideInTable: true,
   },
-  { name: "image_url", label: "Custom cover URL", type: "url", hideInTable: true },
+  { name: "image_url", label: "Custom cover image", type: "image", hideInTable: true },
   { name: "event_url", label: "Official event URL", type: "url" },
   { name: "featured", label: "Featured", type: "boolean" },
+  {
+    name: "publish_at",
+    label: "Scheduled go-live",
+    type: "datetime",
+    hideInTable: true,
+    help: "Leave blank to go live immediately once published.",
+  },
+  { name: "published", label: "Published", type: "boolean" },
+];
+
+const ISSUE_FIELDS: FieldDef[] = [
+  { name: "number", label: "Issue number", type: "number", required: true },
+  { name: "title", label: "Title", type: "text", required: true },
+  { name: "slug", label: "Slug", type: "text", required: true, help: "Used in the URL." },
+  { name: "issue_date", label: "Issue date", type: "date", required: true },
+  { name: "reading_time", label: "Reading time", type: "text", help: 'e.g. 5 min read' },
+  { name: "summary", label: "Summary", type: "textarea", required: true },
+  { name: "cover_url", label: "Cover image", type: "image", hideInTable: true },
+  {
+    name: "sections",
+    label: "Issue body",
+    type: "json",
+    hideInTable: true,
+    help: 'Sections as JSON: [{"heading":"Industry news","items":[{"title":"…","body":"…"}]}]',
+  },
+  {
+    name: "publish_at",
+    label: "Scheduled go-live",
+    type: "datetime",
+    hideInTable: true,
+    help: "Leave blank to go live immediately once published.",
+  },
   { name: "published", label: "Published", type: "boolean" },
 ];
 
@@ -141,10 +197,20 @@ export const ENTITIES: Record<EntityKey, EntityDef> = {
     orderBy: { column: "starts_on", ascending: true },
     fields: EVENT_FIELDS,
   },
+  issues: {
+    key: "issues",
+    table: "issues",
+    singular: "issue",
+    plural: "Issues",
+    titleField: "title",
+    subtitleField: "issue_date",
+    orderBy: { column: "number", ascending: false },
+    fields: ISSUE_FIELDS,
+  },
 };
 
 export function isEntityKey(value: unknown): value is EntityKey {
-  return value === "jobs" || value === "deals" || value === "events";
+  return value === "jobs" || value === "deals" || value === "events" || value === "issues";
 }
 
 export function emptyRecord(entity: EntityDef): AdminRow {
@@ -152,6 +218,7 @@ export function emptyRecord(entity: EntityDef): AdminRow {
   for (const field of entity.fields) {
     if (field.type === "boolean") out[field.name] = field.name === "published";
     else if (field.type === "select") out[field.name] = field.options?.[0] ?? "";
+    else if (field.type === "json") out[field.name] = "[]";
     else out[field.name] = "";
   }
   return out;
@@ -163,7 +230,19 @@ export function coerceRecord(entity: EntityDef, raw: AdminRow): AdminRow {
   for (const field of entity.fields) {
     if (!(field.name in raw)) continue;
     const value = raw[field.name];
-    if (field.type === "boolean") {
+    if (field.type === "json") {
+      if (value == null || String(value).trim() === "") {
+        out[field.name] = null;
+      } else if (typeof value === "string") {
+        try {
+          out[field.name] = JSON.parse(value) as never;
+        } catch {
+          throw new Error(`${field.label} must be valid JSON`);
+        }
+      } else {
+        out[field.name] = value;
+      }
+    } else if (field.type === "boolean") {
       out[field.name] =
         typeof value === "boolean"
           ? value

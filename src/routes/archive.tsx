@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
@@ -7,7 +8,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Pager, paginate } from "@/components/site/Pager";
-import { issues } from "@/data/issues";
+import { listIssues } from "@/lib/issues.functions";
 
 const title = "The Affiliate Week newsletter archive — read past issues";
 const description =
@@ -32,12 +33,18 @@ export const Route = createFileRoute("/archive")({
     ],
     links: [{ rel: "canonical", href: "/archive" }],
   }),
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData({ queryKey: ["issues"], queryFn: () => listIssues() }),
   component: ArchivePage,
 });
 
 function ArchivePage() {
   const { q, page } = Route.useSearch();
   const navigate = useNavigate({ from: "/archive" });
+  const { data: issues = [], isLoading } = useQuery({
+    queryKey: ["issues"],
+    queryFn: () => listIssues(),
+  });
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -45,7 +52,7 @@ function ArchivePage() {
     return issues.filter((issue) =>
       `${issue.title} ${issue.summary} #${issue.number}`.toLowerCase().includes(needle),
     );
-  }, [q]);
+  }, [q, issues]);
 
   const paged = paginate(filtered, page);
 
@@ -109,7 +116,9 @@ function ArchivePage() {
               ))}
             </ul>
 
-            {filtered.length === 0 ? (
+            {isLoading ? (
+              <p className="mt-6 text-center text-sm text-muted-foreground">Loading issues…</p>
+            ) : filtered.length === 0 ? (
               <p className="mt-6 text-center text-sm text-muted-foreground">
                 No issues match that search yet.
               </p>

@@ -1,15 +1,16 @@
 import { Link } from "@tanstack/react-router";
 
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { sampleIssue } from "@/data/issues";
+import { useLatestIssue } from "@/hooks/use-latest-issue";
 
 export function Hero() {
+  const latestIssue = useLatestIssue();
   return (
     <section id="newsletter" className="bg-primary text-primary-foreground">
       <div className="mx-auto grid max-w-6xl gap-8 px-5 sm:px-6 lg:px-8 py-14 lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-20">
         <div className="max-w-xl">
           <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground">
-            Issue #{sampleIssue.number} · Thursdays · Free
+            Issue #{latestIssue?.number ?? 1} · Thursdays · Free
           </p>
           <h1 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
             The affiliate industry, every week.

@@ -89,6 +89,7 @@ export const listJobs = createServerFn({ method: "GET" }).handler(async (): Prom
     .from("jobs")
     .select(COLUMNS)
     .eq("published", true)
+      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
     .order("featured", { ascending: false })
     .order("posted_on", { ascending: false });
 
@@ -107,6 +108,7 @@ export const getJob = createServerFn({ method: "GET" })
       .from("jobs")
       .select(COLUMNS)
       .eq("published", true)
+      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
       .eq("id", data.id)
       .maybeSingle();
 

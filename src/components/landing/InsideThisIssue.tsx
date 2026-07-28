@@ -2,15 +2,16 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 
-import { sampleIssue } from "@/data/issues";
+import { useLatestIssue } from "@/hooks/use-latest-issue";
 import { listJobs } from "@/lib/jobs.functions";
 import { listDeals } from "@/lib/deals.functions";
 
 export function InsideThisIssue() {
+  const latestIssue = useLatestIssue();
   const { data: jobs = [] } = useQuery({ queryKey: ["jobs"], queryFn: () => listJobs() });
   const { data: deals = [] } = useQuery({ queryKey: ["deals"], queryFn: () => listDeals() });
 
-  const headlines = sampleIssue.sections
+  const headlines = (latestIssue?.sections ?? [])
     .flatMap((section) => section.items.map((item) => ({ ...item, section: section.heading })))
     .slice(0, 3);
 
@@ -24,13 +25,15 @@ export function InsideThisIssue() {
           <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
             Inside the latest issue
           </h2>
-          <Link
-            to="/issues/$slug"
-            params={{ slug: sampleIssue.slug }}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-          >
-            Read the full issue <ArrowRight className="size-4" />
-          </Link>
+          {latestIssue ? (
+            <Link
+              to="/issues/$slug"
+              params={{ slug: latestIssue.slug }}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              Read the full issue <ArrowRight className="size-4" />
+            </Link>
+          ) : null}
         </div>
 
         <div className="grid gap-10 pt-8 lg:grid-cols-[1.4fr_1fr]">
