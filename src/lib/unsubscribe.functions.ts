@@ -1,23 +1,28 @@
-import { createServerFn } from "@tanstack/react-start";
+import { COLLECTIONS } from "@/integrations/firebase/config";
+import { fsGet, fsUpdate, nowIso } from "@/integrations/firebase/firestore";
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const TOKEN = /^[0-9a-zA-Z-]{16,64}$/;
 
 /**
- * Public, token-gated unsubscribe. The token is a random UUID stored against the
- * subscriber row and only ever shared inside that subscriber's own emails.
+ * Public, token-gated unsubscribe. Each subscriber document is keyed by a
+ * random token that only ever appears in that subscriber's own emails, so
+ * knowing the token is the authorisation.
  */
-export const unsubscribeByToken = createServerFn({ method: "POST" })
-  .inputValidator((data: { token: string }) => ({ token: String(data.token ?? "") }))
-  .handler(async ({ data }): Promise<{ ok: boolean; email: string | null }> => {
-    if (!UUID.test(data.token)) return { ok: false, email: null };
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: row, error } = await supabaseAdmin
-      .from("subscribers")
-      .update({ status: "unsubscribed", unsubscribed_at: new Date().toISOString() } as never)
-      .eq("unsubscribe_token", data.token)
-      .select("email")
-      .maybeSingle();
+export async function unsubscribeByToken({
+  data,
+}: {
+  data: { token: string };
+}): Promise<{ ok: boolean; email: string | null }> {
+  const token = String(data.token ?? "");
+  if (!TOKEN.test(token)) return { ok: false, email: null };
 
-    if (error || !row) return { ok: false, email: null };
-    return { ok: true, email: (row as { email: string }).email };
+  const row = await fsGet(COLLECTIONS.subscribers, token);
+  if (!row) return { ok: false, email: null };
+
+  await fsUpdate(COLLECTIONS.subscribers, token, {
+    status: "unsubscribed",
+    unsubscribed_at: nowIso(),
   });
+
+  return { ok: true, email: typeof row.email === "string" ? row.email : null };
+}

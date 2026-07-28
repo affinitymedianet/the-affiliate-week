@@ -6,7 +6,8 @@ import { Check, Copy, Loader2, Link2, ShieldCheck, Sparkles, Star } from "lucide
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { supabase } from "@/integrations/supabase/client";
+import { COLLECTIONS } from "@/integrations/firebase/config";
+import { fsCreate, nowIso } from "@/integrations/firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -147,8 +148,14 @@ function SubmitPage() {
 
     setStatus("loading");
     setError(null);
-    const { error: insertError } = await supabase.from("submissions").insert(parsed.data);
-    if (insertError) {
+    try {
+      await fsCreate(COLLECTIONS.submissions, {
+        ...parsed.data,
+        status: "new",
+        admin_notes: null,
+        created_at: nowIso(),
+      });
+    } catch {
       setStatus("idle");
       setError(`Something went wrong. Please try again or email ${CONTACT_EMAIL}.`);
       return;

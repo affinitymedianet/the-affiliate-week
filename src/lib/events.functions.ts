@@ -1,41 +1,29 @@
-import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
 import type { AffiliateEvent } from "@/data/events";
+import { COLLECTIONS } from "@/integrations/firebase/config";
+import { fsQuery, type Row } from "@/integrations/firebase/firestore";
+import { isLive } from "./jobs.functions";
 
-const COLUMNS =
-  "slug, name, starts_on, location, format, price, description, image_key, image_url, event_url, featured";
+const str = (value: unknown, fallback = "") => (typeof value === "string" ? value : fallback);
 
-type EventRow = {
-  slug: string;
-  name: string;
-  starts_on: string;
-  location: string;
-  format: string;
-  price: string;
-  description: string;
-  image_key: string;
-  image_url: string | null;
-  event_url: string | null;
-  featured: boolean;
-};
-
-function safeUrl(url: string | null): string | undefined {
-  if (!url) return undefined;
+function safeUrl(url: unknown): string | undefined {
+  if (typeof url !== "string" || !url) return undefined;
   try {
     const parsed = new URL(url);
-    return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.toString() : undefined;
+    return parsed.protocol === "http:" || parsed.protocol === "https:"
+      ? parsed.toString()
+      : undefined;
   } catch {
     return undefined;
   }
 }
 
-function toDto(row: EventRow): AffiliateEvent {
-  const d = new Date(`${row.starts_on}T00:00:00Z`);
+function toDto(row: Row): AffiliateEvent {
+  const startsOn = str(row.starts_on);
+  const d = new Date(`${startsOn}T00:00:00Z`);
   return {
-    id: row.slug,
-    name: row.name,
-    isoDate: row.starts_on,
+    id: str(row.slug, String(row.id)),
+    name: str(row.name),
+    isoDate: startsOn,
     date: d.toLocaleDateString("en-GB", {
       day: "numeric",
       month: "long",
@@ -46,62 +34,41 @@ function toDto(row: EventRow): AffiliateEvent {
       day: String(d.getUTCDate()).padStart(2, "0"),
       month: d.toLocaleDateString("en-GB", { month: "short", timeZone: "UTC" }),
     },
-    location: row.location,
-    format: row.format,
-    price: row.price,
-    description: row.description,
-    imageKey: row.image_key,
+    location: str(row.location),
+    format: str(row.format, "Conference"),
+    price: str(row.price, "Free"),
+    description: str(row.description),
+    imageKey: str(row.image_key, "conference"),
     imageUrl: safeUrl(row.image_url) ?? null,
     url: safeUrl(row.event_url),
-    featured: row.featured,
+    featured: row.featured === true,
   };
 }
 
-function getPublicClient() {
-  const url = process.env.SUPABASE_URL!;
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
-  return createClient<Database>(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) {
-          h.delete("Authorization");
-        }
-        h.set("apikey", key);
-        return fetch(input, { ...init, headers: h });
-      },
-    },
+export async function listEvents(): Promise<AffiliateEvent[]> {
+  const rows = await fsQuery(COLLECTIONS.events, {
+    where: [{ field: "published", op: "EQUAL", value: true }],
+    limit: 1000,
   });
+  return rows
+    .filter(isLive)
+    .sort((a, b) => str(a.starts_on).localeCompare(str(b.starts_on)))
+    .map(toDto);
 }
 
-export const listEvents = createServerFn({ method: "GET" }).handler(
-  async (): Promise<AffiliateEvent[]> => {
-    const supabase = getPublicClient();
-    const { data, error } = await supabase
-      .from("events")
-      .select(COLUMNS)
-      .eq("published", true)
-      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
-      .order("starts_on", { ascending: true });
-
-    if (error) throw new Error(error.message);
-    return ((data ?? []) as EventRow[]).map(toDto);
-  },
-);
-
-export const getEvent = createServerFn({ method: "GET" })
-  .inputValidator((data: { slug: string }) => data)
-  .handler(async ({ data }): Promise<AffiliateEvent | null> => {
-    const supabase = getPublicClient();
-    const { data: row, error } = await supabase
-      .from("events")
-      .select(COLUMNS)
-      .eq("published", true)
-      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
-      .eq("slug", data.slug)
-      .maybeSingle();
-
-    if (error) throw new Error(error.message);
-    return row ? toDto(row as EventRow) : null;
+export async function getEvent({
+  data,
+}: {
+  data: { slug: string };
+}): Promise<AffiliateEvent | null> {
+  if (!data.slug) return null;
+  const rows = await fsQuery(COLLECTIONS.events, {
+    where: [
+      { field: "published", op: "EQUAL", value: true },
+      { field: "slug", op: "EQUAL", value: data.slug },
+    ],
+    limit: 1,
   });
+  const row = rows.find(isLive);
+  return row ? toDto(row) : null;
+}

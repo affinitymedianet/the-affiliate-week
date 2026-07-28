@@ -2,7 +2,8 @@ import { useState } from "react";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
 
-import { supabase } from "@/integrations/supabase/client";
+import { COLLECTIONS } from "@/integrations/firebase/config";
+import { fsCreate, nowIso } from "@/integrations/firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -48,11 +49,23 @@ export function NewsletterForm({
     setStatus("loading");
     setMessage(null);
 
-    const { error } = await supabase
-      .from("subscribers")
-      .insert({ email: parsed.data.toLowerCase(), source });
-
-    if (error && error.code !== "23505") {
+    try {
+      // The document id doubles as the subscriber's private unsubscribe token.
+      const token = crypto.randomUUID();
+      await fsCreate(
+        COLLECTIONS.subscribers,
+        {
+          email: parsed.data.toLowerCase(),
+          source,
+          status: "active",
+          unsubscribe_token: token,
+          unsubscribed_at: null,
+          created_at: nowIso(),
+        },
+        null,
+        token,
+      );
+    } catch {
       setStatus("idle");
       setIsError(true);
       setMessage("Something went wrong. Please try again.");

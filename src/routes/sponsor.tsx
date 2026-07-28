@@ -6,7 +6,8 @@ import { Loader2 } from "lucide-react";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { supabase } from "@/integrations/supabase/client";
+import { COLLECTIONS } from "@/integrations/firebase/config";
+import { fsCreate, nowIso } from "@/integrations/firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -79,7 +80,17 @@ function SponsorPage() {
     }
     setStatus("loading");
     setError(null);
-    const { error: insertError } = await supabase.from("sponsor_enquiries").insert(parsed.data);
+    let insertError: unknown = null;
+    try {
+      await fsCreate(COLLECTIONS.sponsor_enquiries, {
+        ...parsed.data,
+        status: "new",
+        admin_notes: null,
+        created_at: nowIso(),
+      });
+    } catch (err) {
+      insertError = err;
+    }
     if (insertError) {
       setStatus("idle");
       setError("Something went wrong. Please email partners@theaffiliateweek.com instead.");

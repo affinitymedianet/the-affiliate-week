@@ -1,6 +1,6 @@
-import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
+import { COLLECTIONS } from "@/integrations/firebase/config";
+import { fsQuery, type Row } from "@/integrations/firebase/firestore";
+import { isLive } from "./jobs.functions";
 
 export type IssueSection = {
   heading: string;
@@ -20,20 +20,7 @@ export type Issue = {
   sections: IssueSection[];
 };
 
-const COLUMNS =
-  "id, slug, number, title, summary, reading_time, cover_url, issue_date, sections";
-
-type IssueRow = {
-  id: string;
-  slug: string;
-  number: number;
-  title: string;
-  summary: string;
-  reading_time: string;
-  cover_url: string | null;
-  issue_date: string;
-  sections: unknown;
-};
+const str = (value: unknown, fallback = "") => (typeof value === "string" ? value : fallback);
 
 function formatDate(iso: string): string {
   const parsed = new Date(`${iso}T00:00:00Z`);
@@ -48,8 +35,18 @@ function formatDate(iso: string): string {
 }
 
 function toSections(raw: unknown): IssueSection[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
+  const parsed =
+    typeof raw === "string"
+      ? (() => {
+          try {
+            return JSON.parse(raw);
+          } catch {
+            return [];
+          }
+        })()
+      : raw;
+  if (!Array.isArray(parsed)) return [];
+  return parsed
     .filter((s): s is { heading?: unknown; items?: unknown } => !!s && typeof s === "object")
     .map((s) => ({
       heading: String((s as { heading?: unknown }).heading ?? ""),
@@ -65,65 +62,48 @@ function toSections(raw: unknown): IssueSection[] {
     .filter((s) => s.heading || s.items.length > 0);
 }
 
-function toDto(row: IssueRow): Issue {
+function toDto(row: Row): Issue {
+  const issueDate = str(row.issue_date);
   return {
-    id: row.id,
-    slug: row.slug,
-    number: row.number,
-    title: row.title,
-    summary: row.summary,
-    readingTime: row.reading_time,
-    coverUrl: row.cover_url,
-    isoDate: row.issue_date,
-    date: formatDate(row.issue_date),
+    id: String(row.id),
+    slug: str(row.slug),
+    number: Number(row.number ?? 0),
+    title: str(row.title),
+    summary: str(row.summary),
+    readingTime: str(row.reading_time, "5 min read"),
+    coverUrl: str(row.cover_url) || null,
+    isoDate: issueDate,
+    date: formatDate(issueDate),
     sections: toSections(row.sections),
   };
 }
 
-function getPublicClient() {
-  const url = process.env.SUPABASE_URL!;
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
-  return createClient<Database>(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) {
-          h.delete("Authorization");
-        }
-        h.set("apikey", key);
-        return fetch(input, { ...init, headers: h });
-      },
-    },
+export async function listIssues(): Promise<Issue[]> {
+  const rows = await fsQuery(COLLECTIONS.issues, {
+    where: [{ field: "published", op: "EQUAL", value: true }],
+    limit: 1000,
   });
+  return rows
+    .filter(isLive)
+    .sort((a, b) => Number(b.number ?? 0) - Number(a.number ?? 0))
+    .map(toDto);
 }
 
-export const listIssues = createServerFn({ method: "GET" }).handler(async (): Promise<Issue[]> => {
-  const supabase = getPublicClient();
-  const { data, error } = await supabase
-    .from("issues")
-    .select(COLUMNS)
-    .eq("published", true)
-    .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
-    .order("number", { ascending: false });
-
-  if (error) throw new Error(error.message);
-  return ((data ?? []) as IssueRow[]).map(toDto);
-});
-
-export const getIssue = createServerFn({ method: "GET" })
-  .inputValidator((data: { slug: string }) => ({ slug: String(data.slug ?? "").slice(0, 120) }))
-  .handler(async ({ data }): Promise<Issue | null> => {
-    if (!data.slug) return null;
-    const supabase = getPublicClient();
-    const { data: row, error } = await supabase
-      .from("issues")
-      .select(COLUMNS)
-      .eq("published", true)
-      .or(`publish_at.is.null,publish_at.lte.${new Date().toISOString()}`)
-      .eq("slug", data.slug)
-      .maybeSingle();
-
-    if (error) throw new Error(error.message);
-    return row ? toDto(row as IssueRow) : null;
+export async function getIssue({ data }: { data: { slug: string } }): Promise<Issue | null> {
+  const slug = String(data.slug ?? "").slice(0, 120);
+  if (!slug) return null;
+  const rows = await fsQuery(COLLECTIONS.issues, {
+    where: [
+      { field: "published", op: "EQUAL", value: true },
+      { field: "slug", op: "EQUAL", value: slug },
+    ],
+    limit: 1,
   });
+  const row = rows.find(isLive);
+  return row ? toDto(row) : null;
+}
+
+export async function getLatestIssue(): Promise<Issue | null> {
+  const issues = await listIssues();
+  return issues[0] ?? null;
+}
