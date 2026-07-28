@@ -36,6 +36,14 @@ import {
 } from "@/components/ui/dialog";
 import { PageHeading } from "@/components/admin/AdminShell";
 
+function toLocalInput(value: string | null): string {
+  if (!value) return "";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${parsed.getFullYear()}-${pad(parsed.getMonth() + 1)}-${pad(parsed.getDate())}T${pad(parsed.getHours())}:${pad(parsed.getMinutes())}`;
+}
+
 function FieldInput({
   field,
   value,
@@ -96,7 +104,7 @@ function FieldInput({
         <AssetUpload
           id={id}
           value={(value as string) ?? ""}
-          onChange={(next) => onChange(next)}
+          onChange={(next: string) => onChange(next)}
         />
       ) : (
         <Input
