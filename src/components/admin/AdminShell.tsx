@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
-import { getMyAccess } from "@/lib/admin.functions";
+import { claimFirstAdmin, getMyAccess } from "@/lib/admin.functions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import logoAsset from "@/assets/taw-logo.png.asset.json";
@@ -81,11 +81,23 @@ export function AdminShell() {
             Your account is signed in but has no editor or admin role. Ask an existing admin to
             grant you access from Team &amp; roles.
           </p>
-          <div className="mt-6 flex justify-center gap-2">
+          <div className="mt-6 flex flex-wrap justify-center gap-2">
+            <Button
+              onClick={async () => {
+                try {
+                  await claimFirstAdmin();
+                  await queryClient.invalidateQueries({ queryKey: ["admin", "access"] });
+                } catch (err) {
+                  alert(err instanceof Error ? err.message : "Could not claim access");
+                }
+              }}
+            >
+              Claim owner access
+            </Button>
             <Button variant="outline" onClick={signOut}>
               Sign out
             </Button>
-            <Button asChild>
+            <Button asChild variant="ghost">
               <Link to="/">Back to the site</Link>
             </Button>
           </div>

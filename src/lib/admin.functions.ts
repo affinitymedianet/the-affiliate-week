@@ -330,3 +330,18 @@ export const adminStats = createServerFn({ method: "GET" })
       recentActivity: (activity.data ?? []) as AdminStats["recentActivity"],
     };
   });
+
+/** One-time bootstrap: the very first signed-in user can claim owner access. */
+export const claimFirstAdmin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<{ ok: boolean }> => {
+    const { adminClient } = await import("@/lib/admin.server");
+    const supabase = adminClient();
+    const { count } = await supabase.from("user_roles").select("id", { count: "exact", head: true });
+    if ((count ?? 0) > 0) throw new Error("An admin already exists — ask them to grant you access.");
+    const { error } = await supabase
+      .from("user_roles")
+      .insert({ user_id: context.userId, role: "admin" });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
