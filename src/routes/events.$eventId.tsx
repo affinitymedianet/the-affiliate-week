@@ -5,11 +5,12 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { events, type AffiliateEvent } from "@/data/events";
+import { eventImage, type AffiliateEvent } from "@/data/events";
+import { getEvent } from "@/lib/events.functions";
 
 export const Route = createFileRoute("/events/$eventId")({
-  head: ({ params }) => {
-    const event = events.find((e) => e.id === params.eventId);
+  head: ({ params, loaderData }) => {
+    const event = loaderData as AffiliateEvent | undefined;
     const title = event
       ? `${event.name} — ${event.date}, ${event.location} | The Affiliate Week`
       : "Event not found — The Affiliate Week";
@@ -51,8 +52,8 @@ export const Route = createFileRoute("/events/$eventId")({
         : [],
     };
   },
-  loader: ({ params }): AffiliateEvent => {
-    const event = events.find((e) => e.id === params.eventId);
+  loader: async ({ params }): Promise<AffiliateEvent> => {
+    const event = await getEvent({ data: { slug: params.eventId } });
     if (!event) throw notFound();
     return event;
   },
@@ -89,7 +90,7 @@ function EventPage() {
           </Link>
           <div className="mt-6 overflow-hidden rounded-xl border border-border shadow-card">
             <img
-              src={event.image}
+              src={eventImage(event)}
               alt={`${event.name} event`}
               width={1024}
               height={640}

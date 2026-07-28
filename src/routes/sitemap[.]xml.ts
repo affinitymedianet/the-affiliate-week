@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { listDeals } from "@/lib/deals.functions";
 import { listJobs } from "@/lib/jobs.functions";
-import { events } from "@/data/events";
+import { listEvents } from "@/lib/events.functions";
 import { issues } from "@/data/issues";
 import { PAGE_SIZE } from "@/components/site/Pager";
 
@@ -34,9 +34,10 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const [deals, jobs] = await Promise.all([
+        const [deals, jobs, events] = await Promise.all([
           listDeals().catch(() => []),
           listJobs().catch(() => []),
+          listEvents().catch(() => []),
         ]);
 
         const entries: SitemapEntry[] = [

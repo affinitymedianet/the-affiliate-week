@@ -14,7 +14,9 @@ import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as SponsorRouteImport } from './routes/sponsor'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ArchiveRouteImport } from './routes/archive'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
@@ -23,6 +25,16 @@ import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as IssuesSlugRouteImport } from './routes/issues.$slug'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
 import { Route as DealsDealIdRouteImport } from './routes/deals.$dealId'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminTeamRouteImport } from './routes/_authenticated/admin.team'
+import { Route as AuthenticatedAdminSubscribersRouteImport } from './routes/_authenticated/admin.subscribers'
+import { Route as AuthenticatedAdminSubmissionsRouteImport } from './routes/_authenticated/admin.submissions'
+import { Route as AuthenticatedAdminSponsorsRouteImport } from './routes/_authenticated/admin.sponsors'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
+import { Route as AuthenticatedAdminJobsRouteImport } from './routes/_authenticated/admin.jobs'
+import { Route as AuthenticatedAdminEventsRouteImport } from './routes/_authenticated/admin.events'
+import { Route as AuthenticatedAdminDealsRouteImport } from './routes/_authenticated/admin.deals'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -49,9 +61,18 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArchiveRoute = ArchiveRouteImport.update({
   id: '/archive',
   path: '/archive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -94,15 +115,72 @@ const DealsDealIdRoute = DealsDealIdRouteImport.update({
   path: '/deals/$dealId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminTeamRoute = AuthenticatedAdminTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminSubscribersRoute =
+  AuthenticatedAdminSubscribersRouteImport.update({
+    id: '/subscribers',
+    path: '/subscribers',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSubmissionsRoute =
+  AuthenticatedAdminSubmissionsRouteImport.update({
+    id: '/submissions',
+    path: '/submissions',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSponsorsRoute =
+  AuthenticatedAdminSponsorsRouteImport.update({
+    id: '/sponsors',
+    path: '/sponsors',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminJobsRoute = AuthenticatedAdminJobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminEventsRoute =
+  AuthenticatedAdminEventsRouteImport.update({
+    id: '/events',
+    path: '/events',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminDealsRoute = AuthenticatedAdminDealsRouteImport.update({
+  id: '/deals',
+  path: '/deals',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
@@ -110,10 +188,20 @@ export interface FileRoutesByFullPath {
   '/deals/': typeof DealsIndexRoute
   '/events/': typeof EventsIndexRoute
   '/jobs/': typeof JobsIndexRoute
+  '/admin/deals': typeof AuthenticatedAdminDealsRoute
+  '/admin/events': typeof AuthenticatedAdminEventsRoute
+  '/admin/jobs': typeof AuthenticatedAdminJobsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
+  '/admin/submissions': typeof AuthenticatedAdminSubmissionsRoute
+  '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
+  '/admin/team': typeof AuthenticatedAdminTeamRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsor': typeof SponsorRoute
@@ -126,16 +214,28 @@ export interface FileRoutesByTo {
   '/deals': typeof DealsIndexRoute
   '/events': typeof EventsIndexRoute
   '/jobs': typeof JobsIndexRoute
+  '/admin/deals': typeof AuthenticatedAdminDealsRoute
+  '/admin/events': typeof AuthenticatedAdminEventsRoute
+  '/admin/jobs': typeof AuthenticatedAdminJobsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
+  '/admin/submissions': typeof AuthenticatedAdminSubmissionsRoute
+  '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
+  '/admin/team': typeof AuthenticatedAdminTeamRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/archive': typeof ArchiveRoute
+  '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsor': typeof SponsorRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/deals/$dealId': typeof DealsDealIdRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/issues/$slug': typeof IssuesSlugRoute
@@ -143,17 +243,28 @@ export interface FileRoutesById {
   '/deals/': typeof DealsIndexRoute
   '/events/': typeof EventsIndexRoute
   '/jobs/': typeof JobsIndexRoute
+  '/_authenticated/admin/deals': typeof AuthenticatedAdminDealsRoute
+  '/_authenticated/admin/events': typeof AuthenticatedAdminEventsRoute
+  '/_authenticated/admin/jobs': typeof AuthenticatedAdminJobsRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
+  '/_authenticated/admin/submissions': typeof AuthenticatedAdminSubmissionsRoute
+  '/_authenticated/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
+  '/_authenticated/admin/team': typeof AuthenticatedAdminTeamRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/archive'
+    | '/auth'
     | '/privacy'
     | '/sitemap.xml'
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/admin'
     | '/deals/$dealId'
     | '/events/$eventId'
     | '/issues/$slug'
@@ -161,10 +272,20 @@ export interface FileRouteTypes {
     | '/deals/'
     | '/events/'
     | '/jobs/'
+    | '/admin/deals'
+    | '/admin/events'
+    | '/admin/jobs'
+    | '/admin/settings'
+    | '/admin/sponsors'
+    | '/admin/submissions'
+    | '/admin/subscribers'
+    | '/admin/team'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/archive'
+    | '/auth'
     | '/privacy'
     | '/sitemap.xml'
     | '/sponsor'
@@ -177,15 +298,27 @@ export interface FileRouteTypes {
     | '/deals'
     | '/events'
     | '/jobs'
+    | '/admin/deals'
+    | '/admin/events'
+    | '/admin/jobs'
+    | '/admin/settings'
+    | '/admin/sponsors'
+    | '/admin/submissions'
+    | '/admin/subscribers'
+    | '/admin/team'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/archive'
+    | '/auth'
     | '/privacy'
     | '/sitemap.xml'
     | '/sponsor'
     | '/submit'
     | '/terms'
+    | '/_authenticated/admin'
     | '/deals/$dealId'
     | '/events/$eventId'
     | '/issues/$slug'
@@ -193,11 +326,22 @@ export interface FileRouteTypes {
     | '/deals/'
     | '/events/'
     | '/jobs/'
+    | '/_authenticated/admin/deals'
+    | '/_authenticated/admin/events'
+    | '/_authenticated/admin/jobs'
+    | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/sponsors'
+    | '/_authenticated/admin/submissions'
+    | '/_authenticated/admin/subscribers'
+    | '/_authenticated/admin/team'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ArchiveRoute: typeof ArchiveRoute
+  AuthRoute: typeof AuthRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SponsorRoute: typeof SponsorRoute
@@ -249,11 +393,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/archive': {
       id: '/archive'
       path: '/archive'
       fullPath: '/archive'
       preLoaderRoute: typeof ArchiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -312,12 +470,122 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DealsDealIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/team': {
+      id: '/_authenticated/admin/team'
+      path: '/team'
+      fullPath: '/admin/team'
+      preLoaderRoute: typeof AuthenticatedAdminTeamRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/subscribers': {
+      id: '/_authenticated/admin/subscribers'
+      path: '/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof AuthenticatedAdminSubscribersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/submissions': {
+      id: '/_authenticated/admin/submissions'
+      path: '/submissions'
+      fullPath: '/admin/submissions'
+      preLoaderRoute: typeof AuthenticatedAdminSubmissionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/sponsors': {
+      id: '/_authenticated/admin/sponsors'
+      path: '/sponsors'
+      fullPath: '/admin/sponsors'
+      preLoaderRoute: typeof AuthenticatedAdminSponsorsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/jobs': {
+      id: '/_authenticated/admin/jobs'
+      path: '/jobs'
+      fullPath: '/admin/jobs'
+      preLoaderRoute: typeof AuthenticatedAdminJobsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/events': {
+      id: '/_authenticated/admin/events'
+      path: '/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AuthenticatedAdminEventsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/deals': {
+      id: '/_authenticated/admin/deals'
+      path: '/deals'
+      fullPath: '/admin/deals'
+      preLoaderRoute: typeof AuthenticatedAdminDealsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminDealsRoute: typeof AuthenticatedAdminDealsRoute
+  AuthenticatedAdminEventsRoute: typeof AuthenticatedAdminEventsRoute
+  AuthenticatedAdminJobsRoute: typeof AuthenticatedAdminJobsRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminSponsorsRoute: typeof AuthenticatedAdminSponsorsRoute
+  AuthenticatedAdminSubmissionsRoute: typeof AuthenticatedAdminSubmissionsRoute
+  AuthenticatedAdminSubscribersRoute: typeof AuthenticatedAdminSubscribersRoute
+  AuthenticatedAdminTeamRoute: typeof AuthenticatedAdminTeamRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminDealsRoute: AuthenticatedAdminDealsRoute,
+  AuthenticatedAdminEventsRoute: AuthenticatedAdminEventsRoute,
+  AuthenticatedAdminJobsRoute: AuthenticatedAdminJobsRoute,
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminSponsorsRoute: AuthenticatedAdminSponsorsRoute,
+  AuthenticatedAdminSubmissionsRoute: AuthenticatedAdminSubmissionsRoute,
+  AuthenticatedAdminSubscribersRoute: AuthenticatedAdminSubscribersRoute,
+  AuthenticatedAdminTeamRoute: AuthenticatedAdminTeamRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ArchiveRoute: ArchiveRoute,
+  AuthRoute: AuthRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SponsorRoute: SponsorRoute,

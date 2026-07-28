@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, MapPin } from "lucide-react";
 
-import { events } from "@/data/events";
+import { listEvents } from "@/lib/events.functions";
 import { listJobs } from "@/lib/jobs.functions";
 import { listDeals } from "@/lib/deals.functions";
 
@@ -36,6 +36,8 @@ function SectionHead({
 export function WeeklyBoards() {
   const { data: jobs = [] } = useQuery({ queryKey: ["jobs"], queryFn: () => listJobs() });
   const { data: deals = [] } = useQuery({ queryKey: ["deals"], queryFn: () => listDeals() });
+
+  const { data: events = [] } = useQuery({ queryKey: ["events"], queryFn: () => listEvents() });
 
   const upcoming = events.slice(0, 4);
 
