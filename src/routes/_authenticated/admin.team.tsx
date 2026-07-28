@@ -4,7 +4,13 @@ import { toast } from "sonner";
 
 import { useState } from "react";
 
-import { adminCreateStaff, adminListTeam, adminSetRole } from "@/lib/admin.functions";
+import {
+  adminCreateStaff,
+  adminDeactivateStaff,
+  adminListTeam,
+  adminSendPasswordReset,
+  adminSetRole,
+} from "@/lib/admin.functions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/admin/AdminShell";
@@ -40,6 +46,21 @@ function TeamPage() {
       adminSetRole({ data: input }),
     onSuccess: () => {
       toast.success("Roles updated");
+      queryClient.invalidateQueries({ queryKey: ["admin", "team"] });
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const sendReset = useMutation({
+    mutationFn: (input: { email: string }) => adminSendPasswordReset({ data: input }),
+    onSuccess: () => toast.success("Reset link sent"),
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const deactivate = useMutation({
+    mutationFn: (input: { userId: string }) => adminDeactivateStaff({ data: input }),
+    onSuccess: () => {
+      toast.success("Account deactivated");
       queryClient.invalidateQueries({ queryKey: ["admin", "team"] });
     },
     onError: (err: Error) => toast.error(err.message),
@@ -116,6 +137,30 @@ function TeamPage() {
                     </Button>
                   );
                 })}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={!member.email || sendReset.isPending}
+                  onClick={() => sendReset.mutate({ email: member.email as string })}
+                >
+                  Send reset link
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  disabled={deactivate.isPending}
+                  onClick={() => {
+                    if (
+                      confirm(
+                        `Deactivate ${member.email ?? member.id}? They lose all access immediately.`,
+                      )
+                    ) {
+                      deactivate.mutate({ userId: member.id });
+                    }
+                  }}
+                >
+                  Deactivate
+                </Button>
               </div>
             </div>
           ))}
