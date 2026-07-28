@@ -33,6 +33,8 @@ export const Route = createFileRoute("/archive")({
     ],
     links: [{ rel: "canonical", href: "/archive" }],
   }),
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData({ queryKey: ["issues"], queryFn: () => listIssues() }),
   component: ArchivePage,
 });
 
