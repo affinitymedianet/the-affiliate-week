@@ -25,7 +25,7 @@ export function SiteHeader() {
           <img
             src={logoAsset.url}
             alt="The Affiliate Week"
-            className="h-8 w-auto"
+            className="h-10 w-auto"
           />
         </Link>
 
