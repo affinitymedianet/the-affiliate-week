@@ -161,7 +161,7 @@ export const adminListInbox = createServerFn({ method: "GET" })
     const supabase = adminClient();
     const columns =
       data.kind === "subscribers"
-        ? "id, email, source, status, unsubscribed_at, created_at"
+        ? "id, email, source, status, unsubscribed_at, unsubscribe_token, created_at"
         : "*";
     const { data: rows, error } = await supabase
       .from(data.kind)
