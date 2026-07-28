@@ -12,7 +12,6 @@ const links = [
   { label: "Deals", to: "/deals" as const },
   { label: "Events", to: "/events" as const },
   { label: "Sponsor", to: "/sponsor" as const },
-  { label: "FAQ", to: "/" as const, hash: "faq" },
 ];
 
 export function SiteHeader() {
