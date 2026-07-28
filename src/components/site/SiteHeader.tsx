@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TYPEFORM_SUBMIT_URL } from "@/lib/site";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 import logoAsset from "@/assets/taw-logo.png.asset.json";
 
 const links = [
@@ -16,14 +17,18 @@ const links = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const settings = useSiteSettings();
+  const logoSrc = settings?.logoUrl || logoAsset.url;
+  const submitUrl = settings?.submitUrl || TYPEFORM_SUBMIT_URL;
+  const siteName = settings?.siteName || "The Affiliate Week";
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center">
           <img
-            src={logoAsset.url}
-            alt="The Affiliate Week"
+            src={logoSrc}
+            alt={siteName}
             className="h-9 w-auto sm:h-12"
           />
         </Link>
@@ -44,7 +49,7 @@ export function SiteHeader() {
         <div className="hidden md:block">
           <Button asChild size="sm">
             <a
-              href={TYPEFORM_SUBMIT_URL}
+              href={submitUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -79,7 +84,7 @@ export function SiteHeader() {
             ))}
             <Button asChild size="sm" className="mt-2">
               <a
-                href={TYPEFORM_SUBMIT_URL}
+                href={submitUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setOpen(false)}

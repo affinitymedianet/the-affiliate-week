@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 const title = "Terms of use — The Affiliate Week newsletter";
 const description =
@@ -56,6 +57,9 @@ const sections = [
 ];
 
 function TermsPage() {
+  const settings = useSiteSettings();
+  const custom = settings?.termsContent?.trim() || "";
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -67,12 +71,20 @@ function TermsPage() {
             Working terms for The Affiliate Week. Have them reviewed before launch.
           </p>
           <div className="mt-10 space-y-8">
-            {sections.map((s) => (
-              <section key={s.h}>
-                <h2 className="font-display text-xl font-semibold">{s.h}</h2>
-                <p className="mt-2 leading-relaxed text-muted-foreground">{s.p}</p>
-              </section>
-            ))}
+            {custom
+              ? custom
+                  .split(/\n\s*\n/)
+                  .map((paragraph, index) => (
+                    <p key={index} className="whitespace-pre-line leading-relaxed text-muted-foreground">
+                      {paragraph}
+                    </p>
+                  ))
+              : sections.map((s) => (
+                  <section key={s.h}>
+                    <h2 className="font-display text-xl font-semibold">{s.h}</h2>
+                    <p className="mt-2 leading-relaxed text-muted-foreground">{s.p}</p>
+                  </section>
+                ))}
           </div>
         </article>
       </main>
