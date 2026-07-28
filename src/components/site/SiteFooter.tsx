@@ -7,8 +7,17 @@ const linkClass =
 
 export function SiteFooter() {
   return (
-    <footer className="bg-navy-deep pb-20 text-navy-foreground md:pb-0">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:px-8 py-16 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="relative overflow-hidden pb-20 text-navy-foreground md:pb-0" style={{ backgroundColor: "#10151C" }}>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(60% 50% at 50% 45%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 45%, rgba(255,255,255,0) 75%)",
+        }}
+      />
+      <div className="relative mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:px-8 py-16 sm:grid-cols-2 lg:grid-cols-4">
+
         <div>
           <div className="flex items-center">
             <img
