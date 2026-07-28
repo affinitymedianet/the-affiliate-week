@@ -369,3 +369,122 @@ export const adminCreateStaff = createServerFn({ method: "POST" })
     });
     return { email: data.email, password };
   });
+
+/* --------------------------------- Uploads ---------------------------------- */
+
+const ALLOWED_UPLOAD_TYPES = ["image/png", "image/jpeg", "image/webp", "image/svg+xml", "image/x-icon", "image/vnd.microsoft.icon"];
+
+/** Staff-only: upload a brand/cover asset and return the URL the public site should use. */
+export const adminUploadAsset = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { filename: string; contentType: string; dataBase64: string }) => {
+    const filename = String(data.filename ?? "").replace(/[^a-zA-Z0-9._-]/g, "-").slice(-80);
+    if (!filename) throw new Error("Missing filename");
+    if (!ALLOWED_UPLOAD_TYPES.includes(data.contentType)) {
+      throw new Error("Only PNG, JPEG, WebP, SVG or ICO files are allowed");
+    }
+    if (!data.dataBase64 || data.dataBase64.length > 8_000_000) {
+      throw new Error("File is too large (max ~5MB)");
+    }
+    return { filename, contentType: data.contentType, dataBase64: data.dataBase64 };
+  })
+  .handler(async ({ data, context }): Promise<{ url: string }> => {
+    const { requireStaff, adminClient, writeAudit } = await import("@/lib/admin.server");
+    const identity = await requireStaff(context);
+    const bytes = Uint8Array.from(atob(data.dataBase64), (c) => c.charCodeAt(0));
+    const key = `${Date.now()}-${data.filename}`;
+    const supabase = adminClient();
+    const { error } = await supabase.storage
+      .from("brand")
+      .upload(key, bytes, { contentType: data.contentType, upsert: false });
+    if (error) throw new Error(error.message);
+    await writeAudit(identity, "upload", "brand", key, { contentType: data.contentType });
+    return { url: `/api/public/brand/${key}` };
+  });
+
+/* ------------------------------- Subscribers -------------------------------- */
+
+export const adminUpdateSubscriber = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { id: string; status: string }) => {
+    if (!data.id) throw new Error("Missing subscriber");
+    if (!["active", "unsubscribed", "bounced"].includes(data.status)) {
+      throw new Error("Unknown status");
+    }
+    return { id: data.id, status: data.status };
+  })
+  .handler(async ({ data, context }): Promise<{ ok: true }> => {
+    const { requireStaff, adminClient, writeAudit } = await import("@/lib/admin.server");
+    const identity = await requireStaff(context);
+    const supabase = adminClient();
+    const { error } = await supabase
+      .from("subscribers")
+      .update({
+        status: data.status,
+        unsubscribed_at: data.status === "unsubscribed" ? new Date().toISOString() : null,
+      } as never)
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    await writeAudit(identity, "update", "subscribers", data.id, { status: data.status });
+    return { ok: true };
+  });
+
+export const adminDeleteSubscribers = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { ids: string[] }) => {
+    if (!Array.isArray(data.ids) || data.ids.length === 0) throw new Error("No subscribers selected");
+    return { ids: data.ids };
+  })
+  .handler(async ({ data, context }): Promise<{ ok: true }> => {
+    const { requireAdmin, adminClient, writeAudit } = await import("@/lib/admin.server");
+    const identity = await requireAdmin(context);
+    const supabase = adminClient();
+    const { error } = await supabase.from("subscribers").delete().in("id", data.ids);
+    if (error) throw new Error(error.message);
+    await writeAudit(identity, "delete", "subscribers", null, { ids: data.ids });
+    return { ok: true };
+  });
+
+/* ----------------------------- Staff accounts ------------------------------- */
+
+/** Admin-only: email a password reset link to a staff member. */
+export const adminSendPasswordReset = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { email: string; redirectTo: string }) => {
+    const email = String(data.email ?? "").trim().toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error("Invalid email address");
+    return { email, redirectTo: String(data.redirectTo ?? "").slice(0, 300) };
+  })
+  .handler(async ({ data, context }): Promise<{ ok: true }> => {
+    const { requireAdmin, adminClient, writeAudit } = await import("@/lib/admin.server");
+    const identity = await requireAdmin(context);
+    const supabase = adminClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
+      redirectTo: data.redirectTo || undefined,
+    });
+    if (error) throw new Error(error.message);
+    await writeAudit(identity, "password_reset", "auth.users", null, { email: data.email });
+    return { ok: true };
+  });
+
+/** Admin-only: revoke all access — removes roles, signs the user out and disables the login. */
+export const adminDeactivateStaff = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { userId: string }) => {
+    if (!data.userId) throw new Error("Missing user");
+    return { userId: data.userId };
+  })
+  .handler(async ({ data, context }): Promise<{ ok: true }> => {
+    const { requireAdmin, adminClient, writeAudit } = await import("@/lib/admin.server");
+    const identity = await requireAdmin(context);
+    if (data.userId === identity.userId) throw new Error("You cannot deactivate your own account");
+    const supabase = adminClient();
+    await supabase.from("user_roles").delete().eq("user_id", data.userId);
+    const { error } = await supabase.auth.admin.updateUserById(data.userId, {
+      ban_duration: "876000h",
+    });
+    if (error) throw new Error(error.message);
+    await supabase.auth.admin.signOut(data.userId).catch(() => undefined);
+    await writeAudit(identity, "deactivate_staff", "auth.users", data.userId, {});
+    return { ok: true };
+  });
