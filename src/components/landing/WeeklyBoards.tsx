@@ -41,7 +41,7 @@ export function WeeklyBoards() {
 
   return (
     <section className="border-b border-rule bg-background py-16 lg:py-20">
-      <div className="mx-auto max-w-6xl space-y-14 px-4">
+      <div className="mx-auto max-w-6xl space-y-14 px-5 sm:px-6 lg:px-8">
         <div>
           <SectionHead
             label="Events"

@@ -93,7 +93,7 @@ function SponsorPage() {
       <SiteHeader />
       <main>
         <section className="border-b border-border bg-background py-14 lg:py-20">
-          <div className="mx-auto max-w-4xl px-4">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Sponsor" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Sponsor the newsletter
@@ -106,7 +106,7 @@ function SponsorPage() {
         </section>
 
         <section className="border-b border-border py-12 lg:py-16">
-          <div className="mx-auto max-w-4xl px-4">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <h2 className="font-display text-2xl font-semibold">Who reads it</h2>
             <p className="mt-3 max-w-2xl text-muted-foreground">
               Affiliates and publishers, affiliate and partnership managers, media buyers, and
@@ -134,7 +134,7 @@ function SponsorPage() {
         </section>
 
         <section className="py-12 lg:py-16">
-          <div className="mx-auto max-w-3xl px-4">
+          <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
             <h2 className="font-display text-2xl font-semibold">Request the rate card</h2>
             {status === "done" ? (
               <div className="mt-6 rounded-xl border border-border bg-card p-8 text-center shadow-card">

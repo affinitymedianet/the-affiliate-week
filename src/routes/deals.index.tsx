@@ -55,13 +55,13 @@ export const Route = createFileRoute("/deals/")({
   }),
   component: DealsPage,
   errorComponent: ({ error }) => (
-    <div className="mx-auto max-w-2xl px-4 py-24 text-center" role="alert">
+    <div className="mx-auto max-w-2xl px-5 sm:px-6 lg:px-8 py-24 text-center" role="alert">
       <h1 className="font-display text-2xl font-bold">We couldn't load the deals</h1>
       <p className="mt-3 text-sm text-muted-foreground">{error.message}</p>
     </div>
   ),
   notFoundComponent: () => (
-    <div className="mx-auto max-w-2xl px-4 py-24 text-center">
+    <div className="mx-auto max-w-2xl px-5 sm:px-6 lg:px-8 py-24 text-center">
       <h1 className="font-display text-2xl font-bold">No deals found</h1>
     </div>
   ),
@@ -97,7 +97,7 @@ function DealsPage() {
       <SiteHeader />
       <main>
         <section className="border-b border-border bg-background py-14 lg:py-20">
-          <div className="mx-auto max-w-6xl px-4">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Deals" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Exclusive affiliate deals
@@ -118,7 +118,7 @@ function DealsPage() {
         </section>
 
         <section className="py-12 lg:py-16">
-          <div className="mx-auto max-w-5xl px-4">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <div className="flex flex-wrap items-center gap-2">
               {categories.map((c) => (
                 <Button

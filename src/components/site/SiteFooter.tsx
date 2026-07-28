@@ -8,7 +8,7 @@ const linkClass =
 export function SiteFooter() {
   return (
     <footer className="bg-navy-deep pb-20 text-navy-foreground md:pb-0">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:px-8 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="flex items-center">
             <img
@@ -116,7 +116,7 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-navy-foreground/10">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 sm:px-6 lg:px-8 py-5 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} The Affiliate Week. All rights reserved.</p>
           <p>
             Postal address: add your registered mailing address here (required on bulk email).

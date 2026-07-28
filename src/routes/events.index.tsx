@@ -102,7 +102,7 @@ function EventsPage() {
       <SiteHeader />
       <main>
         <section className="border-b border-border bg-background py-14 lg:py-20">
-          <div className="mx-auto max-w-6xl px-4">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Events" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Affiliate events calendar
@@ -126,7 +126,7 @@ function EventsPage() {
         </section>
 
         <section className="py-12 lg:py-16">
-          <div className="mx-auto max-w-4xl px-4">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <div className="flex flex-wrap items-center gap-2">
               {formats.map((f) => (
                 <Button

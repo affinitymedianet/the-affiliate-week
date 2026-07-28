@@ -65,7 +65,7 @@ function EventMissing() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-3xl px-4 py-24 text-center">
+      <main className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8 py-24 text-center">
         <h1 className="font-display text-3xl font-bold">We couldn't find that event</h1>
         <Link to="/events" className="mt-6 inline-block font-medium text-primary hover:underline">
           Back to the events calendar
@@ -83,7 +83,7 @@ function EventPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <article className="mx-auto max-w-3xl px-4 py-12 lg:py-16">
+        <article className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8 py-12 lg:py-16">
           <Link to="/events" className="text-sm font-medium text-primary hover:underline">
             ← All events
           </Link>

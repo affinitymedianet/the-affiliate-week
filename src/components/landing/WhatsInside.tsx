@@ -34,7 +34,7 @@ const items = [
 export function WhatsInside() {
   return (
     <section id="inside" className="border-b border-rule py-16 lg:py-20">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
         <div className="border-b border-rule pb-4">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-signal">
             Every issue
