@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 
@@ -9,14 +9,16 @@ import { Label } from "@/components/ui/label";
 import logoAsset from "@/assets/taw-logo.png.asset.json";
 
 const title = "Staff sign in — The Affiliate Week";
-const description = "Sign in to manage jobs, deals, events and enquiries for The Affiliate Week.";
+const description = "Private sign in for The Affiliate Week editorial team.";
 
-export const Route = createFileRoute("/auth")({
+export const Route = createFileRoute("/a6b8")({
+  ssr: false,
   head: () => ({
     meta: [
       { title },
       { name: "description", content: description },
-      { name: "robots", content: "noindex" },
+      { name: "robots", content: "noindex, nofollow, noarchive" },
+      { name: "googlebot", content: "noindex, nofollow" },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
@@ -26,14 +28,17 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 5 * 60 * 1000;
+
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lockedUntil, setLockedUntil] = useState(0);
+  const attempts = useRef(0);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -43,31 +48,34 @@ function AuthPage() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (Date.now() < lockedUntil) return;
     setBusy(true);
     setError(null);
-    setMessage(null);
     try {
-      if (mode === "signin") {
-        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-        if (signInError) throw signInError;
-        navigate({ to: "/admin", replace: true });
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
+      });
+      if (signInError) throw signInError;
+      attempts.current = 0;
+      navigate({ to: "/admin", replace: true });
+    } catch {
+      attempts.current += 1;
+      if (attempts.current >= MAX_ATTEMPTS) {
+        setLockedUntil(Date.now() + LOCKOUT_MS);
+        attempts.current = 0;
+        setError("Too many attempts. Try again in a few minutes.");
       } else {
-        const { error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
-        });
-        if (signUpError) throw signUpError;
-        setMessage(
-          "Account created. Check your inbox to confirm your email, then ask an admin to grant you access.",
-        );
+        // Deliberately generic: never reveal whether the address exists.
+        setError("Invalid email or password.");
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setPassword("");
     } finally {
       setBusy(false);
     }
   }
+
+  const locked = Date.now() < lockedUntil;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-primary px-5 py-16">
@@ -75,14 +83,12 @@ function AuthPage() {
         <Link to="/" className="block">
           <img src={logoAsset.url} alt="The Affiliate Week" className="mx-auto h-10 w-auto" />
         </Link>
-        <h1 className="mt-6 text-center font-display text-2xl font-bold">
-          {mode === "signin" ? "Staff sign in" : "Create your account"}
-        </h1>
+        <h1 className="mt-6 text-center font-display text-2xl font-bold">Staff sign in</h1>
         <p className="mt-2 text-center text-sm text-muted-foreground">
-          Access to the control room is limited to invited editors and admins.
+          Private area. Accounts are created by an administrator only.
         </p>
 
-        <form onSubmit={onSubmit} className="mt-6 space-y-4">
+        <form onSubmit={onSubmit} className="mt-6 space-y-4" autoComplete="off">
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
@@ -92,7 +98,7 @@ function AuthPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               maxLength={255}
-              autoComplete="email"
+              autoComplete="username"
               className="mt-1.5"
             />
           </div>
@@ -106,35 +112,22 @@ function AuthPage() {
               required
               minLength={8}
               maxLength={72}
-              autoComplete={mode === "signin" ? "current-password" : "new-password"}
+              autoComplete="current-password"
               className="mt-1.5"
             />
           </div>
 
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
-          {message ? <p className="text-sm text-primary">{message}</p> : null}
 
-          <Button type="submit" className="w-full" disabled={busy}>
+          <Button type="submit" className="w-full" disabled={busy || locked}>
             {busy ? <Loader2 className="size-4 animate-spin" /> : null}
-            {mode === "signin" ? "Sign in" : "Create account"}
+            Sign in
           </Button>
         </form>
 
-        <button
-          type="button"
-          onClick={() => {
-            setMode(mode === "signin" ? "signup" : "signin");
-            setError(null);
-            setMessage(null);
-          }}
-          className="mt-5 w-full text-center text-sm text-muted-foreground hover:text-foreground"
-        >
-          {mode === "signin" ? "Need an account? Sign up" : "Already have an account? Sign in"}
-        </button>
-
         <Link
           to="/"
-          className="mt-4 block text-center text-sm font-medium text-primary hover:underline"
+          className="mt-6 block text-center text-sm font-medium text-primary hover:underline"
         >
           ← Back to the site
         </Link>
