@@ -130,14 +130,12 @@ function SubscribersPage() {
 
       <div className="flex flex-wrap items-center gap-2">
         <Input
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
           placeholder="Search by email"
           className="max-w-xs"
         />
+
         <select
           value={statusFilter}
           onChange={(e) => {
