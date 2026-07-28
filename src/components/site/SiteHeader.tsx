@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TYPEFORM_SUBMIT_URL } from "@/lib/site";
+import logoAsset from "@/assets/taw-logo.png.asset.json";
 
 const links = [
   { label: "Archive", to: "/archive" as const },
