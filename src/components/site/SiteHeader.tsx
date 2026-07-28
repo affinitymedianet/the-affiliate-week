@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TYPEFORM_SUBMIT_URL } from "@/lib/site";
+import logoAsset from "@/assets/taw-logo.png.asset.json";
 
 const links = [
   { label: "Archive", to: "/archive" as const },
@@ -20,13 +21,12 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="flex size-8 items-center justify-center rounded-md bg-navy font-display text-xs font-bold text-navy-foreground">
-            AW
-          </span>
-          <span className="font-display text-lg font-bold tracking-tight">
-            The Affiliate Week
-          </span>
+        <Link to="/" className="flex items-center">
+          <img
+            src={logoAsset.url}
+            alt="The Affiliate Week"
+            className="h-12 w-auto"
+          />
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">
