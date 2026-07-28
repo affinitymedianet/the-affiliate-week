@@ -7,24 +7,26 @@
  * Set them in `.env` as VITE_FIREBASE_*; the process.env fallbacks let the
  * same values be supplied by the host when the app is server-rendered.
  */
-function read(key: string): string {
+function read(key: string, fallback = ""): string {
   const viteEnv = (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
   const fromVite = viteEnv?.[`VITE_${key}`];
   if (fromVite) return fromVite;
   if (typeof process !== "undefined" && process.env) {
-    return process.env[`VITE_${key}`] ?? process.env[key] ?? "";
+    return process.env[`VITE_${key}`] ?? process.env[key] ?? fallback;
   }
-  return "";
+  return fallback;
 }
 
 export const firebaseConfig = {
   apiKey: read("FIREBASE_API_KEY"),
-  authDomain: read("FIREBASE_AUTH_DOMAIN"),
-  projectId: read("FIREBASE_PROJECT_ID"),
-  storageBucket: read("FIREBASE_STORAGE_BUCKET"),
-  messagingSenderId: read("FIREBASE_MESSAGING_SENDER_ID"),
-  appId: read("FIREBASE_APP_ID"),
+  authDomain: read("FIREBASE_AUTH_DOMAIN", "the-affiliate-week.firebaseapp.com"),
+  projectId: read("FIREBASE_PROJECT_ID", "the-affiliate-week"),
+  storageBucket: read("FIREBASE_STORAGE_BUCKET", "the-affiliate-week.firebasestorage.app"),
+  messagingSenderId: read("FIREBASE_MESSAGING_SENDER_ID", "808833159041"),
+  appId: read("FIREBASE_APP_ID", "1:808833159041:web:d53fc2c7fd0ce2175da280"),
+  measurementId: read("FIREBASE_MEASUREMENT_ID", "G-CJBJTDNTGS"),
 };
+
 
 export function isFirebaseConfigured(): boolean {
   return Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
