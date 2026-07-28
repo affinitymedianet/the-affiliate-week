@@ -12,4 +12,14 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    define: {
+      // Firebase web API keys are publishable (security rules protect the data).
+      // Inject the stored key at build time so the browser SDK can initialise.
+      "import.meta.env.VITE_FIREBASE_API_KEY": JSON.stringify(
+        process.env.VITE_FIREBASE_API_KEY ?? process.env.GOOGLE_API_KEY ?? "",
+      ),
+    },
+  },
 });
+
