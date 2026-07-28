@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Download, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -14,9 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PageHeading } from "@/components/admin/AdminShell";
+import { validateListSearch, type ListSearch } from "@/components/admin/RecordTable";
 import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/_authenticated/admin/subscribers")({
+  validateSearch: validateListSearch,
   component: SubscribersPage,
 });
 
@@ -25,10 +27,28 @@ const STATUSES = ["active", "unsubscribed", "bounced"] as const;
 
 function SubscribersPage() {
   const queryClient = useQueryClient();
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [page, setPage] = useState(1);
+  const params = Route.useSearch();
+  const navigate = useNavigate();
+  const setParams = (next: Partial<ListSearch>) =>
+    navigate({ to: "/admin/subscribers", search: (prev: ListSearch) => ({ ...prev, ...next }) });
+
+  const search = params.q;
+  const statusFilter = params.status;
+  const page = params.page;
+  const setStatusFilter = (value: string) => setParams({ status: value, page: 1 });
+  const setPage = (value: number) => setParams({ page: value });
+
+  const [term, setTerm] = useState(search);
+  useEffect(() => setTerm(search), [search]);
+  useEffect(() => {
+    if (term === search) return;
+    const timer = setTimeout(() => setParams({ q: term, page: 1 }), 300);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [term]);
+
   const [selected, setSelected] = useState<string[]>([]);
+
 
   const listKey = ["admin", "inbox", "subscribers"];
   const { data: rows = [], isLoading } = useQuery({
