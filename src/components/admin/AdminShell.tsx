@@ -21,7 +21,15 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import logoAsset from "@/assets/taw-logo.png.asset.json";
 
-const NAV = [
+type NavItem = {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact?: boolean;
+  adminOnly?: boolean;
+};
+
+const NAV: NavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/jobs", label: "Jobs", icon: Briefcase },
   { to: "/admin/deals", label: "Deals", icon: Tag },
@@ -31,7 +39,7 @@ const NAV = [
   { to: "/admin/subscribers", label: "Subscribers", icon: Users },
   { to: "/admin/settings", label: "Settings", icon: Settings, adminOnly: true },
   { to: "/admin/team", label: "Team & roles", icon: Users, adminOnly: true },
-] as const;
+];
 
 export function AdminShell() {
   const navigate = useNavigate();
@@ -86,7 +94,7 @@ export function AdminShell() {
     );
   }
 
-  const items = NAV.filter((item) => !("adminOnly" in item && item.adminOnly) || access.isAdmin);
+  const items = NAV.filter((item) => !item.adminOnly || access.isAdmin);
 
   return (
     <div className="min-h-screen bg-background">
@@ -134,7 +142,7 @@ export function AdminShell() {
               return (
                 <Link
                   key={item.to}
-                  to={item.to}
+                  to={item.to as never}
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
                     active
