@@ -40,7 +40,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-signal">
+          <h3 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-white">
             Newsletter
           </h3>
           <ul className="mt-4 space-y-2 text-sm">
@@ -68,7 +68,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-signal">
+          <h3 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-white">
             Explore
           </h3>
           <ul className="mt-4 space-y-2 text-sm">
@@ -101,7 +101,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-signal">
+          <h3 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-white">
             Contact & legal
           </h3>
           <ul className="mt-4 space-y-2 text-sm">
