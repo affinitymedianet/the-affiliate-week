@@ -96,21 +96,21 @@ function DealsPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <section className="border-b border-border bg-background py-14 lg:py-20">
+        <section className="bg-primary text-primary-foreground py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Deals" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Exclusive affiliate deals
             </h1>
-            <p className="mt-4 max-w-2xl text-muted-foreground">
+            <p className="mt-4 max-w-2xl text-primary-foreground/85">
               Discounts on the software, tools, proxies and trackers affiliates actually use. Every
               deal is checked before it goes live and re-checked when it expires.
             </p>
             <p className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-              <Link to="/submit" className="font-medium text-primary hover:underline">
+              <Link to="/submit" className="font-medium text-primary-foreground underline underline-offset-2 hover:opacity-80">
                 Submit a deal →
               </Link>
-              <Link to="/jobs" className="font-medium text-primary hover:underline">
+              <Link to="/jobs" className="font-medium text-primary-foreground underline underline-offset-2 hover:opacity-80">
                 Browse jobs →
               </Link>
             </p>

@@ -101,24 +101,24 @@ function EventsPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <section className="border-b border-border bg-background py-14 lg:py-20">
+        <section className="bg-primary text-primary-foreground py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Events" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Affiliate events calendar
             </h1>
-            <p className="mt-4 max-w-2xl text-muted-foreground">
+            <p className="mt-4 max-w-2xl text-primary-foreground/85">
               Every conference, meetup and webinar worth knowing about, in one list. We update it
               each week and cover the highlights in the newsletter.
             </p>
             <p className="mt-4 text-sm">
-              <Link to="/submit" className="font-medium text-primary hover:underline">
+              <Link to="/submit" className="font-medium text-primary-foreground underline underline-offset-2 hover:opacity-80">
                 Submit an event →
               </Link>
-              <Link to="/jobs" className="ml-6 font-medium text-primary hover:underline">
+              <Link to="/jobs" className="ml-6 font-medium text-primary-foreground underline underline-offset-2 hover:opacity-80">
                 Browse jobs →
               </Link>
-              <Link to="/deals" className="ml-6 font-medium text-primary hover:underline">
+              <Link to="/deals" className="ml-6 font-medium text-primary-foreground underline underline-offset-2 hover:opacity-80">
                 See deals →
               </Link>
             </p>

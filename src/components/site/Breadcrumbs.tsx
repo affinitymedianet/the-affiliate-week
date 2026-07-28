@@ -29,19 +29,19 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
 
   return (
     <nav aria-label="Breadcrumb" className="text-sm">
-      <ol className="flex flex-wrap items-center gap-1.5 text-muted-foreground">
+      <ol className="flex flex-wrap items-center gap-1.5 text-current opacity-70">
         {trail.map((crumb, i) => {
           const isLast = i === trail.length - 1;
           return (
             <li key={`${crumb.label}-${i}`} className="flex items-center gap-1.5">
               {i > 0 ? <ChevronRight className="size-3.5 opacity-60" aria-hidden="true" /> : null}
               {isLast || !crumb.href ? (
-                <span aria-current={isLast ? "page" : undefined} className="text-foreground">
+                <span aria-current={isLast ? "page" : undefined} className="font-medium opacity-100">
                   {crumb.label}
                 </span>
               ) : (
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                <Link to={crumb.href as any} className="transition-colors hover:text-foreground">
+                <Link to={crumb.href as any} className="transition-colors hover:underline">
                   {crumb.label}
                 </Link>
               )}
