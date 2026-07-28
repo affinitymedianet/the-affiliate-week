@@ -33,7 +33,7 @@ function SubmissionsListPage() {
       columns={SUBMISSION_COLUMNS}
       search={search}
       onSearchChange={(next: Partial<ListSearch>) =>
-        navigate({ to: "/admin/submissions", search: (prev) => ({ ...prev, ...next }) })
+        navigate({ to: "/admin/submissions", search: (prev: ListSearch) => ({ ...prev, ...next }) })
       }
       renderOpenLink={(id, label) => (
         <Button asChild size="sm" variant="ghost">

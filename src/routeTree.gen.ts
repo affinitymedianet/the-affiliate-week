@@ -31,6 +31,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminTeamRouteImport } from './routes/_authenticated/admin.team'
 import { Route as AuthenticatedAdminSubscribersRouteImport } from './routes/_authenticated/admin.subscribers'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
+import { Route as AuthenticatedAdminSubmissionsIndexRouteImport } from './routes/_authenticated/admin.submissions.index'
 import { Route as AuthenticatedAdminJobsIndexRouteImport } from './routes/_authenticated/admin.jobs.index'
 import { Route as AuthenticatedAdminIssuesIndexRouteImport } from './routes/_authenticated/admin.issues.index'
 import { Route as AuthenticatedAdminEventsIndexRouteImport } from './routes/_authenticated/admin.events.index'
@@ -156,6 +157,12 @@ const AuthenticatedAdminSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminSubmissionsIndexRoute =
+  AuthenticatedAdminSubmissionsIndexRouteImport.update({
+    id: '/submissions/',
+    path: '/submissions/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminJobsIndexRoute =
   AuthenticatedAdminJobsIndexRouteImport.update({
     id: '/jobs/',
@@ -269,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/admin/events/': typeof AuthenticatedAdminEventsIndexRoute
   '/admin/issues/': typeof AuthenticatedAdminIssuesIndexRoute
   '/admin/jobs/': typeof AuthenticatedAdminJobsIndexRoute
+  '/admin/submissions/': typeof AuthenticatedAdminSubmissionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -304,6 +312,7 @@ export interface FileRoutesByTo {
   '/admin/events': typeof AuthenticatedAdminEventsIndexRoute
   '/admin/issues': typeof AuthenticatedAdminIssuesIndexRoute
   '/admin/jobs': typeof AuthenticatedAdminJobsIndexRoute
+  '/admin/submissions': typeof AuthenticatedAdminSubmissionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -342,6 +351,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/events/': typeof AuthenticatedAdminEventsIndexRoute
   '/_authenticated/admin/issues/': typeof AuthenticatedAdminIssuesIndexRoute
   '/_authenticated/admin/jobs/': typeof AuthenticatedAdminJobsIndexRoute
+  '/_authenticated/admin/submissions/': typeof AuthenticatedAdminSubmissionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -380,6 +390,7 @@ export interface FileRouteTypes {
     | '/admin/events/'
     | '/admin/issues/'
     | '/admin/jobs/'
+    | '/admin/submissions/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -415,6 +426,7 @@ export interface FileRouteTypes {
     | '/admin/events'
     | '/admin/issues'
     | '/admin/jobs'
+    | '/admin/submissions'
   id:
     | '__root__'
     | '/'
@@ -452,6 +464,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/events/'
     | '/_authenticated/admin/issues/'
     | '/_authenticated/admin/jobs/'
+    | '/_authenticated/admin/submissions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -631,6 +644,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/submissions/': {
+      id: '/_authenticated/admin/submissions/'
+      path: '/submissions'
+      fullPath: '/admin/submissions/'
+      preLoaderRoute: typeof AuthenticatedAdminSubmissionsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/jobs/': {
       id: '/_authenticated/admin/jobs/'
       path: '/jobs'
@@ -742,6 +762,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminEventsIndexRoute: typeof AuthenticatedAdminEventsIndexRoute
   AuthenticatedAdminIssuesIndexRoute: typeof AuthenticatedAdminIssuesIndexRoute
   AuthenticatedAdminJobsIndexRoute: typeof AuthenticatedAdminJobsIndexRoute
+  AuthenticatedAdminSubmissionsIndexRoute: typeof AuthenticatedAdminSubmissionsIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
@@ -761,6 +782,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminEventsIndexRoute: AuthenticatedAdminEventsIndexRoute,
   AuthenticatedAdminIssuesIndexRoute: AuthenticatedAdminIssuesIndexRoute,
   AuthenticatedAdminJobsIndexRoute: AuthenticatedAdminJobsIndexRoute,
+  AuthenticatedAdminSubmissionsIndexRoute:
+    AuthenticatedAdminSubmissionsIndexRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =

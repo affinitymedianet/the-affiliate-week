@@ -22,7 +22,7 @@ function DealsListPage() {
       entityKey="deals"
       search={search}
       onSearchChange={(next: Partial<ListSearch>) =>
-        navigate({ to: "/admin/deals", search: (prev) => ({ ...prev, ...next }) })
+        navigate({ to: "/admin/deals", search: (prev: ListSearch) => ({ ...prev, ...next }) })
       }
       newButton={
         <Button asChild>

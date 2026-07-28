@@ -22,7 +22,7 @@ function JobsListPage() {
       entityKey="jobs"
       search={search}
       onSearchChange={(next: Partial<ListSearch>) =>
-        navigate({ to: "/admin/jobs", search: (prev) => ({ ...prev, ...next }) })
+        navigate({ to: "/admin/jobs", search: (prev: ListSearch) => ({ ...prev, ...next }) })
       }
       newButton={
         <Button asChild>
