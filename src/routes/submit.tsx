@@ -20,9 +20,9 @@ import {
 import { SITE_NAME, SITE_URL, CONTACT_EMAIL } from "@/lib/site";
 import logoAsset from "@/assets/taw-logo.png.asset.json";
 
-const title = "Submit an affiliate event, job or offer — The Affiliate Week";
+const title = "Submit an affiliate event, job or deal — The Affiliate Week";
 const description =
-  "Get your affiliate event, job or offer in front of thousands of affiliate operators. Free editorial listings — or list free by adding our badge and a backlink from your site.";
+  "Get your affiliate event, job or deal in front of thousands of affiliate operators. Free editorial listings — or list free by adding our badge and a backlink from your site.";
 
 export const Route = createFileRoute("/submit")({
   head: () => ({
@@ -55,7 +55,7 @@ const schema = z.object({
 const kinds = [
   { value: "event", label: "Event" },
   { value: "job", label: "Job" },
-  { value: "offer", label: "Offer / deal" },
+  { value: "offer", label: "Deal" },
 ] as const;
 
 const badgeDark = `<a href="${SITE_URL}" target="_blank" rel="noopener">
@@ -79,7 +79,7 @@ const faqs = [
   },
   {
     q: "What makes a submission get rejected?",
-    a: "Thin or expired offers, roles that are not affiliate or partnerships related, pay-to-play content dressed up as news, and anything we cannot verify on a real website.",
+    a: "Thin or expired deals, roles that are not affiliate or partnerships related, pay-to-play content dressed up as news, and anything we cannot verify on a real website.",
   },
   {
     q: "Can I edit a listing after it goes out?",
@@ -164,7 +164,7 @@ function SubmitPage() {
           <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Submit" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
-              Submit an event, job or offer
+              Submit an event, job or deal
             </h1>
             <p className="mt-4 text-primary-foreground/85">
               Get in front of affiliate managers, media buyers and partnership leads who read every

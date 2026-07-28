@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { TYPEFORM_SUBMIT_URL } from "@/lib/site";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import logoAsset from "@/assets/taw-logo.png.asset.json";
 
@@ -19,7 +18,6 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const settings = useSiteSettings();
   const logoSrc = settings?.logoUrl || logoAsset.url;
-  const submitUrl = settings?.submitUrl || TYPEFORM_SUBMIT_URL;
   const siteName = settings?.siteName || "The Affiliate Week";
 
   return (
@@ -48,13 +46,7 @@ export function SiteHeader() {
 
         <div className="hidden md:block">
           <Button asChild size="sm">
-            <a
-              href={submitUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Submit
-            </a>
+            <Link to="/submit">Submit</Link>
           </Button>
         </div>
 
@@ -83,14 +75,9 @@ export function SiteHeader() {
               </Link>
             ))}
             <Button asChild size="sm" className="mt-2">
-              <a
-                href={submitUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-              >
+              <Link to="/submit" onClick={() => setOpen(false)}>
                 Submit
-              </a>
+              </Link>
             </Button>
           </nav>
         </div>
