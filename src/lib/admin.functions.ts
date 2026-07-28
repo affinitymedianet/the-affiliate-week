@@ -159,9 +159,13 @@ export const adminListInbox = createServerFn({ method: "GET" })
     const { requireStaff, adminClient } = await import("@/lib/admin.server");
     await requireStaff(context);
     const supabase = adminClient();
+    const columns =
+      data.kind === "subscribers"
+        ? "id, email, source, status, unsubscribed_at, created_at"
+        : "*";
     const { data: rows, error } = await supabase
       .from(data.kind)
-      .select("*")
+      .select(columns)
       .order("created_at", { ascending: false })
       .limit(1000);
     if (error) throw new Error(error.message);
@@ -484,7 +488,6 @@ export const adminDeactivateStaff = createServerFn({ method: "POST" })
       ban_duration: "876000h",
     });
     if (error) throw new Error(error.message);
-    await supabase.auth.admin.signOut(data.userId).catch(() => undefined);
     await writeAudit(identity, "deactivate_staff", "auth.users", data.userId, {});
     return { ok: true };
   });
