@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
+import logoAsset from "@/assets/taw-logo.png.asset.json";
+
 const linkClass =
   "text-navy-foreground/70 transition-colors hover:text-signal";
 
