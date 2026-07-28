@@ -32,6 +32,7 @@ import { Route as AuthenticatedAdminTeamRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminSubscribersRouteImport } from './routes/_authenticated/admin.subscribers'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSubmissionsIndexRouteImport } from './routes/_authenticated/admin.submissions.index'
+import { Route as AuthenticatedAdminSponsorsIndexRouteImport } from './routes/_authenticated/admin.sponsors.index'
 import { Route as AuthenticatedAdminJobsIndexRouteImport } from './routes/_authenticated/admin.jobs.index'
 import { Route as AuthenticatedAdminIssuesIndexRouteImport } from './routes/_authenticated/admin.issues.index'
 import { Route as AuthenticatedAdminEventsIndexRouteImport } from './routes/_authenticated/admin.events.index'
@@ -164,6 +165,12 @@ const AuthenticatedAdminSubmissionsIndexRoute =
     path: '/submissions/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminSponsorsIndexRoute =
+  AuthenticatedAdminSponsorsIndexRouteImport.update({
+    id: '/sponsors/',
+    path: '/sponsors/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminJobsIndexRoute =
   AuthenticatedAdminJobsIndexRouteImport.update({
     id: '/jobs/',
@@ -284,6 +291,7 @@ export interface FileRoutesByFullPath {
   '/admin/events/': typeof AuthenticatedAdminEventsIndexRoute
   '/admin/issues/': typeof AuthenticatedAdminIssuesIndexRoute
   '/admin/jobs/': typeof AuthenticatedAdminJobsIndexRoute
+  '/admin/sponsors/': typeof AuthenticatedAdminSponsorsIndexRoute
   '/admin/submissions/': typeof AuthenticatedAdminSubmissionsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -321,6 +329,7 @@ export interface FileRoutesByTo {
   '/admin/events': typeof AuthenticatedAdminEventsIndexRoute
   '/admin/issues': typeof AuthenticatedAdminIssuesIndexRoute
   '/admin/jobs': typeof AuthenticatedAdminJobsIndexRoute
+  '/admin/sponsors': typeof AuthenticatedAdminSponsorsIndexRoute
   '/admin/submissions': typeof AuthenticatedAdminSubmissionsIndexRoute
 }
 export interface FileRoutesById {
@@ -361,6 +370,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/events/': typeof AuthenticatedAdminEventsIndexRoute
   '/_authenticated/admin/issues/': typeof AuthenticatedAdminIssuesIndexRoute
   '/_authenticated/admin/jobs/': typeof AuthenticatedAdminJobsIndexRoute
+  '/_authenticated/admin/sponsors/': typeof AuthenticatedAdminSponsorsIndexRoute
   '/_authenticated/admin/submissions/': typeof AuthenticatedAdminSubmissionsIndexRoute
 }
 export interface FileRouteTypes {
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/admin/events/'
     | '/admin/issues/'
     | '/admin/jobs/'
+    | '/admin/sponsors/'
     | '/admin/submissions/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -438,6 +449,7 @@ export interface FileRouteTypes {
     | '/admin/events'
     | '/admin/issues'
     | '/admin/jobs'
+    | '/admin/sponsors'
     | '/admin/submissions'
   id:
     | '__root__'
@@ -477,6 +489,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/events/'
     | '/_authenticated/admin/issues/'
     | '/_authenticated/admin/jobs/'
+    | '/_authenticated/admin/sponsors/'
     | '/_authenticated/admin/submissions/'
   fileRoutesById: FileRoutesById
 }
@@ -664,6 +677,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSubmissionsIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/sponsors/': {
+      id: '/_authenticated/admin/sponsors/'
+      path: '/sponsors'
+      fullPath: '/admin/sponsors/'
+      preLoaderRoute: typeof AuthenticatedAdminSponsorsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/jobs/': {
       id: '/_authenticated/admin/jobs/'
       path: '/jobs'
@@ -783,6 +803,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminEventsIndexRoute: typeof AuthenticatedAdminEventsIndexRoute
   AuthenticatedAdminIssuesIndexRoute: typeof AuthenticatedAdminIssuesIndexRoute
   AuthenticatedAdminJobsIndexRoute: typeof AuthenticatedAdminJobsIndexRoute
+  AuthenticatedAdminSponsorsIndexRoute: typeof AuthenticatedAdminSponsorsIndexRoute
   AuthenticatedAdminSubmissionsIndexRoute: typeof AuthenticatedAdminSubmissionsIndexRoute
 }
 
@@ -804,6 +825,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminEventsIndexRoute: AuthenticatedAdminEventsIndexRoute,
   AuthenticatedAdminIssuesIndexRoute: AuthenticatedAdminIssuesIndexRoute,
   AuthenticatedAdminJobsIndexRoute: AuthenticatedAdminJobsIndexRoute,
+  AuthenticatedAdminSponsorsIndexRoute: AuthenticatedAdminSponsorsIndexRoute,
   AuthenticatedAdminSubmissionsIndexRoute:
     AuthenticatedAdminSubmissionsIndexRoute,
 }
