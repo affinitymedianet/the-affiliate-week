@@ -19,7 +19,7 @@ export function InsideThisIssue() {
 
   return (
     <section className="border-b border-rule py-16 lg:py-20">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-rule pb-4">
           <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
             Inside the latest issue

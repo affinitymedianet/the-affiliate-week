@@ -20,7 +20,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center">
           <img
             src={logoAsset.url}
@@ -66,7 +66,7 @@ export function SiteHeader() {
 
       {open ? (
         <div className="border-t border-border bg-background md:hidden">
-          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3">
+          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-5 sm:px-6 lg:px-8 py-3">
             {links.map((link) => (
               <Link
                 key={link.label}

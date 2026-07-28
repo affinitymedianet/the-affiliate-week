@@ -54,7 +54,7 @@ function ArchivePage() {
       <SiteHeader />
       <main>
         <section className="border-b border-border bg-background py-14 lg:py-20">
-          <div className="mx-auto max-w-4xl px-4">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Archive" }]} />
             <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
               Newsletter archive
@@ -67,7 +67,7 @@ function ArchivePage() {
         </section>
 
         <section className="py-12 lg:py-16">
-          <div className="mx-auto max-w-4xl px-4">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
             <label className="block">
               <span className="sr-only">Search past issues</span>
               <input

@@ -5,7 +5,7 @@ import { sampleIssue } from "@/data/issues";
 export function EditorNote() {
   return (
     <section id="why" className="border-b border-rule py-16 lg:py-20">
-      <div className="mx-auto grid max-w-5xl gap-8 px-4 md:grid-cols-[auto_1fr] md:gap-12">
+      <div className="mx-auto grid max-w-6xl gap-8 px-5 sm:px-6 lg:px-8 md:grid-cols-[auto_1fr] md:gap-12">
         <div className="flex size-14 items-center justify-center rounded-full bg-navy font-display text-xl font-bold text-navy-foreground">
           AW
         </div>

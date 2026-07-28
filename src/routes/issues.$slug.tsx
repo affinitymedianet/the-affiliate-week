@@ -57,7 +57,7 @@ function IssueMissing() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-3xl px-4 py-24 text-center">
+      <main className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8 py-24 text-center">
         <h1 className="font-display text-3xl font-bold">We couldn't find that issue</h1>
         <p className="mt-3 text-muted-foreground">
           It may have moved. Every published issue is listed in the archive.
@@ -78,7 +78,7 @@ function IssuePage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <article className="mx-auto max-w-2xl px-4 py-14 lg:py-20">
+        <article className="mx-auto max-w-2xl px-5 sm:px-6 lg:px-8 py-14 lg:py-20">
           <Breadcrumbs
             items={[{ label: "Archive", href: "/archive" }, { label: `Issue #${issue.number}` }]}
           />

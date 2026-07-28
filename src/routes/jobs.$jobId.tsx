@@ -68,7 +68,7 @@ export const Route = createFileRoute("/jobs/$jobId")({
   },
   component: JobDetail,
   errorComponent: ({ error }) => (
-    <div className="mx-auto max-w-2xl px-4 py-24 text-center" role="alert">
+    <div className="mx-auto max-w-2xl px-5 sm:px-6 lg:px-8 py-24 text-center" role="alert">
       <h1 className="font-display text-2xl font-bold">We couldn't load this role</h1>
       <p className="mt-3 text-sm text-muted-foreground">{error.message}</p>
     </div>
@@ -76,7 +76,7 @@ export const Route = createFileRoute("/jobs/$jobId")({
   notFoundComponent: () => (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-2xl px-4 py-24 text-center">
+      <main className="mx-auto max-w-2xl px-5 sm:px-6 lg:px-8 py-24 text-center">
         <h1 className="font-display text-3xl font-bold">This role is no longer listed</h1>
         <p className="mt-3 text-muted-foreground">
           It may have been filled or withdrawn. Browse the roles that are still open.
@@ -108,7 +108,7 @@ function JobDetail() {
       <SiteHeader />
       <main>
         <section className="border-b border-border bg-background py-12 lg:py-16">
-          <div className="mx-auto max-w-3xl px-4">
+          <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Jobs", href: "/jobs" }, { label: job.title }]} />
             <Link
               to="/jobs"
@@ -167,7 +167,7 @@ function JobDetail() {
         </section>
 
         <section className="py-12 lg:py-16">
-          <div className="mx-auto max-w-3xl px-4">
+          <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
             <p className="text-lg text-muted-foreground">{job.summary}</p>
             <div className="mt-6 whitespace-pre-line leading-relaxed text-foreground">
               {job.description}

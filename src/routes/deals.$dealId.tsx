@@ -62,7 +62,7 @@ export const Route = createFileRoute("/deals/$dealId")({
   },
   component: DealDetail,
   errorComponent: ({ error }) => (
-    <div className="mx-auto max-w-2xl px-4 py-24 text-center" role="alert">
+    <div className="mx-auto max-w-2xl px-5 sm:px-6 lg:px-8 py-24 text-center" role="alert">
       <h1 className="font-display text-2xl font-bold">We couldn't load this deal</h1>
       <p className="mt-3 text-sm text-muted-foreground">{error.message}</p>
       <Link to="/deals" className="mt-6 inline-block text-sm font-medium text-primary underline">
@@ -71,7 +71,7 @@ export const Route = createFileRoute("/deals/$dealId")({
     </div>
   ),
   notFoundComponent: () => (
-    <div className="mx-auto max-w-2xl px-4 py-24 text-center">
+    <div className="mx-auto max-w-2xl px-5 sm:px-6 lg:px-8 py-24 text-center">
       <h1 className="font-display text-2xl font-bold">This deal has ended</h1>
       <p className="mt-3 text-sm text-muted-foreground">
         It may have expired or been pulled by the vendor.
@@ -101,7 +101,7 @@ function DealDetail() {
       <SiteHeader />
       <main>
         <section className="border-b border-border bg-background py-12 lg:py-16">
-          <div className="mx-auto max-w-3xl px-4">
+          <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
             <Breadcrumbs items={[{ label: "Deals", href: "/deals" }, { label: deal.title }]} />
             <div className="mt-5 flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
@@ -138,7 +138,7 @@ function DealDetail() {
         </section>
 
         <section className="py-12 lg:py-16">
-          <div className="mx-auto max-w-3xl px-4">
+          <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
             <div className="rounded-xl border border-border bg-card p-6 shadow-card">
               <h2 className="font-display text-lg font-semibold">What you get</h2>
               <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">

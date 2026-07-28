@@ -60,7 +60,7 @@ function TermsPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <article className="mx-auto max-w-3xl px-4 py-14 lg:py-20">
+        <article className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8 py-14 lg:py-20">
           <Breadcrumbs items={[{ label: "Terms of use" }]} />
           <h1 className="mt-4 font-display text-4xl font-bold">Terms of use</h1>
           <p className="mt-3 text-sm text-muted-foreground">
