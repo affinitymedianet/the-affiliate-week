@@ -491,3 +491,67 @@ export const adminDeactivateStaff = createServerFn({ method: "POST" })
     await writeAudit(identity, "deactivate_staff", "auth.users", data.userId, {});
     return { ok: true };
   });
+
+/* ------------------------- Single-record fetch/delete ------------------------ */
+
+export const adminGetRecord = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { entity: string; id: string }) => {
+    if (!isEntityKey(data.entity)) throw new Error("Unknown entity");
+    if (!data.id) throw new Error("Missing id");
+    return { entity: data.entity as EntityKey, id: data.id };
+  })
+  .handler(async ({ data, context }): Promise<AdminRow | null> => {
+    const { requireStaff, adminClient } = await import("@/lib/admin.server");
+    await requireStaff(context);
+    const entity = ENTITIES[data.entity];
+    const supabase = adminClient();
+    const { data: row, error } = await supabase
+      .from(entity.table)
+      .select("*")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return (row ?? null) as AdminRow | null;
+  });
+
+export const adminGetInboxItem = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { kind: string; id: string }) => {
+    if (data.kind !== "submissions" && data.kind !== "sponsor_enquiries") {
+      throw new Error("Unknown inbox");
+    }
+    if (!data.id) throw new Error("Missing id");
+    return { kind: data.kind, id: data.id };
+  })
+  .handler(async ({ data, context }): Promise<AdminRow | null> => {
+    const { requireStaff, adminClient } = await import("@/lib/admin.server");
+    await requireStaff(context);
+    const supabase = adminClient();
+    const { data: row, error } = await supabase
+      .from(data.kind)
+      .select("*")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return (row ?? null) as AdminRow | null;
+  });
+
+export const adminDeleteInboxItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { kind: string; id: string }) => {
+    if (data.kind !== "submissions" && data.kind !== "sponsor_enquiries") {
+      throw new Error("Unknown inbox");
+    }
+    if (!data.id) throw new Error("Missing id");
+    return { kind: data.kind, id: data.id };
+  })
+  .handler(async ({ data, context }): Promise<{ ok: true }> => {
+    const { requireAdmin, adminClient, writeAudit } = await import("@/lib/admin.server");
+    const identity = await requireAdmin(context);
+    const supabase = adminClient();
+    const { error } = await supabase.from(data.kind).delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    await writeAudit(identity, "delete", data.kind, data.id, {});
+    return { ok: true };
+  });
