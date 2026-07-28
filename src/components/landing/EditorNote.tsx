@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 
-import { sampleIssue } from "@/data/issues";
+import { useLatestIssue } from "@/hooks/use-latest-issue";
 
 export function EditorNote() {
+  const latestIssue = useLatestIssue();
+
   return (
     <section id="why" className="border-b border-rule py-16 lg:py-20">
       <div className="mx-auto grid max-w-6xl gap-8 px-5 sm:px-6 lg:px-8 md:grid-cols-[auto_1fr] md:gap-12">
@@ -25,15 +27,17 @@ export function EditorNote() {
               never shared.
             </p>
           </div>
-          <p className="mt-6 text-sm">
-            <Link
-              to="/issues/$slug"
-              params={{ slug: sampleIssue.slug }}
-              className="font-medium text-primary hover:underline"
-            >
-              Read a full sample issue before you subscribe →
-            </Link>
-          </p>
+          {latestIssue ? (
+            <p className="mt-6 text-sm">
+              <Link
+                to="/issues/$slug"
+                params={{ slug: latestIssue.slug }}
+                className="font-medium text-primary hover:underline"
+              >
+                Read a full sample issue before you subscribe →
+              </Link>
+            </p>
+          ) : null}
         </div>
       </div>
     </section>
