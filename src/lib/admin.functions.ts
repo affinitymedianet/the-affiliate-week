@@ -169,7 +169,7 @@ export const adminListInbox = createServerFn({ method: "GET" })
       .order("created_at", { ascending: false })
       .limit(1000);
     if (error) throw new Error(error.message);
-    return (rows ?? []) as AdminRow[];
+    return ((rows ?? []) as unknown) as AdminRow[];
   });
 
 export const adminUpdateInboxItem = createServerFn({ method: "POST" })
