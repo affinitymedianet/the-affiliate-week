@@ -1,55 +1,113 @@
 ## Goal
+Deploy your local Firestore/Storage security rules and finish the production server configuration so the live site can read/write data securely.
 
-Every admin record type gets real pages instead of dialogs and expandable rows: a list page, a "new" page, and an edit page — each with full create/read/update/delete, search, filters and pagination that survive refresh and back/forward.
+## Step 1 — Deploy Firebase rules and indexes from your local machine
+Your repo already contains the correct rules (`firestore.rules`, `storage.rules`) and indexes (`firestore.indexes.json`). You only need to push them to Firebase.
 
-## New admin URL map
+Run these commands in your project directory on your local computer:
 
-```text
-/admin/jobs                 list (search, filters, pagination, bulk actions)
-/admin/jobs/new             create form (full page)
-/admin/jobs/<id>            edit form + delete + publish toggle
-   ... same for /admin/deals, /admin/events, /admin/issues
+```bash
+# 1. Install Firebase CLI if you haven't already
+npm install -g firebase-tools
 
-/admin/submissions          list (search, status filter, pagination)
-/admin/submissions/<id>     detail page: full record, status buttons, internal notes
-/admin/sponsors             list + /admin/sponsors/<id> detail page
+# 2. Sign in
+firebase login
 
-/admin/subscribers          list (search, status filter, pagination, bulk delete)
-/admin/team                 staff list + role/reset/deactivate actions
-/admin/settings             settings form (already a full page)
+# 3. Link to your project
+firebase use the-affiliate-week
+
+# 4. Deploy rules + indexes + storage rules
+firebase deploy --only firestore:rules,firestore:indexes,storage
 ```
 
-## What changes
+Expected result: you should see confirmation that `firestore.rules`, `firestore.indexes.json`, and `storage.rules` were deployed.
 
-**1. Shared list component (`RecordTable`)**
-- Table with sortable-by-default ordering, checkbox multi-select, per-row "Edit" link to the record page.
-- Search box, plus status filter (All / Live / Scheduled / Draft) and — where relevant — a category/type filter.
-- Pagination footer (25 per page) with page numbers, prev/next and a "showing X–Y of Z" line.
-- Bulk publish / unpublish / delete, CSV template, bulk import, export — kept from today, moved above the table.
-- Search, filter and page live in the URL (`?q=&status=&page=`) using `validateSearch`, so a refresh or shared link keeps the view. Search is debounced and resets to page 1.
+## Step 2 — Create your first admin user and role record
+After rules are deployed, the admin area still needs a role document to let you in.
 
-**2. Shared form page component (`RecordForm`)**
-- Full-width page with breadcrumb ("Jobs → New job" / "Jobs → <title>"), grouped fields, and a sticky action bar: Save, Save & publish, Cancel, and Delete (edit mode only, with confirm).
-- Keeps every field type already supported: text, textarea, date, datetime, boolean, select, url, number, JSON section editor, image upload.
-- Unsaved-changes guard when navigating away.
-- After create, redirects to the edit page for that record; after delete, back to the list.
+1. In the Firebase console, go to **Authentication → Users → Add user** and create your admin email + strong password. Copy the **UID**.
+2. In **Firestore Database**, create a document at path `roles/{uid}` with these fields:
+   - `role`: string = `admin`
+   - `active`: boolean = `true`
+   - `email`: string = your email
+   - `display_name`: string = your name
 
-**3. Inbox detail pages**
-- The accordion in Submissions and Sponsor enquiries is replaced by a list of rows linking to `/admin/submissions/<id>` and `/admin/sponsors/<id>`.
-- Detail page shows all fields, the status control, internal notes with an explicit Save, "Delete enquiry" for admins, and prev/next links to move through the queue.
-- Submission detail also gets a "Create job/event/deal from this" button that pre-fills the matching new-record form.
+Without this document, `/a6b8` will reject your login.
 
-**4. Subscribers and Team**
-- Subscribers already has search, status filter and pagination — moved onto URL search params for consistency.
-- Team keeps a single page (no per-record form needed), with the existing role, reset-link and deactivate actions.
+## Step 3 — Add your production domain to Firebase authorized domains
+In Firebase console: **Authentication → Settings → Authorized domains**.
+Add:
+- `theaffiliateweek.com`
+- `www.theaffiliateweek.com`
+- your server's temporary hostname (if any)
 
-**5. Dialogs removed**
-- `RecordManager`'s edit `Dialog` and the CSV import preview dialog are removed; import preview becomes an inline confirm panel on the list page.
+## Step 4 — Configure and start the production server
+On your server, inside the app directory:
 
-## Technical notes
+```bash
+# Create and secure the environment file
+cp .env.example .env
+nano .env   # fill VITE_FIREBASE_API_KEY and VITE_SITE_URL
+chmod 600 .env
 
-- Route files are split so each entity has `admin.<entity>.index.tsx` (list), `admin.<entity>.new.tsx`, and `admin.<entity>.$id.tsx`; the current single-leaf `admin.<entity>.tsx` files are removed so the router does not treat them as layouts.
-- Two new server functions in `src/lib/admin.functions.ts`: `adminGetRecord({ entity, id })` and `adminGetInboxItem({ kind, id })`, both behind the existing staff check, so an edit page can load directly by URL.
-- Pagination is client-side over the existing capped list query (1000 rows) to start; if any board grows past that, the list query moves to server-side range + count in a follow-up.
-- List and detail routes prime the cache in their loaders under `_authenticated`, so pages render populated on first paint.
-- `src/components/admin/RecordManager.tsx` and `InboxManager.tsx` are replaced by `RecordTable.tsx`, `RecordForm.tsx`, `InboxTable.tsx` and `InboxDetail.tsx`; the schema in `src/lib/admin-schema.ts` stays the single source of truth for fields.
+# Install dependencies and build
+npm ci
+npm run build
+
+# Start the server (use PM2 for persistence)
+node .output/server/index.mjs
+```
+
+Recommended PM2 setup:
+```bash
+npm install -g pm2
+pm2 start .output/server/index.mjs --name "the-affiliate-week"
+pm2 save
+pm2 startup
+```
+
+## Step 5 — Nginx reverse proxy + HTTPS
+Create an Nginx server block:
+
+```nginx
+server {
+  server_name theaffiliateweek.com www.theaffiliateweek.com;
+
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
+```
+
+Then obtain SSL:
+```bash
+sudo certbot --nginx -d theaffiliateweek.com -d www.theaffiliateweek.com
+```
+
+## Verification checklist
+- [ ] `firebase deploy` completed successfully
+- [ ] Firestore database has the `roles/{uid}` admin document
+- [ ] Production domain added to Firebase authorized domains
+- [ ] `.env` created on server with `VITE_FIREBASE_API_KEY` and `VITE_SITE_URL`
+- [ ] `npm run build` succeeds with no errors
+- [ ] Site loads over HTTPS and public pages show content
+- [ ] `/a6b8` login works with your admin credentials
+- [ ] Admin → Integrations & APIs is accessible after login
+
+## Notes
+- Do not skip the rules deploy — the current locked-down rules are blocking all reads/writes, which is why the site appears empty/broken right now.
+- The API key in `.env` is publishable by design; real secrets (service account JSON, ESP keys, etc.) should be entered later via **Admin → Integrations & APIs**, not hardcoded in `.env`.
+- Once the admin panel is reachable, publish a first issue plus a few jobs/deals/events so the homepage boards are not empty.
+
+## Optional follow-ups
+If you want, I can also:
+- Add a PM2 ecosystem file (`ecosystem.config.cjs`) to the repo.
+- Add a sample Nginx config file to the repo for easier copy-paste.
+- Build a small seed script that creates the admin role document automatically once you provide the UID.
