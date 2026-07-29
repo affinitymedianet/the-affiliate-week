@@ -25,8 +25,10 @@ In the [Firebase console](https://console.firebase.google.com) for project
    your domains. The key is publishable, but restricting it stops abuse.
 6. **Create your admin user**: Authentication → Users → Add user (email +
    strong password). Copy the UID.
-7. **Create the role record** so that user can reach `/a6b8` and `/admin`:
-   Firestore → Start collection `roles` → Document ID = *the UID* → fields:
+7. **Create the role record** so that user can reach `/a6b8` and `/admin`.
+   You can do this manually in Firestore, or use the included seed script:
+
+   **Manual:** Firestore → Start collection `roles` → Document ID = *the UID* → fields:
 
    | field         | type    | value             |
    | ------------- | ------- | ----------------- |
@@ -34,6 +36,14 @@ In the [Firebase console](https://console.firebase.google.com) for project
    | `active`      | boolean | `true`            |
    | `email`       | string  | your email        |
    | `display_name`| string  | your name         |
+
+   **Script:** Generate a service account key in Firebase console → Project
+   settings → Service accounts, then run:
+
+   ```sh
+   FIREBASE_SERVICE_ACCOUNT_JSON='$(cat service-account.json)' \
+     node scripts/seed-admin-role.mjs <UID> <email> "Your Name"
+   ```
 
 8. **Deploy the rules and indexes** from your machine (they are in this repo):
 
