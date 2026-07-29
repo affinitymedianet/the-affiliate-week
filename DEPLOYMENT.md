@@ -85,7 +85,23 @@ npm run build     # emits .output/ (Nitro server bundle + static assets)
 node .output/server/index.mjs
 ```
 
-The server listens on `PORT` (default 3000). Keep it alive with systemd:
+The server listens on `PORT` (default 3000). Keep it alive with PM2 (recommended)
+or systemd.
+
+### PM2 (recommended)
+
+An `ecosystem.config.cjs` is included in the repo. After building:
+
+```sh
+npm install -g pm2
+pm2 start ecosystem.config.cjs
+pm2 save
+pm2 startup
+```
+
+Logs are written to `./logs/pm2-*.log`.
+
+### systemd alternative
 
 ```ini
 # /etc/systemd/system/taw.service
@@ -111,17 +127,18 @@ sudo systemctl enable --now taw
 
 ### Nginx reverse proxy + TLS
 
-```nginx
-server {
-  server_name theaffiliateweek.com www.theaffiliateweek.com;
-  location / {
-    proxy_pass http://127.0.0.1:3000;
-    proxy_set_header Host $host;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-  }
-}
+A sample config is included at `nginx.conf.example`. Copy it to your Nginx
+sites-available directory, adjust `server_name` and certificate paths, then
+enable the site:
+
+```sh
+sudo cp nginx.conf.example /etc/nginx/sites-available/theaffiliateweek.com
+sudo ln -s /etc/nginx/sites-available/theaffiliateweek.com /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
 ```
+
+Obtain SSL with Let's Encrypt:
 
 ```sh
 sudo certbot --nginx -d theaffiliateweek.com -d www.theaffiliateweek.com
