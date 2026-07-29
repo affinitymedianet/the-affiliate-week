@@ -9,6 +9,7 @@ import {
   LogOut,
   Mail,
   Newspaper,
+  KeyRound,
   Menu,
   Settings,
   Tag,
@@ -40,6 +41,7 @@ const NAV: NavItem[] = [
   { to: "/admin/sponsors", label: "Sponsor enquiries", icon: Mail },
   { to: "/admin/subscribers", label: "Subscribers", icon: Users },
   { to: "/admin/settings", label: "Settings", icon: Settings, adminOnly: true },
+  { to: "/admin/integrations", label: "Integrations & APIs", icon: KeyRound, adminOnly: true },
   { to: "/admin/team", label: "Team & roles", icon: Users, adminOnly: true },
 ];
 

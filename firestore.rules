@@ -55,6 +55,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    /* ------------------ private settings (API keys, secrets) --------------- */
+    /* Never world-readable: only admins can read or write these documents. */
+
+    match /private_settings/{id} {
+      allow read, write: if isAdmin();
+    }
+
     /* -------------------------- public submissions ------------------------- */
 
     match /submissions/{id} {

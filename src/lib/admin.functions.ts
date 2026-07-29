@@ -573,3 +573,55 @@ export async function adminDeleteSubscribers({
   await writeAudit(identity, "delete", "subscribers", null, { ids: data.ids });
   return { ok: true };
 }
+
+/* ------------------------- Integrations & API keys ------------------------- */
+
+/**
+ * API keys live in `private_settings/integrations`, a document only admins can
+ * read or write (see firestore.rules). Never move these into `settings/site`:
+ * that document is world-readable because the public site renders from it.
+ */
+export const INTEGRATIONS_DOC = "private_settings/integrations";
+
+export const INTEGRATION_FIELDS = [
+  "esp_provider",
+  "esp_api_key",
+  "esp_publication_id",
+  "esp_audience_id",
+  "esp_from_name",
+  "esp_from_email",
+  "esp_reply_to",
+  "transactional_provider",
+  "transactional_api_key",
+  "notify_email",
+  "slack_webhook_url",
+  "recaptcha_site_key",
+  "recaptcha_secret_key",
+  "webhook_shared_secret",
+  "sitemap_ping_url",
+] as const;
+
+export async function adminGetIntegrations(): Promise<AdminRow> {
+  await requireIdentity(true);
+  const row = (await fsGetPath(INTEGRATIONS_DOC, await authToken())) ?? {};
+  return row as AdminRow;
+}
+
+export async function adminSaveIntegrations({
+  data,
+}: {
+  data: { values: AdminRow };
+}): Promise<{ ok: true }> {
+  const identity = await requireIdentity(true);
+  const patch: Row = {};
+  for (const key of INTEGRATION_FIELDS) {
+    if (key in (data.values ?? {})) patch[key] = data.values[key];
+  }
+  patch.updated_at = nowIso();
+  await fsSetPath(INTEGRATIONS_DOC, patch, await authToken());
+  // Audit the fact of the change only — never the values.
+  await writeAudit(identity, "update", "integrations", "integrations", {
+    keys: Object.keys(patch).join(","),
+  });
+  return { ok: true };
+}
